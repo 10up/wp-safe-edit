@@ -1,0 +1,84 @@
+<?php
+namespace TenUp\PostForking\Helpers;
+
+/**
+ * Get a post object, but only if the ID is not zero. Use this instead of WordPress' get_post( $post ) when you don't want the global post returned when a valid post or post ID isn't given.
+ *
+ * @param  int|\WP_Post $post The post ID or object
+ * @return \WP_Post|null
+ */
+function get_post( $post ) {
+	if ( is_valid_post_id( $post )  ) {
+		$post = \get_post( $post );
+	}
+
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return null;
+	}
+
+	return $post;
+}
+
+/**
+ * Determine if a post ID is valid.
+ *
+ * @param  int|string $post_id
+ * @return boolean
+ */
+function is_valid_post_id( $post_id ) {
+	return ( ! empty( $post_id ) && is_numeric( $post_id ) );
+}
+
+/**
+ * Get a property from either an object or an array.
+ *
+ * @param  string $key The name of the property to retrieve
+ * @param  array|object $data The object to retrieve the property for.
+ * @param  mixed $default The default if the property is empty or not found.
+ * @return mixed
+ */
+function get_property( $key, $data, $default = null ) {
+	$value = null;
+
+	if ( is_array( $data ) ) {
+		$value = get_array_property( $key, $data );
+	} elseif ( is_object( $data ) ) {
+		$value = get_object_property( $key, $data );
+	}
+
+	if ( empty( $value ) && ! empty( $default ) ) {
+		$value = $default;
+	}
+
+	return $value;
+}
+
+/**
+ * Get a property from an array.
+ *
+ * @param  string $key The name of the property to retrieve
+ * @param  array $data The array to retrieve the property for.
+ * @return mixed
+ */
+function get_array_property( $key, $data ) {
+	if ( ! isset( $data[ $key ] ) ) {
+		return null;
+	}
+
+	return $data[ $key ];
+}
+
+/**
+ * Get a property from an object.
+ *
+ * @param  string $key The name of the property to retrieve
+ * @param  object $data The object to retrieve the property for.
+ * @return mixed
+ */
+function get_object_property( $key, $data ) {
+	if ( ! isset( $data->$key ) ) {
+		return null;
+	}
+
+	return $data->$key;
+}
