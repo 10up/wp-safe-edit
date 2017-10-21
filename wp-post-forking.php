@@ -21,5 +21,12 @@ define( 'FORKIT_PLUGIN_FILE', __FILE__ );
 // Include the autoloader.
 require_once __DIR__ . '/vendor/autoload.php';
 
-// Set up the plugin.
-\TenUp\PostForking\Plugin::get_instance();
+try {
+
+	// Set up the plugin.
+	\TenUp\PostForking\Plugin::get_instance();
+
+} catch ( Exception $e ) {
+	// Log all uncaught exceptions.
+	trigger_error( $e->getMessage(), E_USER_WARNING );
+}
