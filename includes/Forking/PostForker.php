@@ -5,6 +5,7 @@ use \Exception;
 use \InvalidArgumentException;
 use \WP_Error;
 
+use \TenUp\PostForking\Posts;
 use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Posts\Statuses\DraftForkStatus;
 
@@ -29,20 +30,11 @@ class PostForker {
 
 			$forked_post_id = $this->fork_post( $post );
 
-			if ( is_wp_error( $forked_post_id ) ) {
-				throw new Exception(
-					'Post could not be forked: ' . $forked_post_id->get_error_message()
-				);
-			}
-
 			if ( true !== Helpers\is_valid_post_id( $forked_post_id ) ) {
 				throw new Exception(
 					'Post could not be forked.'
 				);
 			}
-
-			$this->fork_post_meta( $post, $forked_post_id );
-			$this->fork_post_terms( $post, $forked_post_id );
 
 			do_action( 'post_forking_post_forked', $forked_post_id, $post );
 
@@ -59,16 +51,75 @@ class PostForker {
 	/**
 	 * Copy the post meta from the original post to the forked post.
 	 *
-	 * @param  int|\WP_Post $post_id The original post ID or object
+	 * @param  int|\WP_Post $post The original post ID or object
 	 * @param  int|\WP_Post $forked_post The forked post ID or object
-	 * @return boolean
+	 * @return int|boolean The number of post meta rows copied if successful; false if not.
 	 */
-	public function fork_post_meta( $post_id, $forked_post ) {
-		$merger = $this->get_merge_executor();
+	public function copy_post_meta( $post, $forked_post ) {
+		$post        = Helpers\get_post( $post );
+		$forked_post = Helpers\get_post( $forked_post );
+
+		if (
+			true !== Helpers\is_post( $post ) ||
+			true !== Helpers\is_post( $forked_post )
+		) {
+			throw new InvalidArgumentException(
+				'Could not fork post meta because the posts given were not valid.'
+			);
+		}
 
 		$result = Helpers\clear_post_meta( $forked_post ); // Clear any existing meta data first to prevent duplicate rows for the same meta keys.
 
-		$this->copy_post_meta( $post_id, $fork_id );
+		$result = Helpers\copy_post_meta( $post, $forked_post );
+
+		return $result;
+	}
+
+	/**
+	 * Copy the taxonomy terms from the original post to the forked post.
+	 *
+	 * @param  int|\WP_Post $post The original post ID or object
+	 * @param  int|\WP_Post $forked_post The forked post ID or object
+	 * @return int|boolean The number of taxonomy terms copied to the destination post if successful; false if not.
+	 */
+	public function copy_post_terms( $post, $forked_post ) {
+		$post        = Helpers\get_post( $post );
+		$forked_post = Helpers\get_post( $forked_post );
+
+		if (
+			true !== Helpers\is_post( $post ) ||
+			true !== Helpers\is_post( $forked_post )
+		) {
+			throw new InvalidArgumentException(
+				'Could not fork post terms because the posts given were not valid.'
+			);
+		}
+
+		$post_type  = get_post_type( $post );
+		$taxonomies = get_object_taxonomies( $post_type, 'names' );
+		$count      = 0;
+
+		if ( empty( $taxonomies ) || ! is_array( $taxonomies ) ) {
+			return false;
+		}
+
+		foreach ( $taxonomies as $taxonomy ) {
+			$terms = wp_get_object_terms(
+				$post->ID,
+				$taxonomy,
+				array( 'fields' => 'ids' )
+			);
+
+			if ( empty( $terms ) ) {
+				continue;
+			}
+
+			wp_set_object_terms( $forked_post->ID, $terms, $taxonomy, false );
+
+			$count += count( $terms );
+		}
+
+		return $count;
 	}
 
 	/**
@@ -88,6 +139,21 @@ class PostForker {
 
 		$forked_post = $this->prepare_forked_post_data( $post );
 		$forked_post_id = wp_insert_post( $forked_post, true );
+
+		if ( is_wp_error( $forked_post_id ) ) {
+			throw new Exception(
+				'Post could not be forked: ' . $forked_post_id->get_error_message()
+			);
+		}
+
+		if ( true !== Helpers\is_valid_post_id( $forked_post_id ) ) {
+			throw new Exception(
+				'Post could not be forked.'
+			);
+		}
+
+		$this->copy_post_meta( $post, $forked_post_id );
+		$this->copy_post_terms( $post, $forked_post_id );
 
 		return $forked_post_id;
 
@@ -161,29 +227,6 @@ class PostForker {
 	 * @return boolean
 	 */
 	public function can_fork( $post ) {
-		if ( true !== Helpers\is_post_or_post_id( $post ) ) {
-			throw new InvalidArgumentException(
-				'Post could not be forked because it is not a valid post object or post ID.'
-			);
-		}
-
-		if ( true === $this->has_fork( $post ) ) {
-			throw new Exception(
-				'Post could not be forked because a previous fork is still being edited.'
-			);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Determine if a post has been forked.
-	 *
-	 * @param  int|\WP_Post $post
-	 * @return boolean
-	 */
-	public function has_fork( $post ) {
-		die( var_dump( 'Implement has_fork()' ) );
-		return false;
+		return true === Posts::post_can_be_forked( $post );
 	}
 }

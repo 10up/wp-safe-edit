@@ -12,13 +12,4 @@ abstract class AbstractForker {
 
 	abstract function has_fork( $object );
 
-	/**
-	 * Get the instance of the wpdb class.
-	 *
-	 * @return \wpdb
-	 */
-	public function get_db() {
-		global $wpdb;
-		return $wpdb;
-	}
 }

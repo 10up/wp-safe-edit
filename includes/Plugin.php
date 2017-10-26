@@ -1,6 +1,7 @@
 <?php
 namespace TenUp\PostForking;
 
+use TenUp\PostForking\Posts;
 use TenUp\PostForking\Posts\Statuses;
 
 class Plugin {
@@ -19,8 +20,42 @@ class Plugin {
 	 */
 	public $statuses;
 
+	/**
+	 * The instance of the Posts class.
+	 *
+	 * @var TenUp\PostForking\Posts
+	 */
+	public $posts;
+
 	public function __construct() {
 		$this->statuses = new Statuses();
+		$this->posts    = new Posts();
+	}
+
+	/**
+	 * Register hooks and actions.
+	 */
+	public function register() {
+		$this->statuses->register();
+		$this->posts->register();
+
+		add_action(
+			'init',
+			[ $this, 'i18n' ]
+		);
+
+		add_action(
+			'init',
+			[ $this, 'init' ]
+		);
+		$post = get_post(1);
+		$post_type = get_post_type_object( $post->post_type );
+
+		// how to handle exceptions in this scenario?
+		echo '<pre>'; var_dump( \TenUp\PostForking\Posts::post_can_be_forked('d') ); echo '</pre>';
+		die( 'ARGH' );
+
+		do_action( 'post_forking_loaded' );
 	}
 
 	/**
@@ -35,25 +70,6 @@ class Plugin {
 		}
 
 		return self::$instance;
-	}
-
-	/**
-	 * Register hooks and actions.
-	 */
-	public function register() {
-		$this->statuses->register();
-
-		add_action(
-			'init',
-			[ $this, 'i18n' ]
-		);
-
-		add_action(
-			'init',
-			[ $this, 'init' ]
-		);
-		die( var_dump( Helpers\get_postmeta_table_name() ) );
-		do_action( 'post_forking_loaded' );
 	}
 
 	/**
