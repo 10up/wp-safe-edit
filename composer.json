@@ -26,7 +26,8 @@
             "TenUp\\PostForking\\": "includes"
         },
         "files": [
-            "includes/functions/helpers.php"
+            "includes/functions/helpers.php",
+            "includes/functions/db-helpers.php"
         ]
     }
 }

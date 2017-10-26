@@ -16,16 +16,16 @@ define( 'FORKIT_VERSION',     '0.1.0' );
 define( 'FORKIT_URL',         plugin_dir_url( __FILE__ ) );
 define( 'FORKIT_PATH',        dirname( __FILE__ ) . '/' );
 define( 'FORKIT_INC',         FORKIT_PATH . 'includes/' );
-define( 'FORKIT_PLUGIN_FILE', __FILE__ );
 
 // Include the autoloader.
 require_once __DIR__ . '/vendor/autoload.php';
 
 try {
+	register_activation_hook( __FILE__, '\TenUp\PostForking\Plugin::activate' );
+	register_deactivation_hook( __FILE__, '\\TenUp\PostForking\Plugin::deactivate' );
 
 	// Set up the plugin.
 	\TenUp\PostForking\Plugin::get_instance();
-
 } catch ( Exception $e ) {
 	// Log all uncaught exceptions.
 	trigger_error( $e->getMessage(), E_USER_WARNING );

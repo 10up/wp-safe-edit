@@ -1,6 +1,8 @@
 <?php
 namespace TenUp\PostForking;
 
+use TenUp\PostForking\Posts\Statuses;
+
 class Plugin {
 
 	/**
@@ -9,6 +11,17 @@ class Plugin {
 	 * @var \TenUp\PostForking\Plugin
 	 */
 	protected static $instance;
+
+	/**
+	 * The instance of the Statuses class.
+	 *
+	 * @var TenUp\PostForking\Posts\Statuses
+	 */
+	public $statuses;
+
+	public function __construct() {
+		$this->statuses = new Statuses();
+	}
 
 	/**
 	 * Get the current instance of the plugin, or instantiate it if needed.
@@ -28,8 +41,7 @@ class Plugin {
 	 * Register hooks and actions.
 	 */
 	public function register() {
-		register_activation_hook( FORKIT_PLUGIN_FILE, [ $this, 'activate' ] );
-		register_deactivation_hook( FORKIT_PLUGIN_FILE, [ $this, 'deactivate' ] );
+		$this->statuses->register();
 
 		add_action(
 			'init',
@@ -40,23 +52,21 @@ class Plugin {
 			'init',
 			[ $this, 'init' ]
 		);
-
+		die( var_dump( Helpers\get_postmeta_table_name() ) );
 		do_action( 'post_forking_loaded' );
 	}
 
 	/**
 	 * Perform plugin activation tasks.
 	 */
-	public function activate() {
-		// First load the init scripts in case any rewrite functionality is being loaded
-		$this->init();
+	public static function activate() {
 		flush_rewrite_rules();
 	}
 
 	/**
 	 * Perform plugin deactivation tasks.
 	 */
-	public function deactivate() {
+	public static function deactivate() {
 
 	}
 

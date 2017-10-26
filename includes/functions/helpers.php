@@ -12,11 +12,21 @@ function get_post( $post ) {
 		$post = \get_post( $post );
 	}
 
-	if ( true !== ( $post instanceof \WP_Post ) ) {
+	if ( true !== is_post( $post )  ) {
 		return null;
 	}
 
 	return $post;
+}
+
+/**
+ * Determine if the object is a post object.
+ *
+ * @param  \WP_Post $post The post object
+ * @return boolean
+ */
+function is_post( $post ) {
+	return true === ( $post instanceof \WP_Post );
 }
 
 /**
@@ -26,13 +36,13 @@ function get_post( $post ) {
  * @return boolean
  */
 function is_post_or_post_id( $post ) {
-	if ( true === ( $post instanceof \WP_Post ) ) {
+	if ( true === is_post( $post ) ) {
 		return true;
 	}
 
 	$post = get_post( $post );
 
-	if ( true === ( $post instanceof \WP_Post ) ) {
+	if ( true === is_post( $post )  ) {
 		return true;
 	}
 
