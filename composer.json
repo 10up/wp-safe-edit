@@ -27,7 +27,9 @@
         },
         "files": [
             "includes/functions/helpers.php",
-            "includes/functions/db-helpers.php"
+            "includes/functions/db-helpers.php",
+            "includes/functions/post-helpers.php",
+            "includes/functions/log-helpers.php"
         ]
     }
 }

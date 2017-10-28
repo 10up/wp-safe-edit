@@ -48,14 +48,16 @@ class Plugin {
 			'init',
 			[ $this, 'init' ]
 		);
-		$post = get_post(1);
-		$post_type = get_post_type_object( $post->post_type );
-
-		// how to handle exceptions in this scenario?
-		echo '<pre>'; var_dump( \TenUp\PostForking\Posts::post_can_be_forked('d') ); echo '</pre>';
-		die( 'ARGH' );
 
 		do_action( 'post_forking_loaded' );
+
+		// FOR TESTING REMOVE ME
+		add_action( 'template_redirect', function() {
+			// $forker = new \TenUp\PostForking\Forking\PostForker();
+			// $forker->fork( get_post( 1 ) );
+			//
+			//echo '<pre>'; var_dump( \TenUp\PostForking\Posts\post_can_be_merged(1) ); echo '</pre>';
+		} );
 	}
 
 	/**

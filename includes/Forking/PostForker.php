@@ -41,6 +41,8 @@ class PostForker {
 			return $forked_post_id;
 
 		} catch ( Exception $e ) {
+			\TenUp\PostForking\Logging\log_exception( $e );
+
 			return new WP_Error(
 				'post_forker',
 				$e->getMessage()
@@ -181,7 +183,7 @@ class PostForker {
 			);
 		}
 
-		$forked_post = $post;
+		$forked_post = \get_post( $post, ARRAY_A ); // Get the post data as an array.
 
 		$excluded_columns = $this->get_columns_to_exclude();
 		foreach ( (array) $excluded_columns as $column ) {
@@ -190,7 +192,7 @@ class PostForker {
 			}
 		}
 
-		$forked_post['post_parent'] = $post->id;
+		$forked_post['post_parent'] = $post->ID;
 		$forked_post['post_status'] = $post_status;
 
 		return $forked_post;
@@ -227,6 +229,6 @@ class PostForker {
 	 * @return boolean
 	 */
 	public function can_fork( $post ) {
-		return true === Posts::post_can_be_forked( $post );
+		return true === \TenUp\PostForking\Posts\post_can_be_forked( $post );
 	}
 }

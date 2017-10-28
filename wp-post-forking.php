@@ -28,5 +28,5 @@ try {
 	\TenUp\PostForking\Plugin::get_instance();
 } catch ( Exception $e ) {
 	// Log all uncaught exceptions.
-	trigger_error( $e->getMessage(), E_USER_WARNING );
+	\TenUp\PostForking\Logging\log_exception( $e );
 }

@@ -22,8 +22,40 @@ class PublishingButtons {
 	}
 
 	public function render_publishing_buttons() {
+		$this->render_open_fork_message();
 		$this->render_fork_post_button();
 		$this->render_merge_post_button();
+	}
+
+	/**
+	 * Render a message letting the user know the post has an open fork pending.
+	 */
+	function render_open_fork_message() {
+		global $post;
+
+		if ( true !== \TenUp\PostForking\Posts\post_supports_forking( $post ) ) {
+			return;
+		}
+
+		$fork = \TenUp\PostForking\Posts\get_open_fork_for_post( $post );
+
+		if ( true !== Helpers\is_post( $fork ) ) {
+			return;
+		}
+
+		$message    = $this->get_fork_exists_message();
+		$link_label = $this->get_edit_fork_label(); ?>
+
+		<div class="pf-fork-exists-message">
+			<?php esc_html_e( $message, 'forkit' ); ?>
+
+			<a
+				href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"
+				class="edit-fork-link">
+				<?php esc_html_e( $link_label, 'forkit' ); ?>
+			</a>
+		</div>
+	<?php
 	}
 
 	/**
@@ -32,16 +64,16 @@ class PublishingButtons {
 	function render_fork_post_button() {
 		global $post;
 
-		if ( true !== $this->post_can_be_forked( $post ) ) {
+		if ( true !== \TenUp\PostForking\Posts\post_can_be_forked( $post ) ) {
 			return;
 		}
 
 		$button_label = $this->get_fork_post_button_label(); ?>
 
-		<div class="pf-fork-post-button">
+		<div class="pf-fork-post-button-wrapper">
 			<a
-				href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"
-				class="revisions-fork button-primary button">
+				href="#"
+				class="pf-fork-post-button button-primary button">
 				<?php esc_html_e( $button_label, 'forkit' ) ?>
 			</a>
 		</div>
@@ -54,7 +86,7 @@ class PublishingButtons {
 	function render_merge_post_button() {
 		global $post;
 
-		if ( true !== $this->post_can_be_merged( $post ) ) {
+		if ( true !== \TenUp\PostForking\Posts\post_can_be_merged( $post ) ) {
 			return;
 		}
 
@@ -62,8 +94,8 @@ class PublishingButtons {
 
 		<div class="pf-merge-post-button">
 			<a
-				href="<?php echo esc_url( get_edit_post_link( $post->ID ) ); ?>"
-				class="revisions-merge button-primary button">
+				href="#"
+				class="pf-merge-post-button button-primary button">
 				<?php esc_html_e( $button_label, 'forkit' ) ?>
 			</a>
 		</div>
@@ -80,30 +112,13 @@ class PublishingButtons {
 		return apply_filters( 'post_forking_merge_post_button_label', $value );
 	}
 
-	function post_can_be_forked( $post ) {
-		$post = Helpers\get_post( $post );
-
-		if (
-			true === Helpers\is_post( $post ) &&
-			true === PostTypeSupport::post_supports_forking( $post ) &&
-			true === Users::current_user_can_fork_post( $post )
-		) {
-			return true;
-		}
-
-		return false;
+	function get_fork_exists_message() {
+		$value = 'A fork of this post has been created. Further edits must be made on the forked version or they will be overwritten when it\'s published.';
+		return apply_filters( 'post_forking_fork_exists_message', $value );
 	}
 
-	function post_can_be_merged( $post ) {
-		$post = Helpers\get_post( $post );
-
-		if (
-			true === Helpers\is_post( $post ) &&
-			true === PostTypeSupport::post_supports_forking( $post )
-		) {
-			return true;
-		}
-
-		return false;
+	function get_edit_fork_label() {
+		$value = 'Edit Fork';
+		return apply_filters( 'post_forking_edit_fork_link_label', $value );
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 namespace TenUp\PostForking\Helpers;
 
+use TenUp\PostForking\Helpers;
+
 /**
  * Delete all post meta data for a post.
  *
@@ -86,7 +88,7 @@ function get_copy_meta_data_insert_sql( $source_post_id, $destination_post_id  )
 	}
 
 	$values    = '';
-	$meta_data = $this->get_all_post_meta_data( $source_post_id );
+	$meta_data = get_all_post_meta_data( $source_post_id );
 
 	if ( empty( $meta_data ) || ! is_array( $meta_data ) ) {
 		return false;

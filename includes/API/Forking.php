@@ -6,6 +6,7 @@ use \WP_REST_Server;
 
 use \TenUp\PostForking\Users;
 use \TenUp\PostForking\Helpers;
+use \TenUp\PostForking\Forking\PostForker;
 
 /**
  * Class to manage forking API endpoints.
@@ -33,11 +34,53 @@ class Forking extends WP_REST_Controller {
 				'args'                => array(
 					'post_id' => array(
 						'required' 			=> true,
-						'validate_callback' => '\TenUp\PostForking\Helpers\is_valid_post_id'
+						'validate_callback' => '\TenUp\PostForking\Helpers\is_valid_post_id',
 					),
 				),
 			)
 		);
+	}
+
+	/**
+	 * Handle API request to fork a post.
+	 *
+	 * @param WP_REST_Request $request The API request.
+	 */
+	public function handle_approve_post_request( \WP_REST_Request $request ) {
+		$parameters = $request->get_params();
+		$post_id    = Helpers\get_property( 'post_id', $parameters );
+
+		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
+			return new \WP_Error(
+				'missing_parameters',
+				'A valid post ID was not provided in the request.',
+				array( 'status' => 400 )
+			);
+		}
+
+		$forker = new PostForker();
+		$result = $forker->fork( $post_id );
+
+		if ( true === Helpers\is_valid_post_id( $result ) ) {
+			$response = array(
+				'source_post_id' => absint( $post_id ),
+				'fork_post_id'   => absint( $result ),
+			);
+
+			wp_send_json_success( $response );
+		} else {
+			$message = 'Post could not be forked.';
+
+			if ( is_wp_error( $result ) ) {
+				$message = $result->get_error_message();
+			}
+
+			$response = array(
+				'message' => $message,
+			);
+
+			wp_send_json_error( $response );
+		}
 	}
 
 	/**
@@ -53,7 +96,7 @@ class Forking extends WP_REST_Controller {
 			return false;
 		}
 
-		return true === Users::current_user_can_fork_post( $post_id );
+		return true === \TenUp\PostForking\Posts\post_can_be_forked( $post_id );
 	}
 
 	/**
