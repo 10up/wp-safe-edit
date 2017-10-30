@@ -5,6 +5,7 @@ namespace TenUp\PostForking\Posts;
 use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Users;
 use \TenUp\PostForking\Posts\PostTypeSupport;
+use \TenUp\PostForking\API\ForkPostController;
 
 /**
  * Class to manage the publishing buttons to fork and merge posts.
@@ -68,11 +69,16 @@ class PublishingButtons {
 			return;
 		}
 
-		$button_label = $this->get_fork_post_button_label(); ?>
+		$button_label = $this->get_fork_post_button_label();
+		$url          = ForkPostController::get_fork_post_action_url( $post );
+
+		if ( empty( $url ) ) {
+			return;
+		} ?>
 
 		<div class="pf-fork-post-button-wrapper">
 			<a
-				href="#"
+				href="<?php echo esc_url( $url ); ?>"
 				class="pf-fork-post-button button-primary button">
 				<?php esc_html_e( $button_label, 'forkit' ) ?>
 			</a>

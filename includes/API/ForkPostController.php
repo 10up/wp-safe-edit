@@ -1,137 +1,219 @@
 <?php
 namespace TenUp\PostForking\API;
 
-use \WP_REST_Controller;
-use \WP_REST_Server;
+use \Exception;
+use \WP_Error;
 
 use \TenUp\PostForking\Users;
 use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Forking\PostForker;
 
 /**
- * Class to manage PI endpoints for forking posts.
+ * Class to manage requests for forking posts.
  */
-class ForkPostController extends WP_REST_Controller {
+class ForkPostController {
 
-	const ENDPOINT_NAMESPACE = 'post-forking/v1';
-	const FORK_POST_ROUTE    = 'fork-post';
+	const NONCE_ACTION = 'fork_post';
 
 	public function register() {
-		$this->register_routes();
-
 		add_action(
-			'admin_enqueue_scripts',
-			[ $this, 'enqueue_admin_scripts' ]
+			'admin_post_fork_post',
+			array( $this, 'handle_fork_post_request' )
 		);
 	}
 
 	/**
-	 * Register the routes.
+	 * Handle request to fork a post.
 	 */
-	public function register_routes() {
-		$this->register_fork_post_route();
-	}
+	public function handle_fork_post_request() {
+		try {
+			$post_id = $this->get_post_id_from_request();
 
-	public function register_fork_post_route() {
-		register_rest_route(
-			static::ENDPOINT_NAMESPACE,
-			static::FORK_POST_ROUTE,
-			array(
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'handle_fork_post_request' ),
-				'permission_callback' => array( $this, 'validate_fork_post_request' ),
-				'args'                => array(
-					'post_id' => array(
-						'required' 			=> true,
-						'validate_callback' => '\TenUp\PostForking\Helpers\is_valid_post_id',
-					),
-				),
-			)
-		);
-	}
-
-	/**
-	 * Handle API request to fork a post.
-	 *
-	 * @param WP_REST_Request $request The API request.
-	 */
-	public function handle_approve_post_request( \WP_REST_Request $request ) {
-		$parameters = $request->get_params();
-		$post_id    = Helpers\get_property( 'post_id', $parameters );
-
-		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
-			return new \WP_Error(
-				'missing_parameters',
-				'A valid post ID was not provided in the request.',
-				array( 'status' => 400 )
-			);
-		}
-
-		$forker = new PostForker();
-		$result = $forker->fork( $post_id );
-
-		if ( true === Helpers\is_valid_post_id( $result ) ) {
-			$response = array(
-				'source_post_id' => absint( $post_id ),
-				'fork_post_id'   => absint( $result ),
-			);
-
-			wp_send_json_success( $response );
-		} else {
-			$message = 'Post could not be forked.';
-
-			if ( is_wp_error( $result ) ) {
-				$message = $result->get_error_message();
+			if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
+				throw new Exception(
+					'Post could not be forked because the request did not provide a valid post ID.'
+				);
 			}
 
-			$response = array(
-				'message' => $message,
+			if ( true !== $this->is_request_valid() ) {
+				throw new Exception(
+					'Post could not be forked because the request was invalid.'
+				);
+			}
+
+			$forker = new PostForker();
+			$result = $forker->fork( $post_id );
+
+			if ( true === Helpers\is_valid_post_id( $result ) ) {
+				$this->handle_fork_success( $result, $post_id );
+			} else {
+				$this->handle_fork_failure( $post_id, $result );
+			}
+
+		} catch ( Exception $e ) {
+			\TenUp\PostForking\Logging\log_exception( $e );
+
+			$result = new WP_Error(
+				'post_forker',
+				$e->getMessage()
 			);
 
-			wp_send_json_error( $response );
+			$this->handle_fork_failure( $post_id, $result );
 		}
 	}
 
 	/**
-	 * Validate the API request to fork a post.
+	 * Handle a successful fork post request.
 	 *
-	 * @param WP_REST_Request $request The API request.
+	 * @param  int $fork_post_id The post ID of the post fork.
+	 * @param  int $source_post_id The post ID of the post that was forked.
 	 */
-	public function validate_fork_post_request( \WP_REST_Request $request ) {
-		$parameters = $request->get_params();
-		$post_id    = Helpers\get_property( 'post_id', $parameters );
+	public function handle_fork_success( $fork_post_id, $source_post_id ) {
+		do_action( 'post_forking_post_fork_success', $fork_post_id, $source_post_id );
 
-		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
+		if ( true !== $this->should_redirect() ) {
+			return;
+		}
+
+		$url = get_edit_post_link( $fork_post_id, 'nodisplay' );
+		$url = apply_filters( 'post_forking_post_fork_success_redirect_url', $url, $fork_post_id, $source_post_id );
+
+		wp_redirect( $url );
+		exit;
+	}
+
+	/**
+	 * Handle an unsuccessful fork post request.
+	 *
+	 * @param  int $source_post_id The post ID of the post we attempted to fork.
+	 * @param  \WP_Error|mixed $result The result from the fork request, usually a WP_Error.
+	 */
+	public function handle_fork_failure( $source_post_id, $result ) {
+		do_action( 'post_forking_post_fork_failure', $source_post_id, $result );
+
+		if ( true !== $this->should_redirect() ) {
+			return;
+		}
+
+		$message = $this->get_post_forking_failure_message_from_result( $result );
+
+		$url = get_edit_post_link( $source_post_id, 'nodisplay' );
+		$url = add_query_arg( array(
+			'pf_message' => rawurlencode( $message ),
+		), $url );
+
+		$url = apply_filters( 'post_forking_post_fork_failure_redirect_url', $url, $source_post_id, $result );
+
+		wp_redirect( $url );
+		exit;
+	}
+
+	/**
+	 * Get the feedback message for a user when a post could not be forked.
+	 *
+	 * @param  \WP_Error|mixed $result The result from the fork request, usually a WP_Error.
+	 * @return string
+	 */
+	public function get_post_forking_failure_message_from_result( $result ) {
+		$message = 'Post could not be forked.';
+
+		if ( is_wp_error( $result ) ) {
+			$message = $result->get_error_message();
+		}
+
+		return $message;
+	}
+
+	/**
+	 * Determine if the current request should be redirected after success or failure.
+	 *
+	 * @return boolean
+	 */
+	public function should_redirect() {
+		if ( defined( 'PHPUNIT_RUNNER' ) || defined( 'WP_CLI' ) ) {
 			return false;
 		}
 
-		return true === \TenUp\PostForking\Posts\post_can_be_forked( $post_id );
+		return true;
 	}
 
 	/**
-	 * Get the REST API URL to fork a post.
+	 * Get the post ID from a request.
 	 *
-	 * @return string
+	 * @return int
 	 */
-	public static function get_fork_post_endpoint_url() {
-		return set_url_scheme( rest_url( sprintf(
-			'%s/%s',
-			static::ENDPOINT_NAMESPACE,
-			static::FORK_POST_ROUTE
-		) ) );
+	public function get_post_id_from_request() {
+		return absint( filter_input( INPUT_GET, 'post_id' ) );
 	}
 
 	/**
-	 * Enqueu and localize admin script.
+	 * Get the nonce a request.
+	 *
+	 * @return int
 	 */
-	public function enqueue_admin_scripts() {
-		wp_localize_script(
-			'post-forking-admin',
-			'ForkPostAPISettings',
-			array(
-				'forkPostURL' => esc_url_raw( static::get_fork_post_endpoint_url() ),
-				'nonce'       => wp_create_nonce( 'wp_rest' ),
+	public function get_nonce_from_request() {
+		return sanitize_text_field(
+			rawurldecode(
+				filter_input( INPUT_GET, 'nonce' )
 			)
 		);
+	}
+
+	/**
+	 * Determine if the request to fork a post is valid.
+	 *
+	 * @return boolean
+	 */
+	public function is_request_valid() {
+		try {
+			$post_id = $this->get_post_id_from_request();
+			$nonce   = $this->get_nonce_from_request();
+
+			if ( false === wp_verify_nonce( $nonce, static::NONCE_ACTION ) ) {
+				throw new Exception(
+					'Post could not be forked because the request nonce was invalid.'
+				);
+			}
+
+			if ( true !== \TenUp\PostForking\Posts\post_can_be_forked( $post_id ) ) {
+				throw new Exception(
+					'Post could not be forked because the post specified in the request was not forkable.'
+				);
+			}
+
+			return true;
+
+		} catch ( Exception $e ) {
+			\TenUp\PostForking\Logging\log_exception( $e );
+
+			return false;
+		}
+	}
+
+	/**
+	 * Get the URL used to fork a post.
+	 *
+	 * @param  int|\WP_Post $post The post to fork
+	 * @return string
+	 */
+	public static function get_fork_post_action_url( $post ) {
+		$post_id = 0;
+
+		if ( Helpers\is_post( $post ) ) {
+			$post_id = $post->ID;
+		} elseif ( Helpers\is_valid_post_id( $post ) ) {
+			$post_id = absint( $post );
+		} else {
+			return '';
+		}
+
+		$url = admin_url( 'admin-post.php' );
+		$url = add_query_arg( array(
+			'action'  => rawurlencode( static::NONCE_ACTION ),
+			'post_id' => absint( $post_id ),
+			'nonce'   => rawurlencode( wp_create_nonce( static::NONCE_ACTION ) ),
+		), $url );
+
+		return $url;
 	}
 }
