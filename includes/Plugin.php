@@ -1,6 +1,7 @@
 <?php
 namespace TenUp\PostForking;
 
+use TenUp\PostForking\API;
 use TenUp\PostForking\Posts;
 use TenUp\PostForking\Posts\Statuses;
 
@@ -27,9 +28,17 @@ class Plugin {
 	 */
 	public $posts;
 
+	/**
+	 * The instance of the Posts class.
+	 *
+	 * @var TenUp\PostForking\API
+	 */
+	public $api;
+
 	public function __construct() {
 		$this->statuses = new Statuses();
 		$this->posts    = new Posts();
+		$this->api      = new API();
 	}
 
 	/**
@@ -38,6 +47,7 @@ class Plugin {
 	public function register() {
 		$this->statuses->register();
 		$this->posts->register();
+		$this->api->register();
 
 		add_action(
 			'init',

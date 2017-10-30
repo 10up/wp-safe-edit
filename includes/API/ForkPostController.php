@@ -9,12 +9,21 @@ use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Forking\PostForker;
 
 /**
- * Class to manage forking API endpoints.
+ * Class to manage PI endpoints for forking posts.
  */
-class Forking extends WP_REST_Controller {
+class ForkPostController extends WP_REST_Controller {
 
 	const ENDPOINT_NAMESPACE = 'post-forking/v1';
 	const FORK_POST_ROUTE    = 'fork-post';
+
+	public function register() {
+		$this->register_routes();
+
+		add_action(
+			'admin_enqueue_scripts',
+			[ $this, 'enqueue_admin_scripts' ]
+		);
+	}
 
 	/**
 	 * Register the routes.
@@ -104,11 +113,25 @@ class Forking extends WP_REST_Controller {
 	 *
 	 * @return string
 	 */
-	public static function get_endpoint_url() {
+	public static function get_fork_post_endpoint_url() {
 		return set_url_scheme( rest_url( sprintf(
 			'%s/%s',
 			static::ENDPOINT_NAMESPACE,
 			static::FORK_POST_ROUTE
 		) ) );
+	}
+
+	/**
+	 * Enqueu and localize admin script.
+	 */
+	public function enqueue_admin_scripts() {
+		wp_localize_script(
+			'post-forking-admin',
+			'ForkPostAPISettings',
+			array(
+				'forkPostURL' => esc_url_raw( static::get_fork_post_endpoint_url() ),
+				'nonce'       => wp_create_nonce( 'wp_rest' ),
+			)
+		);
 	}
 }

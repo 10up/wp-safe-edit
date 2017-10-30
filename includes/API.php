@@ -6,10 +6,6 @@ namespace TenUp\PostForking;
  */
 class API {
 
-	public function __construct() {
-
-	}
-
 	/**
 	 * Register hooks and actions.
 	 */
