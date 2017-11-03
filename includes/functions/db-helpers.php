@@ -66,6 +66,51 @@ function copy_post_meta( $source_post, $destination_post ) {
 }
 
 /**
+ * Copy the taxonomy terms from the original post to the forked post.
+ *
+ * @param  int|\WP_Post $source_post The post ID or object to copy the terms from
+ * @param  int|\WP_Post $destination_post The post ID or object to copy the terms to
+ * @return int|boolean The number of taxonomy terms copied to the destination post if successful; false if not.
+ */
+function copy_post_terms( $source_post, $destination_post ) {
+	$source_post        = Helpers\get_post( $source_post );
+	$destination_post = Helpers\get_post( $destination_post );
+
+	if (
+		true !== Helpers\is_post( $source_post ) ||
+		true !== Helpers\is_post( $destination_post )
+	) {
+		return false;
+	}
+
+	$post_type  = get_post_type( $source_post );
+	$taxonomies = get_object_taxonomies( $post_type, 'names' );
+	$count      = 0;
+
+	if ( empty( $taxonomies ) || ! is_array( $taxonomies ) ) {
+		return false;
+	}
+
+	foreach ( $taxonomies as $taxonomy ) {
+		$terms = wp_get_object_terms(
+			$source_post->ID,
+			$taxonomy,
+			array( 'fields' => 'ids' )
+		);
+
+		if ( empty( $terms ) ) {
+			continue;
+		}
+
+		wp_set_object_terms( $destination_post->ID, $terms, $taxonomy, false );
+
+		$count += count( $terms );
+	}
+
+	return $count;
+}
+
+/**
  * Get the SQL statement to insert post meta fields copied from another post.
  *
  * @param  int $source_post_id The post id to copy the meta data from

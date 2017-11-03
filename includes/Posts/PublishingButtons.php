@@ -6,6 +6,7 @@ use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Users;
 use \TenUp\PostForking\Posts\PostTypeSupport;
 use \TenUp\PostForking\API\ForkPostController;
+use \TenUp\PostForking\API\MergePostController;
 
 /**
  * Class to manage the publishing buttons to fork and merge posts.
@@ -69,19 +70,15 @@ class PublishingButtons {
 			return;
 		}
 
-		$button_label = $this->get_fork_post_button_label();
-		$url          = ForkPostController::get_fork_post_action_url( $post );
-
-		if ( empty( $url ) ) {
-			return;
-		} ?>
+		$button_label = $this->get_fork_post_button_label(); ?>
 
 		<div class="pf-fork-post-button-wrapper">
-			<a
-				href="<?php echo esc_url( $url ); ?>"
-				class="pf-fork-post-button button-primary button">
-				<?php esc_html_e( $button_label, 'forkit' ) ?>
-			</a>
+			<input
+				type="submit"
+				class="button button-primary button-large"
+				id="pf-fork-post-button"
+				value="<?php esc_html_e( $button_label, 'forkit' ) ?>"
+			>
 		</div>
 	<?php
 	}
@@ -101,7 +98,8 @@ class PublishingButtons {
 		<div class="pf-merge-post-button">
 			<a
 				href="#"
-				class="pf-merge-post-button button-primary button">
+				class="button-primary button"
+				id="pf-merge-post-button">
 				<?php esc_html_e( $button_label, 'forkit' ) ?>
 			</a>
 		</div>

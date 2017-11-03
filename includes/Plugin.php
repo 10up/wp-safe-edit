@@ -51,12 +51,17 @@ class Plugin {
 
 		add_action(
 			'init',
-			[ $this, 'i18n' ]
+			array( $this, 'i18n' )
 		);
 
 		add_action(
 			'init',
-			[ $this, 'init' ]
+			array( $this, 'init' )
+		);
+
+		add_action(
+			'admin_enqueue_scripts',
+			array( $this, 'enqueue_admin_scripts' )
 		);
 
 		do_action( 'post_forking_loaded' );
@@ -124,5 +129,23 @@ class Plugin {
 	 */
 	function init() {
 		do_action( 'post_forking_init' );
+	}
+
+	function enqueue_admin_scripts() {
+		$min     = '.min';
+		$version = FORKIT_VERSION;
+
+		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			$min     = '';
+			$version = time();
+		}
+
+		wp_enqueue_script(
+			'forkit_admin',
+			trailingslashit( FORKIT_URL ) . "assets/js/wp-post-forking{$min}.js",
+			array( 'jquery' ),
+			$version,
+			true
+		);
 	}
 }

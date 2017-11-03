@@ -1,11 +1,6 @@
-/**
- * WP Post Forking
+/*! WP Post Forking - v0.1.0
  * https://github.com/10up/post-forking
- *
- * Copyright (c) 2017 Michael Phillips
- * Licensed under the MIT license.
- */
-
+ * Copyright (c) 2017; * Licensed MIT */
 ( function( $, window, undefined ) {
 	'use strict';
 	var form            = null,
