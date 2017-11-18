@@ -13,11 +13,12 @@ use \TenUp\PostForking\Forking\PostMerger;
  */
 class MergePostController {
 
+	const NONCE_NAME   = 'merge_post_nonce';
 	const NONCE_ACTION = 'merge_post';
 
 	public function register() {
 		add_action(
-			'admin_post_merge_post',
+			'post_action_merge_post',
 			array( $this, 'handle_merge_post_request' )
 		);
 	}
@@ -143,7 +144,7 @@ class MergePostController {
 	 * @return int
 	 */
 	public function get_post_id_from_request() {
-		return absint( filter_input( INPUT_GET, 'post_id' ) );
+		return absint( filter_input( INPUT_POST, 'post_ID' ) );
 	}
 
 	/**
@@ -152,11 +153,7 @@ class MergePostController {
 	 * @return int
 	 */
 	public function get_nonce_from_request() {
-		return sanitize_text_field(
-			rawurldecode(
-				filter_input( INPUT_GET, 'nonce' )
-			)
-		);
+		return sanitize_text_field( filter_input( INPUT_POST, static::NONCE_NAME ) );
 	}
 
 	/**
@@ -196,24 +193,24 @@ class MergePostController {
 	 * @param  int|\WP_Post $post The post to merge
 	 * @return string
 	 */
-	public static function get_merge_post_action_url( $post ) {
-		$post_id = 0;
+	// public static function get_merge_post_action_url( $post ) {
+	// 	$post_id = 0;
 
-		if ( Helpers\is_post( $post ) ) {
-			$post_id = $post->ID;
-		} elseif ( Helpers\is_valid_post_id( $post ) ) {
-			$post_id = absint( $post );
-		} else {
-			return '';
-		}
+	// 	if ( Helpers\is_post( $post ) ) {
+	// 		$post_id = $post->ID;
+	// 	} elseif ( Helpers\is_valid_post_id( $post ) ) {
+	// 		$post_id = absint( $post );
+	// 	} else {
+	// 		return '';
+	// 	}
 
-		$url = admin_url( 'admin-post.php' );
-		$url = add_query_arg( array(
-			'action'  => rawurlencode( static::NONCE_ACTION ),
-			'post_id' => absint( $post_id ),
-			'nonce'   => rawurlencode( wp_create_nonce( static::NONCE_ACTION ) ),
-		), $url );
+	// 	$url = admin_url( 'admin-post.php' );
+	// 	$url = add_query_arg( array(
+	// 		'action'  => rawurlencode( static::NONCE_ACTION ),
+	// 		'post_id' => absint( $post_id ),
+	// 		'nonce'   => rawurlencode( wp_create_nonce( static::NONCE_ACTION ) ),
+	// 	), $url );
 
-		return $url;
-	}
+	// 	return $url;
+	// }
 }

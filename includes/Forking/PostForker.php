@@ -67,8 +67,16 @@ class PostForker extends AbstractForker {
 
 			do_action( 'post_forking_before_fork_post', $post );
 
-			$forked_post    = $this->prepare_post_data_for_fork( $post );
-			$forked_post_id = wp_insert_post( $forked_post, true );
+			$post_data      = $_POST;
+			$post_data      = $this->prepare_post_data_for_fork( $post, $post_data );
+
+			if ( ! is_array( $post_data ) || empty( $post_data ) ) {
+				throw new Exception(
+					'Post could not be forked because the post data was invalid.'
+				);
+			}
+
+			$forked_post_id = wp_insert_post( $post_data, true );
 
 			if ( is_wp_error( $forked_post_id ) ) {
 				throw new Exception(
@@ -82,10 +90,7 @@ class PostForker extends AbstractForker {
 				);
 			}
 
-			$this->copy_post_meta( $post, $forked_post_id );
-			$this->copy_post_terms( $post, $forked_post_id );
-
-			do_action( 'post_forking_after_fork_post', $forked_post_id, $post );
+			do_action( 'post_forking_after_fork_post', $forked_post_id, $post, $post_data );
 
 			return $forked_post_id;
 
@@ -183,9 +188,10 @@ class PostForker extends AbstractForker {
 	 * Prepare the post data to be forked.
 	 *
 	 * @param  int|\WP_Post $post The post ID or object we're forking.
+	 * @param  array $post_data Array of post data to use for the fork.
 	 * @return array The post data for the forked post.
 	 */
-	public function prepare_post_data_for_fork( $post ) {
+	public function prepare_post_data_for_fork( $post, $post_data ) {
 		try {
 			$post = Helpers\get_post( $post );
 
@@ -202,19 +208,24 @@ class PostForker extends AbstractForker {
 				);
 			}
 
-			$forked_post_data = $post->to_array(); // Get the post data as an array.
+			// Make sure the post data contains the correct keys for the DB post columns. This is needed in case $_POST data is used where the form fields don't all match the DB columns.
+			$post_data = _wp_translate_postdata( false, $post_data );
 
 			$excluded_columns = $this->get_columns_to_exclude();
 			foreach ( (array) $excluded_columns as $column ) {
-				if ( array_key_exists( $column, $forked_post_data ) ) {
-					unset( $forked_post_data[ $column ] );
+				if ( array_key_exists( $column, $post_data ) ) {
+					unset( $post_data[ $column ] );
 				}
 			}
 
-			$forked_post_data['post_parent'] = $post->ID;
-			$forked_post_data['post_status'] = $post_status;
+			// Double check to make sure we don't include a post ID
+			$post_data['post_ID']     = '';
+			$post_data['ID']          = '';
 
-			return $forked_post_data;
+			$post_data['post_parent'] = $post->ID;
+			$post_data['post_status'] = $post_status;
+
+			return apply_filters( 'post_forking_prepared_post_data_for_fork', $post_data );
 
 		} catch ( Exception $e ) {
 			\TenUp\PostForking\Logging\log_exception( $e );
@@ -235,15 +246,9 @@ class PostForker extends AbstractForker {
 	public function get_columns_to_exclude() {
 		return array(
 			'ID',
-			'post_date',
-			'post_date_gmt',
+			'post_ID',
 			'post_parent',
-			'post_modified',
-			'post_modified_gmt',
-			'guid',
-			'post_category',
-			'tags_input',
-			'tax_input',
+			'post_status',
 		);
 	}
 

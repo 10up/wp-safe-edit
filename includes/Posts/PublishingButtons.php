@@ -79,6 +79,9 @@ class PublishingButtons {
 				id="pf-fork-post-button"
 				value="<?php esc_html_e( $button_label, 'forkit' ) ?>"
 			>
+
+			<?php
+			wp_nonce_field( ForkPostController::NONCE_ACTION, ForkPostController::NONCE_NAME ); ?>
 		</div>
 	<?php
 	}
@@ -95,13 +98,16 @@ class PublishingButtons {
 
 		$button_label = $this->get_merge_post_button_label(); ?>
 
-		<div class="pf-merge-post-button">
-			<a
-				href="#"
-				class="button-primary button"
-				id="pf-merge-post-button">
-				<?php esc_html_e( $button_label, 'forkit' ) ?>
-			</a>
+		<div class="pf-merge-post-button-wrapper">
+			<input
+				type="submit"
+				class="button button-primary button-large"
+				id="pf-merge-post-button"
+				value="<?php esc_html_e( $button_label, 'forkit' ) ?>"
+			>
+
+			<?php
+			wp_nonce_field( MergePostController::NONCE_ACTION, MergePostController::NONCE_NAME ); ?>
 		</div>
 	<?php
 	}

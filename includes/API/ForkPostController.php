@@ -13,6 +13,7 @@ use \TenUp\PostForking\Forking\PostForker;
  */
 class ForkPostController {
 
+	const NONCE_NAME   = 'fork_post_nonce';
 	const NONCE_ACTION = 'fork_post';
 
 	public function register() {
@@ -143,7 +144,7 @@ class ForkPostController {
 	 * @return int
 	 */
 	public function get_post_id_from_request() {
-		return absint( filter_input( INPUT_GET, 'post_id' ) );
+		return absint( filter_input( INPUT_POST, 'post_ID' ) );
 	}
 
 	/**
@@ -152,11 +153,7 @@ class ForkPostController {
 	 * @return int
 	 */
 	public function get_nonce_from_request() {
-		return sanitize_text_field(
-			rawurldecode(
-				filter_input( INPUT_GET, 'nonce' )
-			)
-		);
+		return sanitize_text_field( filter_input( INPUT_POST, static::NONCE_NAME ) );
 	}
 
 	/**
@@ -196,24 +193,24 @@ class ForkPostController {
 	 * @param  int|\WP_Post $post The post to fork
 	 * @return string
 	 */
-	public static function get_fork_post_action_url( $post ) {
-		$post_id = 0;
+	// public static function get_fork_post_action_url( $post ) {
+	// 	$post_id = 0;
 
-		if ( Helpers\is_post( $post ) ) {
-			$post_id = $post->ID;
-		} elseif ( Helpers\is_valid_post_id( $post ) ) {
-			$post_id = absint( $post );
-		} else {
-			return '';
-		}
+	// 	if ( Helpers\is_post( $post ) ) {
+	// 		$post_id = $post->ID;
+	// 	} elseif ( Helpers\is_valid_post_id( $post ) ) {
+	// 		$post_id = absint( $post );
+	// 	} else {
+	// 		return '';
+	// 	}
 
-		$url = admin_url( 'admin-post.php' );
-		$url = add_query_arg( array(
-			'action'  => rawurlencode( static::NONCE_ACTION ),
-			'post_id' => absint( $post_id ),
-			'nonce'   => rawurlencode( wp_create_nonce( static::NONCE_ACTION ) ),
-		), $url );
+	// 	$url = admin_url( 'admin-post.php' );
+	// 	$url = add_query_arg( array(
+	// 		'action'  => rawurlencode( static::NONCE_ACTION ),
+	// 		'post_id' => absint( $post_id ),
+	// 		'nonce'   => rawurlencode( wp_create_nonce( static::NONCE_ACTION ) ),
+	// 	), $url );
 
-		return $url;
-	}
+	// 	return $url;
+	// }
 }
