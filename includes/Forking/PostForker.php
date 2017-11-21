@@ -246,9 +246,10 @@ class PostForker extends AbstractForker {
 	public function get_columns_to_exclude() {
 		return array(
 			'ID',
-			'post_ID',
-			'post_parent',
+			'post_ID', // ID may be specified with this field alternatively.
 			'post_status',
+			'post_name',
+			'guid',
 		);
 	}
 

@@ -66,10 +66,10 @@ class MergePostController {
 	/**
 	 * Handle a successful merge post request.
 	 *
-	 * @param  int $fork_post_id The post ID of the post fork.
-	 * @param  int $source_post_id The post ID of the post that the fork will be merged into.
+	 * @param  int $source_post_id The post ID of the post that the fork was merged into.
+	 * @param  int $fork_post_id The post ID of the fork that was merged into the source post.
 	 */
-	public function handle_merge_success( $fork_post_id, $source_post_id ) {
+	public function handle_merge_success( $source_post_id, $fork_post_id ) {
 		do_action( 'post_forking_post_merge_success', $fork_post_id, $source_post_id );
 
 		if ( true !== $this->should_redirect() ) {
