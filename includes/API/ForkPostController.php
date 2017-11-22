@@ -76,7 +76,13 @@ class ForkPostController {
 			return;
 		}
 
+		$message = $this->get_post_forking_success_message( $fork_post_id, $source_post_id );
+
 		$url = get_edit_post_link( $fork_post_id, 'nodisplay' );
+		$url = add_query_arg( array(
+			'pf_success_message' => rawurlencode( $message ),
+		), $url );
+
 		$url = apply_filters( 'post_forking_post_fork_success_redirect_url', $url, $fork_post_id, $source_post_id );
 
 		wp_redirect( $url );
@@ -100,7 +106,7 @@ class ForkPostController {
 
 		$url = get_edit_post_link( $source_post_id, 'nodisplay' );
 		$url = add_query_arg( array(
-			'pf_message' => rawurlencode( $message ),
+			'pf_error_message' => rawurlencode( $message ),
 		), $url );
 
 		$url = apply_filters( 'post_forking_post_fork_failure_redirect_url', $url, $source_post_id, $result );
@@ -116,13 +122,26 @@ class ForkPostController {
 	 * @return string
 	 */
 	public function get_post_forking_failure_message_from_result( $result ) {
-		$message = 'Post could not be forked.';
+		$message = __( 'Post could not be forked.', 'forkit' );
 
 		if ( is_wp_error( $result ) ) {
 			$message = $result->get_error_message();
 		}
 
-		return $message;
+		return apply_filters( 'post_forking_fork_failure_message', $message, $result );
+	}
+
+	/**
+	 * Get the feedback message for a user when a post was forked.
+	 *
+	 * @param  int|\WP_Post $fork The fork created
+	 * @param  int|\WP_Post $source_post The post the fork was created from
+	 * @return string
+	 */
+	public function get_post_forking_success_message( $fork, $source_post ) {
+		$message = __( 'Fork created successfully. You can edit it below.', 'forkit' );
+
+		return apply_filters( 'post_forking_fork_success_message', $message, $fork, $source_post );
 	}
 
 	/**

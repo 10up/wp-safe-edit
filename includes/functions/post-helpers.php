@@ -5,6 +5,7 @@ use \Exception;
 use \InvalidArgumentException;
 
 use \TenUp\PostForking\Helpers;
+use \TenUp\PostForking\Posts;
 use \TenUp\PostForking\Posts\Statuses\PendingForkStatus;
 use \TenUp\PostForking\Posts\Statuses\DraftForkStatus;
 
@@ -162,10 +163,16 @@ function get_open_fork_for_post( $post ) {
 	$args = array(
 		'post_type'              => 'any',
 		'posts_per_page'         => 1,
-		'post_parent'            => $post_id,
 		'order'                  => 'DESC',
 		'post_status'            => (array) get_open_fork_post_statuses(),
 		'no_found_rows'          => true,
+		'ignore_sticky_posts'    => true,
+		'meta_query'             => array(
+			array(
+				'key'   => Posts::ORIGINAL_POST_ID_META_KEY,
+				'value' => $post_id,
+			),
+		),
 	);
 
 	$fork_query = new \WP_Query( $args );
@@ -190,10 +197,18 @@ function get_source_post_for_fork( $post ) {
 		return null;
 	}
 
+	$original_post_id = get_original_post_id_for_fork( $post );
+
+	if ( true !== Helpers\is_valid_post_id( $original_post_id ) ) {
+		return null;
+	}
+
 	$args = array(
-		'p'              => $post->post_parent,
-		'posts_per_page' => 1,
-		'no_found_rows'  => true,
+		'p'                   => absint( $original_post_id ),
+		'post_type'           => 'any',
+		'posts_per_page'      => 1,
+		'no_found_rows'       => true,
+		'ignore_sticky_posts' => true,
 	);
 
 	$source_query = new \WP_Query( $args );
@@ -280,4 +295,75 @@ function is_open_fork( $post ) {
 	$open_statuses = get_open_fork_post_statuses();
 
 	return in_array( $status, $open_statuses );
+}
+
+/**
+ * Save the original post ID for a fork.
+ *
+ * @param int|\WP_Post $forked_post The fork
+ * @param int|\WP_Post $original_post The original post
+ */
+function set_original_post_id_for_fork( $forked_post, $original_post ) {
+	try {
+		$forked_post_id   = $forked_post;
+		$original_post_id = $original_post;
+
+		if ( true === Helpers\is_post( $forked_post ) ) {
+			$forked_post_id = $forked_post->ID;
+		}
+
+		if ( true === Helpers\is_post( $original_post ) ) {
+			$original_post_id = $original_post->ID;
+		}
+
+		if (
+			true !== Helpers\is_valid_post_id( $forked_post_id ) ||
+			true !== Helpers\is_valid_post_id( $original_post_id )
+		) {
+			throw new Exception(
+				'Could not set the original post ID for a fork because the fork or original post were invalid.'
+			);
+		}
+
+		add_post_meta(
+			absint( $forked_post_id ),
+			Posts::ORIGINAL_POST_ID_META_KEY,
+			absint( $original_post_id ),
+			true
+		);
+
+	} catch ( \Exception $e ) {
+		return false;
+	}
+}
+
+/**
+ * Get the original post ID for a fork.
+ *
+ * @param  int|\WP_Post $forked_post The fork
+ *
+ * @return int
+ */
+function get_original_post_id_for_fork( $forked_post ) {
+	try {
+		if ( true === Helpers\is_post( $forked_post ) ) {
+			$forked_post = $forked_post->ID;
+		}
+
+		if ( true !== Helpers\is_valid_post_id( $forked_post ) ) {
+			throw new Exception(
+				'Could not get the original post ID for a fork because the fork was invalid.'
+			);
+		}
+
+		return get_post_meta(
+			absint( $forked_post ),
+			Posts::ORIGINAL_POST_ID_META_KEY,
+			true
+		);
+
+	} catch ( \Exception $e ) {
+		return false;
+	}
+
 }

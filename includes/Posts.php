@@ -6,11 +6,14 @@ use \InvalidArgumentException;
 
 use \TenUp\PostForking\Posts\PublishingButtons;
 use \TenUp\PostForking\Posts\Statuses;
+use \TenUp\PostForking\Posts\Notices;
 
 /**
  * Class to manage post integrations.
  */
 class Posts {
+
+	const ORIGINAL_POST_ID_META_KEY = 'post-forking-original-post-id';
 
 	/**
 	 * Instance of the PublishingButtons class;
@@ -19,8 +22,24 @@ class Posts {
 	 */
 	public $publishing_buttons;
 
+	/**
+	 * Instance of the Statuses class;
+	 *
+	 * @var \TenUp\PostForking\Posts\Statuses
+	 */
+	public $statuses;
+
+	/**
+	 * Instance of the Notices class;
+	 *
+	 * @var \TenUp\PostForking\Posts\Notices
+	 */
+	public $notices;
+
 	public function __construct() {
 		$this->publishing_buttons = new PublishingButtons();
+		$this->statuses           = new Statuses();
+		$this->notices            = new Notices();
 	}
 
 	/**
@@ -28,6 +47,8 @@ class Posts {
 	 */
 	public function register() {
 		$this->publishing_buttons->register();
+		$this->statuses->register();
+		$this->notices->register();
 
 		add_filter(
 			'wp_insert_post_data',

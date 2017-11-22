@@ -180,7 +180,6 @@ class PostMerger extends AbstractMerger  {
 			}
 
 			$post_data['ID']          = $source_post->ID;
-			$post_data['post_parent'] = Helpers\get_property( 'post_parent', $source_post );
 			$post_data['post_status'] = Helpers\get_property( 'post_status', $source_post );
 
 			return $post_data;

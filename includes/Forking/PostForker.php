@@ -90,6 +90,8 @@ class PostForker extends AbstractForker {
 				);
 			}
 
+			\TenUp\PostForking\Posts\set_original_post_id_for_fork( $forked_post_id, $post->ID );
+
 			do_action( 'post_forking_after_fork_post', $forked_post_id, $post, $post_data );
 
 			return $forked_post_id;
@@ -221,8 +223,6 @@ class PostForker extends AbstractForker {
 			// Double check to make sure we don't include a post ID
 			$post_data['post_ID']     = '';
 			$post_data['ID']          = '';
-
-			$post_data['post_parent'] = $post->ID;
 			$post_data['post_status'] = $post_status;
 
 			return apply_filters( 'post_forking_prepared_post_data_for_fork', $post_data );

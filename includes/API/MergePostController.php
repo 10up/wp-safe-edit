@@ -76,7 +76,13 @@ class MergePostController {
 			return;
 		}
 
+		$message = $this->get_post_merge_success_message( $source_post_id, $fork_post_id );
+
 		$url = get_edit_post_link( $source_post_id, 'nodisplay' );
+		$url = add_query_arg( array(
+			'pf_success_message' => rawurlencode( $message ),
+		), $url );
+
 		$url = apply_filters( 'post_forking_post_merge_success_redirect_url', $url, $fork_post_id, $source_post_id );
 
 		wp_redirect( $url );
@@ -100,7 +106,7 @@ class MergePostController {
 
 		$url = get_edit_post_link( $fork_post_id, 'nodisplay' );
 		$url = add_query_arg( array(
-			'pf_message' => rawurlencode( $message ),
+			'pf_error_message' => rawurlencode( $message ),
 		), $url );
 
 		$url = apply_filters( 'post_forking_post_merge_failure_redirect_url', $url, $fork_post_id, $result );
@@ -116,13 +122,26 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_failure_message_from_result( $result ) {
-		$message = 'Post could not be merged.';
+		$message = __( 'Post could not be merged.', 'forkit' );
 
 		if ( is_wp_error( $result ) ) {
 			$message = $result->get_error_message();
 		}
 
-		return $message;
+		return apply_filters( 'post_forking_merge_failure_message', $message, $result );
+	}
+
+	/**
+	 * Get the feedback message for a user when a fork was merged into its source post.
+	 *
+	 * @param  int|\WP_Post $source_post The post the fork was merged into
+	 * @param  int|\WP_Post $fork The fork that was merged into its source post
+	 * @return string
+	 */
+	public function get_post_merge_success_message( $source_post, $fork ) {
+		$message = __( 'Fork merged successfully.', 'forkit' );
+
+		return apply_filters( 'post_forking_merge_success_message', $message, $source_post, $fork );
 	}
 
 	/**
