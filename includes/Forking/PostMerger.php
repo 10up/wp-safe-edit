@@ -100,6 +100,9 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
+			$this->copy_post_meta( $fork, $merge_post_id );
+			$this->copy_post_terms( $fork, $merge_post_id );
+
 			$this->archive_forked_post( $fork->ID, $original_post_data );
 
 			clean_post_cache( $source_post->ID );
@@ -217,7 +220,8 @@ class PostMerger extends AbstractMerger  {
 
 			do_action( 'post_forking_before_merge_post_meta', $source_post, $forked_post );
 
-			$result = Helpers\copy_post_meta( $forked_post, $source_post );
+			$excluded_keys = $this->get_meta_keys_to_exclude();
+			$result = Helpers\copy_post_meta( $forked_post, $source_post, $excluded_keys );
 
 			do_action( 'post_forking_after_merge_post_meta', $source_post, $forked_post, $result );
 
@@ -333,6 +337,17 @@ class PostMerger extends AbstractMerger  {
 			'post_status',
 			'post_name',
 			'guid',
+		);
+	}
+
+	/**
+	 * Get the meta keys to exclude when copying meta data from the fork to the source post.
+	 *
+	 * @return array
+	 */
+	public function get_meta_keys_to_exclude() {
+		return array(
+			Posts::ORIGINAL_POST_ID_META_KEY
 		);
 	}
 

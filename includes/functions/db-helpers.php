@@ -40,9 +40,10 @@ SQL;
  *
  * @param  int|\WP_Post $source_post The post to copy the meta data from
  * @param  int|\WP_Post $destination_post The post to copy the meta data to
+ * @param  array $excluded_keys Array of meta keys to ignore
  * @return int|boolean The number of rows inserted if successful; false if not.
  */
-function copy_post_meta( $source_post, $destination_post ) {
+function copy_post_meta( $source_post, $destination_post, $excluded_keys = array() ) {
 	global $wpdb;
 
 	$source_post      = Helpers\get_post( $source_post );
@@ -55,7 +56,7 @@ function copy_post_meta( $source_post, $destination_post ) {
 		return false;
 	}
 
-	$query = get_copy_meta_data_insert_sql( $source_post->ID, $destination_post->ID );
+	$query = get_copy_meta_data_insert_sql( $source_post->ID, $destination_post->ID, $excluded_keys );
 
 	if ( empty( $query ) ) {
 		return false;
@@ -115,9 +116,10 @@ function copy_post_terms( $source_post, $destination_post ) {
  *
  * @param  int $source_post_id The post id to copy the meta data from
  * @param  int $destination_post_id The post id to copy the meta data to
+ * @param  array $excluded_keys Array of meta keys to ignore
  * @return string|boolean The SQL statement if successful; false if not.
  */
-function get_copy_meta_data_insert_sql( $source_post_id, $destination_post_id  ) {
+function get_copy_meta_data_insert_sql( $source_post_id, $destination_post_id, $excluded_keys = array()  ) {
 	global $wpdb;
 
 	if (
@@ -143,6 +145,10 @@ function get_copy_meta_data_insert_sql( $source_post_id, $destination_post_id  )
 		$meta_key = Helpers\get_property( 'meta_key', $field );
 
 		if ( empty( $meta_key ) ) {
+			continue;
+		}
+
+		if ( in_array( $meta_key, (array) $excluded_keys ) ) {
 			continue;
 		}
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace TenUp\PostForking;
+namespace TenUp\PostForking\Posts;
 
 /**
  * Class to manage permissions.

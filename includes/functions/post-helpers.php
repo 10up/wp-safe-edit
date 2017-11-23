@@ -6,6 +6,8 @@ use \InvalidArgumentException;
 
 use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Posts;
+use \TenUp\PostForking\Posts\Statuses;
+use \TenUp\PostForking\Posts\PostTypeSupport;
 use \TenUp\PostForking\Posts\Statuses\PendingForkStatus;
 use \TenUp\PostForking\Posts\Statuses\DraftForkStatus;
 
@@ -298,6 +300,19 @@ function is_open_fork( $post ) {
 }
 
 /**
+ * Determine if a post is a fork (any valid fork status).
+ *
+ * @param  int|\WP_Post $post
+ * @return boolean
+ */
+function is_fork( $post ) {
+	$status         = get_post_status( $post );
+	$valid_statuses = (array) Statuses::get_valid_fork_post_statuses();
+
+	return in_array( $post->post_status, $valid_statuses );
+}
+
+/**
  * Save the original post ID for a fork.
  *
  * @param int|\WP_Post $forked_post The fork
@@ -365,5 +380,13 @@ function get_original_post_id_for_fork( $forked_post ) {
 	} catch ( \Exception $e ) {
 		return false;
 	}
+}
 
+/**
+ * Get an array of post types that support forking.
+ *
+ * @return array
+ */
+function get_forkable_post_types() {
+	return get_post_types_by_support( PostTypeSupport::FORKING_FEATURE_NAME );
 }

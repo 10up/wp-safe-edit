@@ -7,6 +7,7 @@ use \InvalidArgumentException;
 use \TenUp\PostForking\Posts\PublishingButtons;
 use \TenUp\PostForking\Posts\Statuses;
 use \TenUp\PostForking\Posts\Notices;
+use \TenUp\PostForking\Posts\ArchivedForks;
 
 /**
  * Class to manage post integrations.
@@ -36,10 +37,18 @@ class Posts {
 	 */
 	public $notices;
 
+	/**
+	 * Instance of the ArchivedForks class;
+	 *
+	 * @var \TenUp\PostForking\Posts\ArchivedForks
+	 */
+	public $archived_forks;
+
 	public function __construct() {
 		$this->publishing_buttons = new PublishingButtons();
 		$this->statuses           = new Statuses();
 		$this->notices            = new Notices();
+		$this->archived_forks     = new ArchivedForks();
 	}
 
 	/**
@@ -49,6 +58,7 @@ class Posts {
 		$this->publishing_buttons->register();
 		$this->statuses->register();
 		$this->notices->register();
+		$this->archived_forks->register();
 
 		add_filter(
 			'wp_insert_post_data',

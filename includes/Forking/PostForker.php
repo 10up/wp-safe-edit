@@ -90,6 +90,9 @@ class PostForker extends AbstractForker {
 				);
 			}
 
+			$this->copy_post_meta( $post, $forked_post_id );
+			$this->copy_post_terms( $post, $forked_post_id );
+
 			\TenUp\PostForking\Posts\set_original_post_id_for_fork( $forked_post_id, $post->ID );
 
 			do_action( 'post_forking_after_fork_post', $forked_post_id, $post, $post_data );
