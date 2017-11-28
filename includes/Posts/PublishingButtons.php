@@ -4,6 +4,7 @@ namespace TenUp\PostForking\Posts;
 
 use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Users;
+use \TenUp\PostForking\Posts;
 use \TenUp\PostForking\Posts\PostTypeSupport;
 use \TenUp\PostForking\API\ForkPostController;
 use \TenUp\PostForking\API\MergePostController;
@@ -28,6 +29,7 @@ class PublishingButtons {
 		$this->render_view_source_post_message();
 		$this->render_fork_post_button();
 		$this->render_merge_post_button();
+		$this->alter_publishing_buttons();
 	}
 
 	/**
@@ -36,11 +38,11 @@ class PublishingButtons {
 	function render_open_fork_message() {
 		global $post;
 
-		if ( true !== \TenUp\PostForking\Posts\post_supports_forking( $post ) ) {
+		if ( true !== Posts\post_type_supports_forking( $post ) ) {
 			return;
 		}
 
-		$fork = \TenUp\PostForking\Posts\get_open_fork_for_post( $post );
+		$fork = Posts\get_open_fork_for_post( $post );
 
 		if ( true !== Helpers\is_post( $fork ) ) {
 			return;
@@ -67,11 +69,11 @@ class PublishingButtons {
 	function render_view_source_post_message() {
 		global $post;
 
-		if ( true !== \TenUp\PostForking\Posts\is_open_fork( $post ) ) {
+		if ( true !== Posts\is_open_fork( $post ) ) {
 			return;
 		}
 
-		$source_post = \TenUp\PostForking\Posts\get_source_post_for_fork( $post );
+		$source_post = Posts\get_source_post_for_fork( $post );
 
 		if ( true !== Helpers\is_post( $source_post ) ) {
 			return;
@@ -98,7 +100,7 @@ class PublishingButtons {
 	function render_fork_post_button() {
 		global $post;
 
-		if ( true !== \TenUp\PostForking\Posts\post_can_be_forked( $post ) ) {
+		if ( true !== Posts\post_can_be_forked( $post ) ) {
 			return;
 		}
 
@@ -124,7 +126,7 @@ class PublishingButtons {
 	function render_merge_post_button() {
 		global $post;
 
-		if ( true !== \TenUp\PostForking\Posts\post_can_be_merged( $post ) ) {
+		if ( true !== Posts\post_can_be_merged( $post ) ) {
 			return;
 		}
 
@@ -142,6 +144,42 @@ class PublishingButtons {
 			wp_nonce_field( MergePostController::NONCE_ACTION, MergePostController::NONCE_NAME ); ?>
 		</div>
 	<?php
+	}
+
+	public function alter_publishing_buttons() {
+		if ( true !== $this->should_hide_wp_publish_buttons() ) {
+			return;
+		} ?>
+
+		<style>
+			#publishing-action {
+				display: none !important;
+			}
+		</style>
+
+	<?php
+	}
+
+	public function should_hide_wp_publish_buttons() {
+		global $post;
+
+		$value = false;
+
+		if (
+			true !== Helpers\is_post( $post ) ||
+			true !== Posts\post_type_supports_forking( $post )
+		) {
+			return false;
+		}
+
+		if (
+			Posts\post_has_open_fork( $post ) ||
+			Posts\is_fork( $post )
+		) {
+			$value = true;
+		}
+
+		return $value;
 	}
 
 	function get_fork_post_button_label() {

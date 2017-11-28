@@ -27,7 +27,7 @@ function post_can_be_forked( $post ) {
 			);
 		}
 
-		if ( true !== post_supports_forking( $post ) ) {
+		if ( true !== post_type_supports_forking( $post ) ) {
 			throw new Exception(
 				'Post cannot be forked because the post type does not support forking.'
 			);
@@ -80,7 +80,7 @@ function post_can_be_merged( $post ) {
 			);
 		}
 
-		if ( true !== post_supports_forking( $post ) ) {
+		if ( true !== post_type_supports_forking( $post ) ) {
 			throw new Exception(
 				'Post cannot be merged because the post type does not support forking.'
 			);
@@ -270,7 +270,7 @@ function get_source_post_for_fork( $post ) {
  * @param  int|\WP_Post $post
  * @return boolean
  */
-function post_supports_forking( $post ) {
+function post_type_supports_forking( $post ) {
 	$post_type = get_post_type( $post );
 
 	return true === post_type_supports( $post_type, \TenUp\PostForking\Posts\PostTypeSupport::FORKING_FEATURE_NAME );
