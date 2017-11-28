@@ -122,7 +122,7 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_failure_message_from_result( $result ) {
-		$message = __( 'Post could not be merged.', 'forkit' );
+		$message = __( 'Fork could not be published.', 'forkit' );
 
 		if ( is_wp_error( $result ) ) {
 			$message = $result->get_error_message();
