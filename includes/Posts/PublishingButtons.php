@@ -30,6 +30,7 @@ class PublishingButtons {
 		$this->render_fork_post_button();
 		$this->render_merge_post_button();
 		$this->alter_publishing_buttons();
+		$this->alter_status_field();
 	}
 
 	/**
@@ -160,6 +161,20 @@ class PublishingButtons {
 	<?php
 	}
 
+	public function alter_status_field() {
+		if ( true !== $this->should_hide_wp_status_field() ) {
+			return;
+		} ?>
+
+		<style>
+			.misc-pub-post-status {
+				display: none !important;
+			}
+		</style>
+
+	<?php
+	}
+
 	public function should_hide_wp_publish_buttons() {
 		global $post;
 
@@ -176,6 +191,25 @@ class PublishingButtons {
 			Posts\post_has_open_fork( $post ) ||
 			Posts\is_fork( $post )
 		) {
+			$value = true;
+		}
+
+		return $value;
+	}
+
+	public function should_hide_wp_status_field() {
+		global $post;
+
+		$value = false;
+
+		if (
+			true !== Helpers\is_post( $post ) ||
+			true !== Posts\post_type_supports_forking( $post )
+		) {
+			return false;
+		}
+
+		if ( Posts\is_fork( $post ) ) {
 			$value = true;
 		}
 

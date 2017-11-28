@@ -139,7 +139,7 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_success_message( $source_post, $fork ) {
-		$message = __( 'Fork merged successfully.', 'forkit' );
+		$message = __( 'Fork published successfully.', 'forkit' );
 
 		return apply_filters( 'post_forking_merge_success_message', $message, $source_post, $fork );
 	}
