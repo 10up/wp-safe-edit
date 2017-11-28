@@ -205,31 +205,4 @@ class ForkPostController {
 			return false;
 		}
 	}
-
-	/**
-	 * Get the URL used to fork a post.
-	 *
-	 * @param  int|\WP_Post $post The post to fork
-	 * @return string
-	 */
-	// public static function get_fork_post_action_url( $post ) {
-	// 	$post_id = 0;
-
-	// 	if ( Helpers\is_post( $post ) ) {
-	// 		$post_id = $post->ID;
-	// 	} elseif ( Helpers\is_valid_post_id( $post ) ) {
-	// 		$post_id = absint( $post );
-	// 	} else {
-	// 		return '';
-	// 	}
-
-	// 	$url = admin_url( 'admin-post.php' );
-	// 	$url = add_query_arg( array(
-	// 		'action'  => rawurlencode( static::NONCE_ACTION ),
-	// 		'post_id' => absint( $post_id ),
-	// 		'nonce'   => rawurlencode( wp_create_nonce( static::NONCE_ACTION ) ),
-	// 	), $url );
-
-	// 	return $url;
-	// }
 }
