@@ -8,6 +8,7 @@ use \TenUp\PostForking\Posts\PublishingButtons;
 use \TenUp\PostForking\Posts\Statuses;
 use \TenUp\PostForking\Posts\Notices;
 use \TenUp\PostForking\Posts\ArchivedForks;
+use \TenUp\PostForking\Posts\Trash;
 
 /**
  * Class to manage post integrations.
@@ -44,11 +45,19 @@ class Posts {
 	 */
 	public $archived_forks;
 
+	/**
+	 * Instance of the Trash class;
+	 *
+	 * @var \TenUp\PostForking\Posts\Trash
+	 */
+	public $trash;
+
 	public function __construct() {
 		$this->publishing_buttons = new PublishingButtons();
 		$this->statuses           = new Statuses();
 		$this->notices            = new Notices();
 		$this->archived_forks     = new ArchivedForks();
+		$this->trash              = new Trash();
 	}
 
 	/**
@@ -59,6 +68,7 @@ class Posts {
 		$this->statuses->register();
 		$this->notices->register();
 		$this->archived_forks->register();
+		$this->trash->register();
 
 		add_filter(
 			'wp_insert_post_data',

@@ -187,6 +187,48 @@ function get_open_fork_for_post( $post ) {
 }
 
 /**
+ * Get the WP_Query object for all forks (open and archived) for a post.
+ *
+ * @param  int|\WP_Post $post
+ * @param  array $query_args Args to pass to WP_Query
+ * @return \WP_Query|null
+ */
+function get_all_forks_for_post( $post, $query_args = array() ) {
+	$post_id = 0;
+
+	if ( Helpers\is_post( $post ) ) {
+		$post_id = $post->ID;
+	} elseif ( Helpers\is_valid_post_id( $post ) ) {
+		$post_id = absint( $post );
+	}
+
+	if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
+		return null;
+	}
+
+	$args = array(
+		'post_type'              => 'any',
+		'post_status'            => (array) Statuses::get_valid_fork_post_statuses(),
+		'no_found_rows'          => true,
+		'ignore_sticky_posts'    => true,
+		'meta_query'             => array(
+			array(
+				'key'   => Posts::ORIGINAL_POST_ID_META_KEY,
+				'value' => $post_id,
+			),
+		),
+	);
+
+	if ( ! empty( $query_args ) && is_array( $query_args ) ) {
+		$args = array_merge( $args, $query_args );
+	}
+
+	$fork_query = new \WP_Query( $args );
+
+	return $fork_query;
+}
+
+/**
  * Get the source post for a fork.
  *
  * @param  int|\WP_Post $post
