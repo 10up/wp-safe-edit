@@ -268,7 +268,7 @@ class PublishingButtons {
 	}
 
 	function get_fork_post_button_label() {
-		$value = 'Fork';
+		$value = 'Create Fork';
 		return apply_filters( 'post_forking_fork_post_button_label', $value );
 	}
 

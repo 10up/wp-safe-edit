@@ -5,21 +5,17 @@
  * Copyright (c) 2017 Michael Phillips
  * Licensed under the MIT license.
  */
-
 .pf-view-source-post-message,
 .pf-fork-exists-message,
 .pf-viewing-archived-fork-message {
-	margin-bottom: 10px;
-}
+  margin-bottom: 10px; }
 
 .pf-fork-post-button-wrapper,
 .pf-merge-post-button-wrapper {
-	float: right;
-	line-height: 23px;
-	clear: both;
-	margin-bottom: 10px;
-}
+  float: right;
+  line-height: 23px;
+  clear: both;
+  margin-bottom: 10px; }
 
 #publishing-action {
-	clear: both;
-}
+  clear: both; }

@@ -64,6 +64,11 @@ class Plugin {
 			array( $this, 'enqueue_admin_scripts' )
 		);
 
+		add_action(
+			'admin_enqueue_scripts',
+			array( $this, 'enqueue_admin_styles' )
+		);
+
 		do_action( 'post_forking_loaded' );
 	}
 
@@ -138,6 +143,23 @@ class Plugin {
 			array( 'jquery' ),
 			$version,
 			true
+		);
+	}
+
+	function enqueue_admin_styles() {
+		$min     = '.min';
+		$version = FORKIT_VERSION;
+
+		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			$min     = '';
+			$version = time();
+		}
+
+		wp_enqueue_style(
+			'forkit_admin',
+			trailingslashit( FORKIT_URL ) . "assets/css/wp-post-forking{$min}.css",
+			array(),
+			$version
 		);
 	}
 }
