@@ -4,6 +4,9 @@ namespace TenUp\PostForking\Posts;
 
 use TenUp\PostForking\Helpers;
 use TenUp\PostForking\Posts;
+use TenUp\PostForking\Posts\Statuses\DraftForkStatus;
+use TenUp\PostForking\Posts\Statuses\PendingForkStatus;
+use TenUp\PostForking\Posts\Statuses\ArchivedForkStatus;
 
 /**
  * Class to manage trashing/deleting.
@@ -19,6 +22,12 @@ class Trash {
 		add_action(
 			'untrashed_post',
 			array( $this, 'handle_untrashed_post' )
+		);
+
+		add_filter(
+			'the_title',
+			array( $this, 'filter_admin_post_list_title' ),
+			10, 2
 		);
 	}
 
@@ -53,7 +62,7 @@ class Trash {
 		$forks_query = Posts\get_all_forks_for_post(
 			$post_id,
 			array(
-				'posts_per_page' => 500 // An adequite, but hopefully safe, max
+				'posts_per_page' => 500 // A safe, but hopefully adequate max.
 			)
 		);
 
@@ -75,5 +84,56 @@ class Trash {
 		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
 			return;
 		}
+	}
+
+	/**
+	 * Alter the post title for forks shown in the admin trash post list.
+	 *
+	 * @param  string $title The psot title
+	 * @param  int $id The post ID
+	 * @return string The post title
+	 */
+	public function filter_admin_post_list_title( $title, $id ) {
+		global $pagenow;
+
+		if (
+			! is_admin() ||
+			'edit.php' !== $pagenow ||
+			'trash' !== sanitize_text_field( filter_input( INPUT_GET, 'post_status' ) ) // Only alter the post title when viewing the trash, since forks to not show up on the other list views.
+		) {
+			return $title;
+		}
+
+		$prefix = '';
+		$previous_status = get_post_meta( $id, '_wp_trash_meta_status', true );
+
+		switch ( $previous_status ) {
+			case DraftForkStatus::get_name():
+			case PendingForkStatus::get_name():
+				$prefix = __( 'fork', 'forkit' );
+				break;
+
+			case ArchivedForkStatus::get_name():
+				$prefix = __( 'archived fork', 'forkit' );
+				break;
+
+			default:
+				$prefix = '';
+				break;
+		}
+
+		$prefix = apply_filters( 'post_forking_admin_post_title_prefix', $prefix, $title, $id );
+
+		if ( empty( $prefix ) ) {
+			return $title;
+		}
+
+		$title = sprintf(
+			'%s (%s)',
+			$title,
+			$prefix
+		);
+
+		return $title;
 	}
 }
