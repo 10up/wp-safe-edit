@@ -25,6 +25,7 @@ class PublishingButtons {
 
 	public function render_publishing_buttons() {
 		$this->render_open_fork_message();
+		$this->render_view_source_post_message();
 		$this->render_fork_post_button();
 		$this->render_merge_post_button();
 	}
@@ -54,6 +55,37 @@ class PublishingButtons {
 			<a
 				href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"
 				class="edit-fork-link">
+				<?php esc_html_e( $link_label, 'forkit' ); ?>
+			</a>
+		</div>
+	<?php
+	}
+
+	/**
+	 * Render a message letting the user know they're editing a fork and can view the source post.
+	 */
+	function render_view_source_post_message() {
+		global $post;
+
+		if ( true !== \TenUp\PostForking\Posts\is_open_fork( $post ) ) {
+			return;
+		}
+
+		$source_post = \TenUp\PostForking\Posts\get_source_post_for_fork( $post );
+
+		if ( true !== Helpers\is_post( $source_post ) ) {
+			return;
+		}
+
+		$message    = $this->get_editing_fork_message();
+		$link_label = $this->get_view_source_post_label(); ?>
+
+		<div class="pf-view-source-post-message">
+			<?php esc_html_e( $message, 'forkit' ); ?>
+
+			<a
+				href="<?php echo esc_url( get_edit_post_link( $source_post->ID ) ); ?>"
+				class="view-source-post-link">
 				<?php esc_html_e( $link_label, 'forkit' ); ?>
 			</a>
 		</div>
@@ -118,7 +150,7 @@ class PublishingButtons {
 	}
 
 	function get_merge_post_button_label() {
-		$value = 'Merge & Publish';
+		$value = 'Publish';
 		return apply_filters( 'post_forking_merge_post_button_label', $value );
 	}
 
@@ -127,8 +159,18 @@ class PublishingButtons {
 		return apply_filters( 'post_forking_fork_exists_message', $value );
 	}
 
+	function get_editing_fork_message() {
+		$value = 'You\'re viewing a fork created from another post. Changes you make here will be reflected on the source post when you publish.';
+		return apply_filters( 'post_editing_fork_message', $value );
+	}
+
 	function get_edit_fork_label() {
-		$value = 'Edit Fork';
+		$value = 'Edit fork';
 		return apply_filters( 'post_forking_edit_fork_link_label', $value );
+	}
+
+	function get_view_source_post_label() {
+		$value = 'View source post';
+		return apply_filters( 'post_forking_view_source_post_link_label', $value );
 	}
 }

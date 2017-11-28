@@ -109,8 +109,11 @@ class Trash {
 
 		switch ( $previous_status ) {
 			case DraftForkStatus::get_name():
+				$prefix = __( 'draft fork', 'forkit' );
+				break;
+
 			case PendingForkStatus::get_name():
-				$prefix = __( 'fork', 'forkit' );
+				$prefix = __( 'pending fork', 'forkit' );
 				break;
 
 			case ArchivedForkStatus::get_name():
