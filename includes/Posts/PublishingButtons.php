@@ -26,11 +26,14 @@ class PublishingButtons {
 
 	public function render_publishing_buttons() {
 		$this->render_open_fork_message();
+		$this->render_archived_fork_message();
 		$this->render_view_source_post_message();
+
 		$this->render_fork_post_button();
 		$this->render_merge_post_button();
+
 		$this->alter_publishing_buttons();
-		$this->alter_status_field();
+		$this->alter_publishing_fields();
 	}
 
 	/**
@@ -84,6 +87,37 @@ class PublishingButtons {
 		$link_label = $this->get_view_source_post_label(); ?>
 
 		<div class="pf-view-source-post-message">
+			<?php esc_html_e( $message, 'forkit' ); ?>
+
+			<a
+				href="<?php echo esc_url( get_edit_post_link( $source_post->ID ) ); ?>"
+				class="view-source-post-link">
+				<?php esc_html_e( $link_label, 'forkit' ); ?>
+			</a>
+		</div>
+	<?php
+	}
+
+	/**
+	 * Render a message letting the user know they're viewing an archived fork and can view the source post.
+	 */
+	function render_archived_fork_message() {
+		global $post;
+
+		if ( true !== Posts\is_archived_fork( $post ) ) {
+			return;
+		}
+
+		$source_post = Posts\get_source_post_for_fork( $post );
+
+		if ( true !== Helpers\is_post( $source_post ) ) {
+			return;
+		}
+
+		$message    = $this->get_viewing_archived_fork_message();
+		$link_label = $this->get_view_source_post_label(); ?>
+
+		<div class="pf-viewing-archived-fork-message">
 			<?php esc_html_e( $message, 'forkit' ); ?>
 
 			<a
@@ -161,8 +195,26 @@ class PublishingButtons {
 	<?php
 	}
 
+	public function alter_publishing_fields() {
+		global $post;
+
+		$this->alter_status_field();
+
+		if ( Posts\is_archived_fork( $post ) ) { ?>
+			<style>
+				#delete-action,
+				#publishing-action,
+				#misc-publishing-actions,
+				#minor-publishing-actions {
+					display: none !important;
+				}
+			</style>
+		<?php
+		}
+	}
+
 	public function alter_status_field() {
-		if ( true !== $this->should_hide_wp_status_field() ) {
+		if ( true == $this->should_hide_wp_status_field() ) {
 			return;
 		} ?>
 
@@ -233,7 +285,12 @@ class PublishingButtons {
 
 	function get_editing_fork_message() {
 		$value = 'You\'re viewing a fork created from another post. Changes you make here will be reflected on the source post when you publish.';
-		return apply_filters( 'post_editing_fork_message', $value );
+		return apply_filters( 'post_forking_editing_fork_message', $value );
+	}
+
+	function get_viewing_archived_fork_message() {
+		$value = 'You\'re viewing an archived fork created from another post. Further changes must be made on the source post.';
+		return apply_filters( 'post_forking_viewing_archived_fork_message', $value );
 	}
 
 	function get_edit_fork_label() {

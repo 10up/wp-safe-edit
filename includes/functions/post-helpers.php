@@ -10,6 +10,7 @@ use \TenUp\PostForking\Posts\Statuses;
 use \TenUp\PostForking\Posts\PostTypeSupport;
 use \TenUp\PostForking\Posts\Statuses\PendingForkStatus;
 use \TenUp\PostForking\Posts\Statuses\DraftForkStatus;
+use TenUp\PostForking\Posts\Statuses\ArchivedForkStatus;
 
 /**
  * Determine if a post can be forked.
@@ -339,6 +340,18 @@ function is_open_fork( $post ) {
 	$open_statuses = get_open_fork_post_statuses();
 
 	return in_array( $status, $open_statuses );
+}
+
+/**
+ * Determine if a post is an archived fork.
+ *
+ * @param  int|\WP_Post $post
+ * @return boolean
+ */
+function is_archived_fork( $post ) {
+	$status= get_post_status( $post );
+
+	return $status === ArchivedForkStatus::get_name();
 }
 
 /**
