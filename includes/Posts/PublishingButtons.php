@@ -202,7 +202,6 @@ class PublishingButtons {
 
 		if ( Posts\is_archived_fork( $post ) ) { ?>
 			<style>
-				#delete-action,
 				#publishing-action,
 				#misc-publishing-actions,
 				#minor-publishing-actions {
