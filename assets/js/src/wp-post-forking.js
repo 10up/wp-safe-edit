@@ -10,6 +10,7 @@
 	'use strict';
 	var form            = null,
 	    formActionField = null,
+	    formSpinner     = null,
 	    postID          = 0,
 	    blogID          = 0;
 
@@ -40,6 +41,10 @@
 	function getPostFormActionField() {
 		if ( ! formActionField ) {
 			var form = getPostForm();
+
+			if ( ! form ) {
+				return;
+			}
 
 			formActionField = form.querySelector('input[name=action]');
 		}
@@ -94,6 +99,40 @@
 
 		var key = 'wp-autosave-' + blogID;
 		window.sessionStorage.setItem( key, JSON.stringify( data ) );
+	}
+
+	function getPostFormSpinner() {
+		if ( ! formSpinner ) {
+			var form = getPostForm();
+
+			if ( ! form ) {
+				return;
+			}
+
+			formSpinner = form.querySelector('.pf-spinner');
+		}
+
+		return formSpinner;
+	}
+
+	function showPostFormSpinner() {
+		var spinner = getPostFormSpinner();
+
+		if ( ! spinner ) {
+			return;
+		}
+
+		$( spinner ).addClass( 'is-active' );
+	}
+
+	function hidePostFormSpinner() {
+		var spinner = getPostFormSpinner();
+
+		if ( ! spinner ) {
+			return;
+		}
+
+		$( spinner ).removeClass( 'is-active' );
 	}
 
 	var ForkPostSupport = function () {
@@ -194,6 +233,8 @@
 
 			// Clear the stored session data for this post to prevent the "The backup of this post in your browser is different from the version below" notice from showing after you fork a post.
 			clearStoredPostData();
+
+			showPostFormSpinner();
 		},
 	};
 
@@ -238,6 +279,8 @@
 
 			// Clear the stored session data for this post to prevent the "The backup of this post in your browser is different from the version below" notice from showing after you merge a post.
 			clearStoredPostData();
+
+			showPostFormSpinner();
 		},
 	};
 

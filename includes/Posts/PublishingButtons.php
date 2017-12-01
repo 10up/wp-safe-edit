@@ -145,7 +145,8 @@ class PublishingButtons {
 
 		$button_label = $this->get_fork_post_button_label(); ?>
 
-		<div class="pf-fork-post-button-wrapper">
+		<div class="pf-actions pf-fork-post-button-wrapper">
+			<span class="pf-spinner spinner"></span>
 			<input
 				type="submit"
 				class="button button-primary button-large"
@@ -171,7 +172,8 @@ class PublishingButtons {
 
 		$button_label = $this->get_merge_post_button_label(); ?>
 
-		<div class="pf-merge-post-button-wrapper">
+		<div class="pf-actions pf-merge-post-button-wrapper">
+			<span class="pf-spinner spinner"></span>
 			<input
 				type="submit"
 				class="button button-primary button-large"
