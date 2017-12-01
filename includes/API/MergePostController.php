@@ -4,7 +4,6 @@ namespace TenUp\PostForking\API;
 use \Exception;
 use \WP_Error;
 
-use \TenUp\PostForking\Users;
 use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Forking\PostMerger;
 
@@ -122,7 +121,7 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_failure_message_from_result( $result ) {
-		$message = __( 'Fork could not be published.', 'forkit' );
+		$message = __( 'The changes from the fork could not be published for some reason.', 'forkit' );
 
 		if ( is_wp_error( $result ) ) {
 			$message = $result->get_error_message();
@@ -139,7 +138,7 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_success_message( $source_post, $fork ) {
-		$message = __( 'Fork published successfully.', 'forkit' );
+		$message = __( 'Changes from the fork have been published to the source post below.', 'forkit' );
 
 		return apply_filters( 'post_forking_merge_success_message', $message, $source_post, $fork );
 	}

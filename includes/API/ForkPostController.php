@@ -4,7 +4,6 @@ namespace TenUp\PostForking\API;
 use \Exception;
 use \WP_Error;
 
-use \TenUp\PostForking\Users;
 use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Forking\PostForker;
 
@@ -139,7 +138,7 @@ class ForkPostController {
 	 * @return string
 	 */
 	public function get_post_forking_success_message( $fork, $source_post ) {
-		$message = __( 'Fork created successfully; you can edit it below.', 'forkit' );
+		$message = __( 'A fork has been created and you can edit it below.', 'forkit' );
 
 		return apply_filters( 'post_forking_fork_success_message', $message, $fork, $source_post );
 	}

@@ -3,7 +3,6 @@
 namespace TenUp\PostForking\Posts;
 
 use \TenUp\PostForking\Helpers;
-use \TenUp\PostForking\Users;
 use \TenUp\PostForking\Posts;
 use \TenUp\PostForking\Posts\PostTypeSupport;
 use \TenUp\PostForking\API\ForkPostController;
@@ -218,7 +217,7 @@ class PublishingButtons {
 	}
 
 	public function alter_status_field() {
-		if ( true == $this->should_hide_wp_status_field() ) {
+		if ( true !== $this->should_hide_wp_status_field() ) {
 			return;
 		} ?>
 
@@ -320,7 +319,7 @@ class PublishingButtons {
 	}
 
 	function get_merge_post_button_label() {
-		$value = 'Publish';
+		$value = 'Publish Changes';
 		return apply_filters( 'post_forking_merge_post_button_label', $value );
 	}
 

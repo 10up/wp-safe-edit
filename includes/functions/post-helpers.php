@@ -291,7 +291,7 @@ function current_user_can_fork_post( $post ) {
 	}
 
 	$post_type = get_post_type_object( $post->post_type );
-	$privilege = $post_type->cap->edit_posts;
+	$privilege = $post_type->cap->edit_published_posts;
 
 	$value = current_user_can( $privilege );
 	return true === apply_filters( 'post_forking_current_user_can_merge_post', $value, $post );
