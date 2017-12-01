@@ -19,3 +19,6 @@
 
 #publishing-action {
   clear: both; }
+
+#pf-lock-dialog .post-locked-message {
+  margin: 25px; }

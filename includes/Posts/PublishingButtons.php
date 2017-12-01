@@ -22,6 +22,11 @@ class PublishingButtons {
 			'post_submitbox_start',
 			array( $this, 'render_publishing_buttons' )
 		);
+
+		add_action(
+			'admin_footer',
+			array( $this, 'render_lock_dialog' )
+		);
 	}
 
 	public function render_publishing_buttons() {
@@ -265,6 +270,48 @@ class PublishingButtons {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Render a dialog letting the user know the psot is locked because of an open fork exists.
+	 */
+	function render_lock_dialog() {
+		global $post, $pagenow;
+
+		if ( 'post.php' !== $pagenow ) {
+			return;
+		}
+
+		if ( true !== Posts\post_type_supports_forking( $post ) ) {
+			return;
+		}
+
+		$fork = Posts\get_open_fork_for_post( $post );
+
+		if ( true !== Helpers\is_post( $fork ) ) {
+			return;
+		}
+
+		$message    = $this->get_fork_exists_message();
+		$link_label = $this->get_edit_fork_label(); ?>
+
+		<div id="pf-lock-dialog" class="notification-dialog-wrap">
+			<div class="notification-dialog-background"></div>
+			<div class="notification-dialog">
+				<div class="post-locked-message">
+					<p class="currently-editing wp-tab-first" tabindex="0">
+						<?php esc_html_e( $message, 'forkit' ); ?>
+					</p>
+
+					<p>
+						<a class="button" href="<?php echo esc_url( wp_get_referer() ) ?>"><?php esc_html_e( 'Go back', 'forkit' ) ?></a>
+
+						<a class="button button-primary wp-tab-last" href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"><?php esc_html_e( $link_label, 'forkit' ); ?></a>
+					</p>
+				</div>
+			</div>
+		</div>
+	<?php
 	}
 
 	function get_fork_post_button_label() {

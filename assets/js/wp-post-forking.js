@@ -101,7 +101,12 @@
 
 	ForkPostSupport.prototype = {
 		init: function () {
-			this.setupEvents();
+			var self = this;
+
+			$(document).ready(function () {
+				self.setupEvents();
+				self.setupLockDialog();
+			});
 		},
 
 		setupEvents: function() {
@@ -112,6 +117,54 @@
 					this.didClickForkButton, this
 				));
 			}
+		},
+
+		setupLockDialog: function() {
+			this.lockDialog = this.getLockDialog();
+
+			if ( this.lockDialog ) {
+				var $notificationEl = $( this.lockDialog ).find('.notification-dialog');
+
+				if ( 0 === $notificationEl.length ) {
+					return;
+				}
+
+				$notificationEl.find( '.wp-tab-first' ).focus();
+
+				$( '.notification-dialog-background' ).on( 'click', function(e) {
+					$notificationEl.find( '.wp-tab-first' ).focus();
+					e.preventDefault();
+				});
+
+				// Contain focus inside the dialog. If the dialog is shown, focus the first item. This code borrowed from WordPress's post lock diagram.
+				$notificationEl.on( 'keydown', function(e) {
+					// Don't do anything unless [tab] is pressed.
+					if ( e.which !== 9 ) {
+						return;
+					}
+
+					var $target = $( e.target );
+
+					// [shift] + [tab] on first tab cycles back to last tab.
+					if ( $target.hasClass( 'wp-tab-first' ) && e.shiftKey ) {
+						$( this ).find( '.wp-tab-last' ).focus();
+						e.preventDefault();
+
+					// [tab] on last tab cycles back to first tab.
+					} else if ( $target.hasClass( 'wp-tab-last' ) && ! e.shiftKey ) {
+						$( this ).find( '.wp-tab-first' ).focus();
+						e.preventDefault();
+					}
+				}).filter( ':visible' ).find( '.wp-tab-first' ).focus();
+			}
+		},
+
+		getLockDialog: function() {
+			if ( ! this.lockDialog ) {
+				this.lockDialog = document.getElementById('pf-lock-dialog');
+			}
+
+			return this.lockDialog;
 		},
 
 		getForkButton: function() {
@@ -141,7 +194,11 @@
 
 	MergePostSupport.prototype = {
 		init: function () {
-			this.setupEvents();
+			var self = this;
+
+			$(document).ready(function () {
+				self.setupEvents();
+			});
 		},
 
 		setupEvents: function() {
@@ -179,12 +236,10 @@
 		},
 	};
 
-	$(document).ready(function () {
-		var forkPostSupport = new ForkPostSupport();
-		forkPostSupport.init();
+	var forkPostSupport = new ForkPostSupport();
+	forkPostSupport.init();
 
-		var mergePostSupport = new MergePostSupport();
-		mergePostSupport.init();
-	});
+	var mergePostSupport = new MergePostSupport();
+	mergePostSupport.init();
 
 } )( jQuery, this );
