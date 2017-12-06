@@ -60,7 +60,7 @@ class ArchivedForks {
 			return;
 		}
 
-		$query = $this->get_archived_forks_query( $post );
+		$query = Posts\get_archived_forks_query( $post );
 
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
@@ -84,42 +84,5 @@ class ArchivedForks {
 			<p><?php echo esc_html_e( 'No archived forks available', 'forkit' ); ?></p>
 		<?php
 		}
-	}
-
-	/**
-	 * Get the archived forks query for a post.
-	 *
-	 * @param int|\WP_Post $post The post to get the archived forks for
-	 * @param array $query_args Array of query args
-	 *
-	 * @return \WP_Query|null
-	 */
-	function get_archived_forks_query( $post, $query_args = array() ) {
-		$post = Helpers\get_post( $post );
-
-		if ( true !== Helpers\is_post( $post ) ) {
-			return null;
-		}
-
-		$args = array(
-			'post_type'           => $post->post_type,
-			'posts_per_page'      => 10,
-			'paged'               => 1,
-			'post_status'         => ArchivedForkStatus::NAME,
-			'no_found_rows'       => true,
-			'ignore_sticky_posts' => true,
-			'meta_query'          => array(
-				array(
-					'key'   => Posts::ORIGINAL_POST_ID_META_KEY,
-					'value' => $post->ID,
-				),
-			),
-		);
-
-		if ( is_array( $query_args ) || ! empty( $query_args ) ) {
-			$args = array_merge( $args, $query_args );
-		}
-
-		return new \WP_Query( $args );
 	}
 }

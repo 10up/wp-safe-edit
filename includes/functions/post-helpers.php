@@ -445,3 +445,55 @@ function get_original_post_id_for_fork( $forked_post ) {
 function get_forkable_post_types() {
 	return get_post_types_by_support( PostTypeSupport::FORKING_FEATURE_NAME );
 }
+
+/**
+ * Get the archived forks query for a post.
+ *
+ * @param int|\WP_Post $post The post to get the archived forks for
+ * @param array $query_args Array of query args
+ *
+ * @return \WP_Query|null
+ */
+function get_archived_forks_query( $post, $query_args = array() ) {
+	$post = Helpers\get_post( $post );
+
+	if ( true !== Helpers\is_post( $post ) ) {
+		return null;
+	}
+
+	$args = array(
+		'post_type'           => $post->post_type,
+		'posts_per_page'      => 10,
+		'post_status'         => ArchivedForkStatus::NAME,
+		'no_found_rows'       => true,
+		'ignore_sticky_posts' => true,
+		'meta_query'          => array(
+			array(
+				'key'   => Posts::ORIGINAL_POST_ID_META_KEY,
+				'value' => $post->ID,
+			),
+		),
+	);
+
+	if ( is_array( $query_args ) || ! empty( $query_args ) ) {
+		$args = array_merge( $args, $query_args );
+	}
+
+	return new \WP_Query( $args );
+}
+
+/**
+ * Determine if a post has at least one archived fork.
+ *
+ * @param int|\WP_Post $post The post to get the archived forks for
+ * @return boolean
+ */
+function post_has_archived_forks( $post ) {
+	$archived_forks_query = get_archived_forks_query( $post, array( 'posts_per_page' => 1 ) );
+
+	if ( $archived_forks_query->have_posts() ) {
+		return true;
+	}
+
+	return false;
+}
