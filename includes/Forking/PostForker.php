@@ -9,6 +9,7 @@ use \TenUp\PostForking\Posts;
 use \TenUp\PostForking\Helpers;
 use \TenUp\PostForking\Forking\AbstractForker;
 use \TenUp\PostForking\Posts\Statuses\DraftForkStatus;
+use \TenUp\PostForking\Posts\Statuses\ArchivedForkStatus;
 
 /**
  * Class to manage post forking.
@@ -23,10 +24,22 @@ class PostForker extends AbstractForker {
 	 */
 	public function fork( $post ) {
 		try {
+			$post = Helpers\get_post( $post );
+			if ( true !== Helpers\is_post( $post ) ) {
+				throw new InvalidArgumentException(
+					'Could not fork post because it\'s not valid or could not be found.'
+				);
+			}
+
 			if ( true !== $this->can_fork( $post ) ) {
 				throw new Exception(
 					'Post could not be forked.'
 				);
+			}
+
+			// If a post doesn't have any archived forks, back up the original post data as the first archived fork.
+			if ( false === Posts\post_has_archived_forks( $post ) ) {
+				$archived_fork_post_id = $this->archive_post( $post );
 			}
 
 			$forked_post_id = $this->fork_post( $post );
@@ -53,9 +66,10 @@ class PostForker extends AbstractForker {
 	 * Fork post data.
 	 *
 	 * @param  int|\WP_Post $post
+	 * @param  array $post_data Array of post data to use when forking a post.
 	 * @return int|\WP_Error The forked post ID, if successful.
 	 */
-	public function fork_post( $post ) {
+	public function fork_post( $post, $post_data = array() ) {
 		try {
 			$post = Helpers\get_post( $post );
 
@@ -67,8 +81,11 @@ class PostForker extends AbstractForker {
 
 			do_action( 'post_forking_before_fork_post', $post );
 
-			$post_data      = $_POST;
-			$post_data      = $this->prepare_post_data_for_fork( $post, $post_data );
+			if ( empty( $post_data ) || ! is_array( $post_data ) ) {
+				$post_data = $_POST;
+			}
+
+			$post_data = $this->prepare_post_data_for_fork( $post, $post_data );
 
 			if ( ! is_array( $post_data ) || empty( $post_data ) ) {
 				throw new Exception(
@@ -98,6 +115,44 @@ class PostForker extends AbstractForker {
 			do_action( 'post_forking_after_fork_post', $forked_post_id, $post, $post_data );
 
 			return $forked_post_id;
+
+		} catch ( Exception $e ) {
+			\TenUp\PostForking\Logging\log_exception( $e );
+
+			return new WP_Error(
+				'post_forker',
+				$e->getMessage()
+			);
+		}
+	}
+
+	/**
+	 * Archive a post as a fork.
+	 *
+	 * @param  int|\WP_Post $post
+	 * @return int|\WP_Error The archived post ID, if successful.
+	 */
+	public function archive_post( $post ) {
+		try {
+			$post = Helpers\get_post( $post );
+			if ( true !== Helpers\is_post( $post ) ) {
+				throw new InvalidArgumentException(
+					'Could not create an archived fork of a post because it\'s not valid or could not be found.'
+				);
+			}
+
+			$post_data                   = $post->to_array();
+			$post_data['pf_post_status'] = ArchivedForkStatus::get_name(); // Set the post status that should override the default fork post status.
+
+			$post_id = $this->fork_post( $post, $post_data );
+
+			if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
+				throw new Exception(
+					'Could not back up the original post data as an archived fork.'
+				);
+			}
+
+			return $post_id;
 
 		} catch ( Exception $e ) {
 			\TenUp\PostForking\Logging\log_exception( $e );
@@ -206,7 +261,12 @@ class PostForker extends AbstractForker {
 				);
 			}
 
-			$post_status = $this->get_draft_fork_post_status();
+			if ( ! empty( $post_data['pf_post_status'] ) ) {
+				$post_status = $post_data['pf_post_status'];
+			} else {
+				$post_status = $this->get_draft_fork_post_status();
+			}
+
 			if ( empty( $post_status ) ) {
 				throw new Exception(
 					'Could not prepare the forked post data because the correct post status could not be determined.'

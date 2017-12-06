@@ -491,7 +491,7 @@ function get_archived_forks_query( $post, $query_args = array() ) {
 function post_has_archived_forks( $post ) {
 	$archived_forks_query = get_archived_forks_query( $post, array( 'posts_per_page' => 1 ) );
 
-	if ( $archived_forks_query->have_posts() ) {
+	if ( true === $archived_forks_query->have_posts() ) {
 		return true;
 	}
 

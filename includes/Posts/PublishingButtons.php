@@ -277,11 +277,21 @@ class PublishingButtons {
 	 * Render a dialog letting the user know the psot is locked because of an open fork exists.
 	 */
 	function render_lock_dialog() {
-		global $post, $pagenow;
+		global $pagenow;
 
 		if ( 'post.php' !== $pagenow ) {
 			return;
 		}
+
+		// For some reason, the global $post variable isn't available in the admin_footer action, so we need to get it from the query string.
+		$post_id = 0;
+		if ( isset( $_GET['post'] ) ) {
+			$post_id = absint( $_GET['post'] );
+		} elseif ( isset( $_POST['post_ID'] ) ) {
+			$post_id = absint( $_POST['post_ID'] );
+		}
+
+		$post = Helpers\get_post( $post_id );
 
 		if ( true !== Posts\post_type_supports_forking( $post ) ) {
 			return;
