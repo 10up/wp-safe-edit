@@ -1,5 +1,5 @@
 <?php
-namespace TenUp\PostForking\Helpers;
+namespace TenUp\WPSafeEdit\Helpers;
 
 /**
  * Get a post object, but only if the ID is not zero. Use this instead of WordPress' get_post( $post ) when you don't want the global post returned when a valid post or post ID isn't given.

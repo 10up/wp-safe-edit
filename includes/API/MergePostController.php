@@ -1,11 +1,11 @@
 <?php
-namespace TenUp\PostForking\API;
+namespace TenUp\WPSafeEdit\API;
 
 use \Exception;
 use \WP_Error;
 
-use \TenUp\PostForking\Helpers;
-use \TenUp\PostForking\Forking\PostMerger;
+use \TenUp\WPSafeEdit\Helpers;
+use \TenUp\WPSafeEdit\Forking\PostMerger;
 
 /**
  * Class to manage requests for merging posts.
@@ -51,7 +51,7 @@ class MergePostController {
 			}
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			$result = new WP_Error(
 				'post_merger',
@@ -121,7 +121,7 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_failure_message_from_result( $result ) {
-		$message = __( 'The changes from the fork could not be published for some reason.', 'forkit' );
+		$message = __( 'The changes from the fork could not be published for some reason.', 'wp-safe-edit' );
 
 		if ( is_wp_error( $result ) ) {
 			$message = $result->get_error_message();
@@ -138,7 +138,7 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_success_message( $source_post, $fork ) {
-		$message = __( 'Changes from the fork have been published to the source post below.', 'forkit' );
+		$message = __( 'Changes from the fork have been published to the source post below.', 'wp-safe-edit' );
 
 		return apply_filters( 'post_forking_merge_success_message', $message, $source_post, $fork );
 	}
@@ -190,7 +190,7 @@ class MergePostController {
 				);
 			}
 
-			if ( true !== \TenUp\PostForking\Posts\post_can_be_merged( $post_id ) ) {
+			if ( true !== \TenUp\WPSafeEdit\Posts\post_can_be_merged( $post_id ) ) {
 				throw new Exception(
 					'Post could not be merged because the post specified in the request was not mergable.'
 				);
@@ -199,7 +199,7 @@ class MergePostController {
 			return true;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return false;
 		}

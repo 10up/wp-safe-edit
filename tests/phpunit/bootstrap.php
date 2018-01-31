@@ -26,8 +26,8 @@ if ( ! defined( 'PROJECT' ) ) {
 	define( 'PROJECT', __DIR__ . '/includes/' );
 }
 
-if ( ! defined( 'FORKIT_DIR' ) ) {
-	define( 'FORKIT_DIR', __DIR__ . '/' );
+if ( ! defined( 'WP_SAFE_EDIT_DIR' ) ) {
+	define( 'WP_SAFE_EDIT_DIR', __DIR__ . '/' );
 }
 
 // Place any additional bootstrapping requirements here for PHP Unit.

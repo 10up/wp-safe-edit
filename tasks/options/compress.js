@@ -2,11 +2,11 @@ module.exports = {
 	main: {
 		options: {
 			mode: 'zip',
-			archive: './release/forkit.<%= pkg.version %>.zip'
+			archive: './release/wp-safe-edit.<%= pkg.version %>.zip'
 		},
 		expand: true,
 		cwd: 'release/<%= pkg.version %>/',
 		src: ['**/*'],
-		dest: 'forkit/'
+		dest: 'wp-safe-edit/'
 	}
 };

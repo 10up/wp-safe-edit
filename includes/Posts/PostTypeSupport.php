@@ -1,6 +1,6 @@
 <?php
 
-namespace TenUp\PostForking\Posts;
+namespace TenUp\WPSafeEdit\Posts;
 
 /**
  * Class to manage post type support.

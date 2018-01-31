@@ -1,8 +1,8 @@
 <?php
-namespace TenUp\PostForking;
+namespace TenUp\WPSafeEdit;
 
-use \TenUp\PostForking\API\ForkPostController;
-use \TenUp\PostForking\API\MergePostController;
+use \TenUp\WPSafeEdit\API\ForkPostController;
+use \TenUp\WPSafeEdit\API\MergePostController;
 
 /**
  * Class to manage API endpoints.

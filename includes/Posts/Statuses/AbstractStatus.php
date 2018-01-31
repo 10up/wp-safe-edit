@@ -1,6 +1,6 @@
 <?php
 
-namespace TenUp\PostForking\Posts\Statuses;
+namespace TenUp\WPSafeEdit\Posts\Statuses;
 
 /**
  * Abstract class to manage custom post statuses.

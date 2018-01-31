@@ -1,11 +1,11 @@
 <?php
-namespace TenUp\PostForking\API;
+namespace TenUp\WPSafeEdit\API;
 
 use \Exception;
 use \WP_Error;
 
-use \TenUp\PostForking\Helpers;
-use \TenUp\PostForking\Forking\PostForker;
+use \TenUp\WPSafeEdit\Helpers;
+use \TenUp\WPSafeEdit\Forking\PostForker;
 
 /**
  * Class to manage requests for forking posts.
@@ -51,7 +51,7 @@ class ForkPostController {
 			}
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			$result = new WP_Error(
 				'post_forker',
@@ -121,7 +121,7 @@ class ForkPostController {
 	 * @return string
 	 */
 	public function get_post_forking_failure_message_from_result( $result ) {
-		$message = __( 'Post could not be forked.', 'forkit' );
+		$message = __( 'Post could not be forked.', 'wp-safe-edit' );
 
 		if ( is_wp_error( $result ) ) {
 			$message = $result->get_error_message();
@@ -138,7 +138,7 @@ class ForkPostController {
 	 * @return string
 	 */
 	public function get_post_forking_success_message( $fork, $source_post ) {
-		$message = __( 'A fork has been created and you can edit it below.', 'forkit' );
+		$message = __( 'A fork has been created and you can edit it below.', 'wp-safe-edit' );
 
 		return apply_filters( 'post_forking_fork_success_message', $message, $fork, $source_post );
 	}
@@ -190,7 +190,7 @@ class ForkPostController {
 				);
 			}
 
-			if ( true !== \TenUp\PostForking\Posts\post_can_be_forked( $post_id ) ) {
+			if ( true !== \TenUp\WPSafeEdit\Posts\post_can_be_forked( $post_id ) ) {
 				throw new Exception(
 					'Post could not be forked because the post specified in the request was not forkable.'
 				);
@@ -199,7 +199,7 @@ class ForkPostController {
 			return true;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return false;
 		}

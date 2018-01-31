@@ -1,16 +1,16 @@
 <?php
-namespace TenUp\PostForking\Posts;
+namespace TenUp\WPSafeEdit\Posts;
 
 use \Exception;
 use \InvalidArgumentException;
 
-use \TenUp\PostForking\Helpers;
-use \TenUp\PostForking\Posts;
-use \TenUp\PostForking\Posts\Statuses;
-use \TenUp\PostForking\Posts\PostTypeSupport;
-use \TenUp\PostForking\Posts\Statuses\PendingForkStatus;
-use \TenUp\PostForking\Posts\Statuses\DraftForkStatus;
-use TenUp\PostForking\Posts\Statuses\ArchivedForkStatus;
+use \TenUp\WPSafeEdit\Helpers;
+use \TenUp\WPSafeEdit\Posts;
+use \TenUp\WPSafeEdit\Posts\Statuses;
+use \TenUp\WPSafeEdit\Posts\PostTypeSupport;
+use \TenUp\WPSafeEdit\Posts\Statuses\PendingForkStatus;
+use \TenUp\WPSafeEdit\Posts\Statuses\DraftForkStatus;
+use TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus;
 
 /**
  * Determine if a post can be forked.
@@ -274,7 +274,7 @@ function get_source_post_for_fork( $post ) {
 function post_type_supports_forking( $post ) {
 	$post_type = get_post_type( $post );
 
-	return true === post_type_supports( $post_type, \TenUp\PostForking\Posts\PostTypeSupport::FORKING_FEATURE_NAME );
+	return true === post_type_supports( $post_type, \TenUp\WPSafeEdit\Posts\PostTypeSupport::FORKING_FEATURE_NAME );
 }
 
 /**

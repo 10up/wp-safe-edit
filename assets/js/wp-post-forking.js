@@ -1,5 +1,5 @@
-/*! WP Post Forking - v0.1.0
- * https://github.com/10up/post-forking
+/*! WP Safe Edit - v0.1.0
+ * https://github.com/10up/WP-Safe-Edit
  * Copyright (c) 2017; * Licensed MIT */
 ( function( $, window, undefined ) {
 	'use strict';
@@ -104,7 +104,7 @@
 				return;
 			}
 
-			formSpinner = form.querySelector('.pf-spinner');
+			formSpinner = form.querySelector('.wpse-spinner');
 		}
 
 		return formSpinner;
@@ -200,7 +200,7 @@
 
 		getLockDialog: function() {
 			if ( ! this.lockDialog ) {
-				this.lockDialog = document.getElementById('pf-lock-dialog');
+				this.lockDialog = document.getElementById('wpse-lock-dialog');
 			}
 
 			return this.lockDialog;
@@ -208,7 +208,7 @@
 
 		getForkButton: function() {
 			if ( ! this.forkButton ) {
-				this.forkButton = document.getElementById('pf-fork-post-button');
+				this.forkButton = document.getElementById('wpse-fork-post-button');
 			}
 
 			return this.forkButton;
@@ -254,7 +254,7 @@
 
 		getMergeButton: function() {
 			if ( ! this.mergeButton ) {
-				this.mergeButton = document.getElementById('pf-merge-post-button');
+				this.mergeButton = document.getElementById('wpse-merge-post-button');
 			}
 
 			return this.mergeButton;

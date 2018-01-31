@@ -1,4 +1,4 @@
-=== WP Post Forking ===
+=== WP Safe Edit ===
 Contributors:      Michael Phillips
 Donate link:
 Tags:
@@ -8,7 +8,7 @@ Stable tag:        0.1.0
 License:           MIT
 License URI:       MIT
 
-A WordPress plugin that enables the ability to edit a published post behind the scene, and publish the changes when ready.
+Edit published posts safely behind the scenes and publish the changes when ready.
 
 == Description ==
 
@@ -19,7 +19,7 @@ A WordPress plugin that enables the ability to edit a published post behind the 
 = Manual Installation =
 
 1. Upload the entire `/post-forking` directory to the `/wp-content/plugins/` directory.
-2. Activate WP Post Forking through the 'Plugins' menu in WordPress.
+2. Activate WP Safe Edit through the 'Plugins' menu in WordPress.
 
 == Frequently Asked Questions ==
 

@@ -1,5 +1,5 @@
 <?php
-namespace TenUp\PostForking\Logging;
+namespace TenUp\WPSafeEdit\Logging;
 
 use \Exception;
 

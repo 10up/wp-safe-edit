@@ -1,14 +1,14 @@
 <?php
-namespace TenUp\PostForking;
+namespace TenUp\WPSafeEdit;
 
 use \Exception;
 use \InvalidArgumentException;
 
-use \TenUp\PostForking\Posts\PublishingButtons;
-use \TenUp\PostForking\Posts\Statuses;
-use \TenUp\PostForking\Posts\Notices;
-use \TenUp\PostForking\Posts\ArchivedForks;
-use \TenUp\PostForking\Posts\Trash;
+use \TenUp\WPSafeEdit\Posts\PublishingButtons;
+use \TenUp\WPSafeEdit\Posts\Statuses;
+use \TenUp\WPSafeEdit\Posts\Notices;
+use \TenUp\WPSafeEdit\Posts\ArchivedForks;
+use \TenUp\WPSafeEdit\Posts\Trash;
 
 /**
  * Class to manage post integrations.
@@ -20,35 +20,35 @@ class Posts {
 	/**
 	 * Instance of the PublishingButtons class;
 	 *
-	 * @var \TenUp\PostForking\Posts\PublishingButtons
+	 * @var \TenUp\WPSafeEdit\Posts\PublishingButtons
 	 */
 	public $publishing_buttons;
 
 	/**
 	 * Instance of the Statuses class;
 	 *
-	 * @var \TenUp\PostForking\Posts\Statuses
+	 * @var \TenUp\WPSafeEdit\Posts\Statuses
 	 */
 	public $statuses;
 
 	/**
 	 * Instance of the Notices class;
 	 *
-	 * @var \TenUp\PostForking\Posts\Notices
+	 * @var \TenUp\WPSafeEdit\Posts\Notices
 	 */
 	public $notices;
 
 	/**
 	 * Instance of the ArchivedForks class;
 	 *
-	 * @var \TenUp\PostForking\Posts\ArchivedForks
+	 * @var \TenUp\WPSafeEdit\Posts\ArchivedForks
 	 */
 	public $archived_forks;
 
 	/**
 	 * Instance of the Trash class;
 	 *
-	 * @var \TenUp\PostForking\Posts\Trash
+	 * @var \TenUp\WPSafeEdit\Posts\Trash
 	 */
 	public $trash;
 

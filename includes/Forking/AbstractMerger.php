@@ -1,5 +1,5 @@
 <?php
-namespace TenUp\PostForking\Forking;
+namespace TenUp\WPSafeEdit\Forking;
 
 /**
  * Abstract class object mergers can extend.

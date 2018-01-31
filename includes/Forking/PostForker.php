@@ -1,15 +1,15 @@
 <?php
-namespace TenUp\PostForking\Forking;
+namespace TenUp\WPSafeEdit\Forking;
 
 use \Exception;
 use \InvalidArgumentException;
 use \WP_Error;
 
-use \TenUp\PostForking\Posts;
-use \TenUp\PostForking\Helpers;
-use \TenUp\PostForking\Forking\AbstractForker;
-use \TenUp\PostForking\Posts\Statuses\DraftForkStatus;
-use \TenUp\PostForking\Posts\Statuses\ArchivedForkStatus;
+use \TenUp\WPSafeEdit\Posts;
+use \TenUp\WPSafeEdit\Helpers;
+use \TenUp\WPSafeEdit\Forking\AbstractForker;
+use \TenUp\WPSafeEdit\Posts\Statuses\DraftForkStatus;
+use \TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus;
 
 /**
  * Class to manage post forking.
@@ -53,7 +53,7 @@ class PostForker extends AbstractForker {
 			return $forked_post_id;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_forker',
@@ -110,14 +110,14 @@ class PostForker extends AbstractForker {
 			$this->copy_post_meta( $post, $forked_post_id );
 			$this->copy_post_terms( $post, $forked_post_id );
 
-			\TenUp\PostForking\Posts\set_original_post_id_for_fork( $forked_post_id, $post->ID );
+			\TenUp\WPSafeEdit\Posts\set_original_post_id_for_fork( $forked_post_id, $post->ID );
 
 			do_action( 'post_forking_after_fork_post', $forked_post_id, $post, $post_data );
 
 			return $forked_post_id;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_forker',
@@ -155,7 +155,7 @@ class PostForker extends AbstractForker {
 			return $post_id;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_forker',
@@ -196,7 +196,7 @@ class PostForker extends AbstractForker {
 			return $result;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_forker',
@@ -235,7 +235,7 @@ class PostForker extends AbstractForker {
 			return $result;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_forker',
@@ -291,7 +291,7 @@ class PostForker extends AbstractForker {
 			return apply_filters( 'post_forking_prepared_post_data_for_fork', $post_data );
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return array();
 		}
@@ -323,7 +323,7 @@ class PostForker extends AbstractForker {
 	 * @return boolean
 	 */
 	public function can_fork( $post ) {
-		return true === \TenUp\PostForking\Posts\post_can_be_forked( $post );
+		return true === \TenUp\WPSafeEdit\Posts\post_can_be_forked( $post );
 	}
 
 	/**
@@ -333,6 +333,6 @@ class PostForker extends AbstractForker {
 	 * @return boolean
 	 */
 	public function has_fork( $post ) {
-		return true === \TenUp\PostForking\Posts\post_has_open_fork( $post );
+		return true === \TenUp\WPSafeEdit\Posts\post_has_open_fork( $post );
 	}
 }

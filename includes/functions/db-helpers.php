@@ -1,7 +1,7 @@
 <?php
-namespace TenUp\PostForking\Helpers;
+namespace TenUp\WPSafeEdit\Helpers;
 
-use TenUp\PostForking\Helpers;
+use TenUp\WPSafeEdit\Helpers;
 
 /**
  * Delete all post meta data for a post.

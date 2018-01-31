@@ -1,11 +1,11 @@
 <?php
 
-namespace TenUp\PostForking\Posts;
+namespace TenUp\WPSafeEdit\Posts;
 
-use \TenUp\PostForking\Helpers;
-use \TenUp\PostForking\Posts;
-use \TenUp\PostForking\Posts\Statuses;
-use \TenUp\PostForking\Posts\Statuses\ArchivedForkStatus;
+use \TenUp\WPSafeEdit\Helpers;
+use \TenUp\WPSafeEdit\Posts;
+use \TenUp\WPSafeEdit\Posts\Statuses;
+use \TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus;
 
 /**
  * Class to manage archived forks.
@@ -49,7 +49,7 @@ class ArchivedForks {
 	public function register_archived_forks_meta_box() {
 		add_meta_box(
 			'post-forking-archived-forks',
-			__( 'Archived Forks', 'forkit' ),
+			__( 'Archived Forks', 'wp-safe-edit' ),
 			[ $this, 'render_archived_forks_meta_box' ],
 			(array) Posts\get_forkable_post_types()
 		);
@@ -81,7 +81,7 @@ class ArchivedForks {
 			wp_reset_query();
 
 		} else { ?>
-			<p><?php echo esc_html_e( 'No archived forks available', 'forkit' ); ?></p>
+			<p><?php echo esc_html_e( 'No archived forks available', 'wp-safe-edit' ); ?></p>
 		<?php
 		}
 	}

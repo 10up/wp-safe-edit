@@ -1,7 +1,7 @@
 <?php
-namespace TenUp\PostForking;
+namespace TenUp\WPSafeEdit;
 
-use TenUp\PostForking as Base;
+use TenUp\WPSafeEdit as Base;
 
 class PluginTests extends Base\TestCase {
 

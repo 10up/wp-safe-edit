@@ -1,12 +1,12 @@
 <?php
 
-namespace TenUp\PostForking\Posts;
+namespace TenUp\WPSafeEdit\Posts;
 
-use \TenUp\PostForking\Helpers;
-use \TenUp\PostForking\Posts;
-use \TenUp\PostForking\Posts\PostTypeSupport;
-use \TenUp\PostForking\API\ForkPostController;
-use \TenUp\PostForking\API\MergePostController;
+use \TenUp\WPSafeEdit\Helpers;
+use \TenUp\WPSafeEdit\Posts;
+use \TenUp\WPSafeEdit\Posts\PostTypeSupport;
+use \TenUp\WPSafeEdit\API\ForkPostController;
+use \TenUp\WPSafeEdit\API\MergePostController;
 
 /**
  * Class to manage the publishing buttons to fork and merge posts.
@@ -59,13 +59,13 @@ class PublishingButtons {
 		$message    = $this->get_fork_exists_message();
 		$link_label = $this->get_edit_fork_label(); ?>
 
-		<div class="pf-fork-exists-message">
-			<?php esc_html_e( $message, 'forkit' ); ?>
+		<div class="wpse-fork-exists-message">
+			<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
 
 			<a
 				href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"
 				class="edit-fork-link">
-				<?php esc_html_e( $link_label, 'forkit' ); ?>
+				<?php esc_html_e( $link_label, 'wp-safe-edit' ); ?>
 			</a>
 		</div>
 	<?php
@@ -90,13 +90,13 @@ class PublishingButtons {
 		$message    = $this->get_editing_fork_message();
 		$link_label = $this->get_view_source_post_label(); ?>
 
-		<div class="pf-view-source-post-message">
-			<?php esc_html_e( $message, 'forkit' ); ?>
+		<div class="wpse-view-source-post-message">
+			<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
 
 			<a
 				href="<?php echo esc_url( get_edit_post_link( $source_post->ID ) ); ?>"
 				class="view-source-post-link">
-				<?php esc_html_e( $link_label, 'forkit' ); ?>
+				<?php esc_html_e( $link_label, 'wp-safe-edit' ); ?>
 			</a>
 		</div>
 	<?php
@@ -121,13 +121,13 @@ class PublishingButtons {
 		$message    = $this->get_viewing_archived_fork_message();
 		$link_label = $this->get_view_source_post_label(); ?>
 
-		<div class="pf-viewing-archived-fork-message">
-			<?php esc_html_e( $message, 'forkit' ); ?>
+		<div class="wpse-viewing-archived-fork-message">
+			<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
 
 			<a
 				href="<?php echo esc_url( get_edit_post_link( $source_post->ID ) ); ?>"
 				class="view-source-post-link">
-				<?php esc_html_e( $link_label, 'forkit' ); ?>
+				<?php esc_html_e( $link_label, 'wp-safe-edit' ); ?>
 			</a>
 		</div>
 	<?php
@@ -145,13 +145,13 @@ class PublishingButtons {
 
 		$button_label = $this->get_fork_post_button_label(); ?>
 
-		<div class="pf-actions pf-fork-post-button-wrapper">
-			<span class="pf-spinner spinner"></span>
+		<div class="wpse-actions wpse-fork-post-button-wrapper">
+			<span class="wpse-spinner spinner"></span>
 			<input
 				type="submit"
 				class="button button-primary button-large"
-				id="pf-fork-post-button"
-				value="<?php esc_html_e( $button_label, 'forkit' ) ?>"
+				id="wpse-fork-post-button"
+				value="<?php esc_html_e( $button_label, 'wp-safe-edit' ) ?>"
 			>
 
 			<?php
@@ -172,13 +172,13 @@ class PublishingButtons {
 
 		$button_label = $this->get_merge_post_button_label(); ?>
 
-		<div class="pf-actions pf-merge-post-button-wrapper">
-			<span class="pf-spinner spinner"></span>
+		<div class="wpse-actions wpse-merge-post-button-wrapper">
+			<span class="wpse-spinner spinner"></span>
 			<input
 				type="submit"
 				class="button button-primary button-large"
-				id="pf-merge-post-button"
-				value="<?php esc_html_e( $button_label, 'forkit' ) ?>"
+				id="wpse-merge-post-button"
+				value="<?php esc_html_e( $button_label, 'wp-safe-edit' ) ?>"
 			>
 
 			<?php
@@ -306,18 +306,18 @@ class PublishingButtons {
 		$message    = $this->get_fork_exists_message();
 		$link_label = $this->get_edit_fork_label(); ?>
 
-		<div id="pf-lock-dialog" class="notification-dialog-wrap">
+		<div id="wpse-lock-dialog" class="notification-dialog-wrap">
 			<div class="notification-dialog-background"></div>
 			<div class="notification-dialog">
 				<div class="post-locked-message">
 					<p class="currently-editing wp-tab-first" tabindex="0">
-						<?php esc_html_e( $message, 'forkit' ); ?>
+						<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
 					</p>
 
 					<p>
-						<a class="button" href="<?php echo esc_url( wp_get_referer() ) ?>"><?php esc_html_e( 'Go back', 'forkit' ) ?></a>
+						<a class="button" href="<?php echo esc_url( wp_get_referer() ) ?>"><?php esc_html_e( 'Go back', 'wp-safe-edit' ) ?></a>
 
-						<a class="button button-primary wp-tab-last" href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"><?php esc_html_e( $link_label, 'forkit' ); ?></a>
+						<a class="button button-primary wp-tab-last" href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"><?php esc_html_e( $link_label, 'wp-safe-edit' ); ?></a>
 					</p>
 				</div>
 			</div>

@@ -1,17 +1,17 @@
 /**
- * WP Post Forking
- * https://github.com/10up/post-forking
+ * WP Safe Edit
+ * https://github.com/10up/WP-Safe-Edit
  *
  * Copyright (c) 2017 Michael Phillips
  * Licensed under the MIT license.
  */
-.pf-view-source-post-message,
-.pf-fork-exists-message,
-.pf-viewing-archived-fork-message {
+.wpse-view-source-post-message,
+.wpse-fork-exists-message,
+.wpse-viewing-archived-fork-message {
   margin-bottom: 10px; }
 
-.pf-fork-post-button-wrapper,
-.pf-merge-post-button-wrapper {
+.wpse-fork-post-button-wrapper,
+.wpse-merge-post-button-wrapper {
   float: right;
   line-height: 23px;
   clear: both;
@@ -20,8 +20,8 @@
 #publishing-action {
   clear: both; }
 
-#pf-lock-dialog .post-locked-message {
+#wpse-lock-dialog .post-locked-message {
   margin: 25px; }
 
-.pf-spinner {
+.wpse-spinner {
   float: left; }

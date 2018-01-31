@@ -1,37 +1,37 @@
 <?php
-namespace TenUp\PostForking;
+namespace TenUp\WPSafeEdit;
 
-use TenUp\PostForking\API;
-use TenUp\PostForking\Posts;
-use TenUp\PostForking\Posts\Statuses;
+use TenUp\WPSafeEdit\API;
+use TenUp\WPSafeEdit\Posts;
+use TenUp\WPSafeEdit\Posts\Statuses;
 
 class Plugin {
 
 	/**
 	 * The instance of the plugin class if it's been instantiated.
 	 *
-	 * @var \TenUp\PostForking\Plugin
+	 * @var \TenUp\WPSafeEdit\Plugin
 	 */
 	protected static $instance;
 
 	/**
 	 * The instance of the Statuses class.
 	 *
-	 * @var TenUp\PostForking\Posts\Statuses
+	 * @var TenUp\WPSafeEdit\Posts\Statuses
 	 */
 	public $statuses;
 
 	/**
 	 * The instance of the Posts class.
 	 *
-	 * @var TenUp\PostForking\Posts
+	 * @var TenUp\WPSafeEdit\Posts
 	 */
 	public $posts;
 
 	/**
 	 * The instance of the Posts class.
 	 *
-	 * @var TenUp\PostForking\API
+	 * @var TenUp\WPSafeEdit\API
 	 */
 	public $api;
 
@@ -75,10 +75,10 @@ class Plugin {
 	/**
 	 * Get the current instance of the plugin, or instantiate it if needed.
 	 *
-	 * @return \TenUp\PostForking\Plugin
+	 * @return \TenUp\WPSafeEdit\Plugin
 	 */
 	public static function get_instance() {
-		if ( true !== self::$instance instanceof TenUp\PostForking\Plugin ) {
+		if ( true !== self::$instance instanceof TenUp\WPSafeEdit\Plugin ) {
 			self::$instance = new self();
 			self::$instance->register();
 		}
@@ -112,9 +112,9 @@ class Plugin {
 	 * @return void
 	 */
 	function i18n() {
-		$locale = apply_filters( 'plugin_locale', get_locale(), 'forkit' );
-		load_textdomain( 'forkit', WP_LANG_DIR . '/forkit/forkit-' . $locale . '.mo' );
-		load_plugin_textdomain( 'forkit', false, plugin_basename( FORKIT_PATH ) . '/languages/' );
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'wp-safe-edit' );
+		load_textdomain( 'wp-safe-edit', WP_LANG_DIR . '/wp-safe-edit/wp-safe-edit-' . $locale . '.mo' );
+		load_plugin_textdomain( 'wp-safe-edit', false, plugin_basename( WP_SAFE_EDIT_PATH ) . '/languages/' );
 	}
 
 	/**
@@ -130,7 +130,7 @@ class Plugin {
 
 	function enqueue_admin_scripts() {
 		$min     = '.min';
-		$version = FORKIT_VERSION;
+		$version = WP_SAFE_EDIT_VERSION;
 
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$min     = '';
@@ -138,8 +138,8 @@ class Plugin {
 		}
 
 		wp_enqueue_script(
-			'forkit_admin',
-			trailingslashit( FORKIT_URL ) . "assets/js/wp-post-forking{$min}.js",
+			'wp_safe_edit_admin',
+			trailingslashit( WP_SAFE_EDIT_URL ) . "assets/js/wp-post-forking{$min}.js",
 			array( 'jquery' ),
 			$version,
 			true
@@ -148,7 +148,7 @@ class Plugin {
 
 	function enqueue_admin_styles() {
 		$min     = '.min';
-		$version = FORKIT_VERSION;
+		$version = WP_SAFE_EDIT_VERSION;
 
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$min     = '';
@@ -156,8 +156,8 @@ class Plugin {
 		}
 
 		wp_enqueue_style(
-			'forkit_admin',
-			trailingslashit( FORKIT_URL ) . "assets/css/wp-post-forking{$min}.css",
+			'wp_safe_edit_admin',
+			trailingslashit( WP_SAFE_EDIT_URL ) . "assets/css/wp-post-forking{$min}.css",
 			array(),
 			$version
 		);

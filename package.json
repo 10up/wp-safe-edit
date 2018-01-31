@@ -1,9 +1,9 @@
 {
   "name": "wp-post-forking",
-  "title": "WP Post Forking",
-  "description": "A WordPress plugin that enables the ability to edit a published post behind the scene, and publish the changes when ready.",
+  "title": "WP Safe Edit",
+  "description": "Edit published posts safely behind the scenes and publish the changes when ready.",
   "version": "0.1.0",
-  "homepage": "https://github.com/10up/post-forking",
+  "homepage": "https://github.com/10up/WP-Safe-Edit",
   "repository": {
     "type": "git",
     "url": ""

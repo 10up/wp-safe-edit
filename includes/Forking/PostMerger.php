@@ -1,14 +1,14 @@
 <?php
-namespace TenUp\PostForking\Forking;
+namespace TenUp\WPSafeEdit\Forking;
 
 use \Exception;
 use \InvalidArgumentException;
 use \WP_Error;
 
-use \TenUp\PostForking\Posts;
-use \TenUp\PostForking\Helpers;
-use \TenUp\PostForking\Forking\AbstractMerger;
-use \TenUp\PostForking\Posts\Statuses\ArchivedForkStatus;
+use \TenUp\WPSafeEdit\Posts;
+use \TenUp\WPSafeEdit\Helpers;
+use \TenUp\WPSafeEdit\Forking\AbstractMerger;
+use \TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus;
 
 /**
  * Class to manage post merging.
@@ -40,7 +40,7 @@ class PostMerger extends AbstractMerger  {
 			return $result;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_merger',
@@ -112,7 +112,7 @@ class PostMerger extends AbstractMerger  {
 			return $merge_post_id;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_merger',
@@ -141,7 +141,7 @@ class PostMerger extends AbstractMerger  {
 			return $post_data;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return array();
 		}
@@ -188,7 +188,7 @@ class PostMerger extends AbstractMerger  {
 			return $post_data;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return array();
 		}
@@ -227,7 +227,7 @@ class PostMerger extends AbstractMerger  {
 
 			return $result;
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_merger',
@@ -266,7 +266,7 @@ class PostMerger extends AbstractMerger  {
 
 			return $result;
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_merger',
@@ -312,7 +312,7 @@ class PostMerger extends AbstractMerger  {
 			return true;
 
 		} catch ( Exception $e ) {
-			\TenUp\PostForking\Logging\log_exception( $e );
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
 
 			return new WP_Error(
 				'post_merger',
@@ -358,6 +358,6 @@ class PostMerger extends AbstractMerger  {
 	 * @return boolean
 	 */
 	public function can_merge( $fork ) {
-		return true === \TenUp\PostForking\Posts\post_can_be_merged( $fork );
+		return true === \TenUp\WPSafeEdit\Posts\post_can_be_merged( $fork );
 	}
 }

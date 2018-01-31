@@ -1,6 +1,6 @@
 <?php
 
-namespace TenUp\PostForking;
+namespace TenUp\WPSafeEdit;
 
 use PHPUnit_Framework_TestResult;
 use Text_Template;

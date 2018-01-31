@@ -1,11 +1,11 @@
 <?php
 
-namespace TenUp\PostForking\Posts;
+namespace TenUp\WPSafeEdit\Posts;
 
-use TenUp\PostForking\Helpers;
-use TenUp\PostForking\Posts\Statuses\DraftForkStatus;
-use TenUp\PostForking\Posts\Statuses\PendingForkStatus;
-use TenUp\PostForking\Posts\Statuses\ArchivedForkStatus;
+use TenUp\WPSafeEdit\Helpers;
+use TenUp\WPSafeEdit\Posts\Statuses\DraftForkStatus;
+use TenUp\WPSafeEdit\Posts\Statuses\PendingForkStatus;
+use TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus;
 
 /**
  * Class to manage custom post statuses.
@@ -15,21 +15,21 @@ class Statuses {
 	/**
 	 * Instance of the DraftForkStatus class
 	 *
-	 * @var \TenUp\PostForking\Posts\Statuses\DraftForkStatus
+	 * @var \TenUp\WPSafeEdit\Posts\Statuses\DraftForkStatus
 	 */
 	protected $draft_status;
 
 	/**
 	 * Instance of the PendingForkStatus class
 	 *
-	 * @var \TenUp\PostForking\Posts\Statuses\PendingForkStatus
+	 * @var \TenUp\WPSafeEdit\Posts\Statuses\PendingForkStatus
 	 */
 	protected $pending_status;
 
 	/**
 	 * Instance of the ArchivedForkStatus class
 	 *
-	 * @var \TenUp\PostForking\Posts\Statuses\ArchivedForkStatus
+	 * @var \TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus
 	 */
 	protected $archived_status;
 
