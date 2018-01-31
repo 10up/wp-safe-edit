@@ -167,6 +167,7 @@ function get_open_fork_for_post( $post ) {
 		'post_type'              => 'any',
 		'posts_per_page'         => 1,
 		'order'                  => 'DESC',
+		'orderby'                => 'modified', // Important to order by the modified date because the published date won't change when a post is updated.
 		'post_status'            => (array) get_open_fork_post_statuses(),
 		'no_found_rows'          => true,
 		'ignore_sticky_posts'    => true,
@@ -464,6 +465,8 @@ function get_archived_forks_query( $post, $query_args = array() ) {
 	$args = array(
 		'post_type'           => $post->post_type,
 		'posts_per_page'      => 10,
+		'order'               => 'DESC',
+		'orderby'             => 'modified', // Important to order by the modified date because the published date won't change when a post is updated.
 		'post_status'         => ArchivedForkStatus::NAME,
 		'no_found_rows'       => true,
 		'ignore_sticky_posts' => true,

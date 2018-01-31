@@ -81,11 +81,8 @@ class PostForker extends AbstractForker {
 
 			do_action( 'safe_edit_before_fork_post', $post );
 
-			if ( empty( $post_data ) || ! is_array( $post_data ) ) {
-				$post_data = $_POST;
-			}
-
-			$post_data = $this->prepare_post_data_for_fork( $post, $post_data );
+			// First, create a copy of the post using the source post.
+			$post_data = $this->prepare_post_data_for_fork( $post, $post->to_array() );
 
 			if ( ! is_array( $post_data ) || empty( $post_data ) ) {
 				throw new Exception(
@@ -107,8 +104,18 @@ class PostForker extends AbstractForker {
 				);
 			}
 
+			// Second, copy post meta and terms from the source post.
 			$this->copy_post_meta( $post, $forked_post_id );
 			$this->copy_post_terms( $post, $forked_post_id );
+
+			// Third, update the fork with the $_POST data in case any changes were made but not saved.
+			$updated_forked_post_id = $this->update_forked_post( $forked_post_id, $_POST );
+
+			if ( is_wp_error( $updated_forked_post_id ) ) {
+				throw new Exception(
+					'The fork could not be updated: ' . $updated_forked_post_id->get_error_message()
+				);
+			}
 
 			\TenUp\WPSafeEdit\Posts\set_original_post_id_for_fork( $forked_post_id, $post->ID );
 
@@ -124,6 +131,33 @@ class PostForker extends AbstractForker {
 				$e->getMessage()
 			);
 		}
+	}
+
+	/**
+	 * Update a fork using an array of post data.
+	 *
+	 * @param int|\WP_Post $fork The fork post ID or object.
+	 * @param array $post_data The post data to use when updating the fork.
+	 * @return int|\WP_Error The value 0 or WP_Error on failure. The fork ID on success.
+	 */
+	function update_forked_post( $fork, $post_data ) {
+		$fork = Helpers\get_post( $fork );
+		if ( true !== Helpers\is_post( $fork ) ) {
+			return;
+		}
+
+		$post_data = $this->prepare_post_data_for_fork_update( $fork, $post_data );
+
+		if ( ! is_array( $post_data ) || empty( $post_data ) ) {
+			return;
+		}
+
+		// Make sure the post ID is set to the fork's ID since the post data passed in could be from the source post.
+		$post_data['ID'] = $fork->ID;
+
+		$fork_id = wp_update_post( $post_data );
+
+		return $fork_id;
 	}
 
 	/**
@@ -295,6 +329,39 @@ class PostForker extends AbstractForker {
 
 			return array();
 		}
+	}
+
+	/**
+	 * Prepare the post data to be updated for a fork.
+	 *
+	 * @param  int|\WP_Post $fork The post ID or object for the fork to be updated.
+	 * @param  array $post_data Array of post data to use for the fork.
+	 * @return array|boolean The post data for the forked post if successful.
+	 */
+	public function prepare_post_data_for_fork_update( $fork, $post_data ) {
+		$fork = Helpers\get_post( $fork );
+
+		if ( true !== Helpers\is_post( $fork ) ) {
+			return false;
+		}
+
+		// Make sure the post data contains the correct keys for the DB post columns. This is needed in case $_POST data is used where the form fields don't all match the DB columns.
+		$post_data = _wp_translate_postdata( true, $post_data );
+
+		$excluded_columns = $this->get_columns_to_exclude();
+		foreach ( (array) $excluded_columns as $column ) {
+			if ( array_key_exists( $column, $post_data ) ) {
+				unset( $post_data[ $column ] );
+			}
+		}
+
+		// Make sure the post ID is correct.
+		$post_data['ID'] = $fork->ID;
+
+		$post_data['post_parent'] = $fork->post_parent;
+		$post_data['post_status'] = $fork->post_status;
+
+		return $post_data;
 	}
 
 	public function get_draft_fork_post_status() {

@@ -9,6 +9,7 @@ use \TenUp\WPSafeEdit\Posts\Statuses;
 use \TenUp\WPSafeEdit\Posts\Notices;
 use \TenUp\WPSafeEdit\Posts\ArchivedForks;
 use \TenUp\WPSafeEdit\Posts\Trash;
+use \TenUp\WPSafeEdit\Posts\PostTypeSupport;
 
 /**
  * Class to manage post integrations.
@@ -75,6 +76,11 @@ class Posts {
 			[ $this, 'filter_insert_post_data' ],
 			999, 2
 		);
+
+		add_action(
+			'safe_edit_add_post_type_support',
+			[ $this, 'add_post_type_support' ]
+		);
 	}
 
 	/**
@@ -101,5 +107,21 @@ class Posts {
 		$data = apply_filters( 'safe_edit_filter_insert_post_data', $data, $postarr );
 
 		return $data;
+	}
+
+	/**
+	 * Add forking support for one or more post types.
+	 *
+	 * @param string|array $post_types The post types to add support to.
+	 * @return void
+	 */
+	public function add_post_type_support( $post_types ) {
+		if ( is_array( $post_types ) ) {
+			foreach ( $post_types as $post_type ) {
+				add_post_type_support( $post_type, PostTypeSupport::FORKING_FEATURE_NAME );
+			}
+		} elseif( is_string( $post_types ) ) {
+			add_post_type_support( $post_types, PostTypeSupport::FORKING_FEATURE_NAME );
+		}
 	}
 }

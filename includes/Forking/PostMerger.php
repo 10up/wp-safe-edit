@@ -65,6 +65,19 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
+			// First, save the fork in case changes were made to the fields but not saved.
+			$fork_post_data       = $this->prepare_post_data( $_POST, true );
+			$updated_fork_post_id = wp_update_post( $fork_post_data, true );
+
+			if ( is_wp_error( $updated_fork_post_id ) ) {
+				throw new Exception(
+					'Fork could not be updated with $_POST data during merge: ' . $updated_fork_post_id->get_error_message()
+				);
+			}
+
+			// Get a fresh copy of the fork since it may have been updated.
+			$fork = Helpers\get_post( $fork->ID );
+
 			$source_post = Posts\get_source_post_for_fork( $fork );
 
 			if ( true !== Helpers\is_post( $source_post ) ) {
@@ -75,35 +88,34 @@ class PostMerger extends AbstractMerger  {
 
 			do_action( 'safe_edit_before_merge_post', $fork, $source_post );
 
-			$original_post_data   = $_POST;
-			$original_post_data   = $this->prepare_post_data( $post_data );
+			// Second, update the source post with the data saved to the fork.
+			$post_data = $this->prepare_post_data_for_merge( $fork, $source_post, $fork->to_array() );
 
-			if ( ! is_array( $original_post_data ) || empty( $original_post_data ) ) {
+			if ( ! is_array( $post_data ) || empty( $post_data ) ) {
 				throw new Exception(
-					'Post could not be merged because the post data was invalid.'
+					'Fork could not be merged because the post data was invalid.'
 				);
 			}
 
-			// Update the source post with the data from the forked post.
-			$new_source_post_data = $this->prepare_post_data_for_merge( $fork, $source_post, $original_post_data );
-			$merge_post_id = wp_update_post( $new_source_post_data, true );
+			$merge_post_id = wp_update_post( $post_data, true );
 
 			if ( is_wp_error( $merge_post_id ) ) {
 				throw new Exception(
-					'Post could not be merged: ' . $merge_post_id->get_error_message()
+					'Fork could not be merged: ' . $merge_post_id->get_error_message()
 				);
 			}
 
 			if ( true !== Helpers\is_valid_post_id( $merge_post_id ) ) {
 				throw new Exception(
-					'Post could not be merged.'
+					'Fork could not be merged.'
 				);
 			}
 
+			// Third, copy post meta and terms from the source post.
 			$this->copy_post_meta( $fork, $merge_post_id );
 			$this->copy_post_terms( $fork, $merge_post_id );
 
-			$this->archive_forked_post( $fork->ID, $original_post_data );
+			$this->archive_forked_post( $fork->ID );
 
 			clean_post_cache( $source_post->ID );
 
@@ -124,13 +136,14 @@ class PostMerger extends AbstractMerger  {
 	/**
 	 * Prepare an array of post data so it can be saved to the database.
 	 *
-	 * @param  array $post_data Array of post data to prepare.
+	 * @param array $post_data Array of post data to prepare.
+	 * @param bool  $update    Are we updating a pre-existing post.
 	 * @return array The prepared post data.
 	 */
-	public function prepare_post_data( $post_data ) {
+	public function prepare_post_data( $post_data, $update ) {
 		try {
 			// Make sure the post data contains the correct keys for the DB post columns. This is needed in case $_POST data is used where the form fields don't all match the DB columns.
-			$post_data = _wp_translate_postdata( false, $post_data );
+			$post_data = _wp_translate_postdata( $update, $post_data );
 
 			if ( empty( $post_data ) || ! is_array( $post_data ) ) {
 				throw new InvalidArgumentException(
@@ -173,7 +186,7 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
-			$post_data = $this->prepare_post_data( $post_data );
+			$post_data = $this->prepare_post_data( $post_data, true );
 
 			$excluded_columns = $this->get_columns_to_exclude();
 			foreach ( (array) $excluded_columns as $column ) {
@@ -204,7 +217,6 @@ class PostMerger extends AbstractMerger  {
 	public function copy_post_meta( $forked_post, $source_post ) {
 		try {
 			$forked_post = Helpers\get_post( $forked_post );
-
 			$source_post = Helpers\get_post( $source_post );
 
 			if (
@@ -276,13 +288,12 @@ class PostMerger extends AbstractMerger  {
 	}
 
 	/**
-	 * Archive a forked post after it's been merged.
+	 * Archive a forked post after it's been merged. 
 	 *
-	 * @param  int $post_id The post ID to archive.
-	 * @param  array $post_data Array of post data to save for the archived fork.
+	 * @param  int $post_id The post ID for the fork to archive.
 	 * @return boolean|\WP_Error
 	 */
-	public function archive_forked_post( $post_id, $post_data ) {
+	public function archive_forked_post( $post_id ) {
 		try {
 			if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
 				throw new Exception(
@@ -290,14 +301,7 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
-			$post_data = $this->prepare_post_data( $post_data );
-
-			if ( empty( $post_data ) || ! is_array( $post_data ) ) {
-				throw new Exception(
-					'Forked post could not be archived because the post data was invalid.'
-				);
-			}
-
+			$post_data                = array();
 			$post_data['ID']          = absint( $post_id );
 			$post_data['post_status'] = $this->get_archived_fork_post_status();
 
