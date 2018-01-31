@@ -329,41 +329,41 @@ class PublishingButtons {
 
 	function get_fork_post_button_label() {
 		$value = 'Create Fork';
-		return apply_filters( 'post_forking_fork_post_button_label', $value );
+		return apply_filters( 'safe_edit_fork_post_button_label', $value );
 	}
 
 	function get_merge_post_button_label() {
 		$value = 'Publish Changes';
-		return apply_filters( 'post_forking_merge_post_button_label', $value );
+		return apply_filters( 'safe_edit_merge_post_button_label', $value );
 	}
 
 	function get_fork_exists_message() {
 		$value = 'A fork of this post has been created. Further edits must be made on the forked version or they will be overwritten when it\'s published.';
-		return apply_filters( 'post_forking_fork_exists_message', $value );
+		return apply_filters( 'safe_edit_fork_exists_message', $value );
 	}
 
 	function get_editing_fork_message() {
 		$value = 'You\'re viewing a fork created from another post. Changes you make here will be reflected on the source post when you publish.';
-		return apply_filters( 'post_forking_editing_fork_message', $value );
+		return apply_filters( 'safe_edit_editing_fork_message', $value );
 	}
 
 	function get_viewing_archived_fork_message() {
 		$value = 'You\'re viewing an archived fork created from another post. Further changes must be made on the source post.';
-		return apply_filters( 'post_forking_viewing_archived_fork_message', $value );
+		return apply_filters( 'safe_edit_viewing_archived_fork_message', $value );
 	}
 
 	function get_edit_fork_label() {
 		$value = 'Edit fork';
-		return apply_filters( 'post_forking_edit_fork_link_label', $value );
+		return apply_filters( 'safe_edit_edit_fork_link_label', $value );
 	}
 
 	function get_view_source_post_label() {
 		$value = 'View source post on site';
-		return apply_filters( 'post_forking_view_source_post_link_label', $value );
+		return apply_filters( 'safe_edit_view_source_post_link_label', $value );
 	}
 
 	function get_edit_source_post_label() {
 		$value = 'Edit source post';
-		return apply_filters( 'post_forking_edit_source_post_link_label', $value );
+		return apply_filters( 'safe_edit_edit_source_post_link_label', $value );
 	}
 }

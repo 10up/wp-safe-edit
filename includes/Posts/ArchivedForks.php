@@ -43,7 +43,7 @@ class ArchivedForks {
 			$value = true;
 		}
 
-		return apply_filters( 'post_forking_should_show_archived_forks_meta_box', $value, $post );
+		return apply_filters( 'safe_edit_should_show_archived_forks_meta_box', $value, $post );
 	}
 
 	public function register_archived_forks_meta_box() {

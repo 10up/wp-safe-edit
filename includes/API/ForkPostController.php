@@ -69,7 +69,7 @@ class ForkPostController {
 	 * @param  int $source_post_id The post ID of the post that was forked.
 	 */
 	public function handle_fork_success( $fork_post_id, $source_post_id ) {
-		do_action( 'post_forking_post_fork_success', $fork_post_id, $source_post_id );
+		do_action( 'safe_edit_post_fork_success', $fork_post_id, $source_post_id );
 
 		if ( true !== $this->should_redirect() ) {
 			return;
@@ -82,7 +82,7 @@ class ForkPostController {
 			'pf_success_message' => rawurlencode( $message ),
 		), $url );
 
-		$url = apply_filters( 'post_forking_post_fork_success_redirect_url', $url, $fork_post_id, $source_post_id );
+		$url = apply_filters( 'safe_edit_post_fork_success_redirect_url', $url, $fork_post_id, $source_post_id );
 
 		wp_redirect( $url );
 		exit;
@@ -95,7 +95,7 @@ class ForkPostController {
 	 * @param  \WP_Error|mixed $result The result from the fork request, usually a WP_Error.
 	 */
 	public function handle_fork_failure( $source_post_id, $result ) {
-		do_action( 'post_forking_post_fork_failure', $source_post_id, $result );
+		do_action( 'safe_edit_post_fork_failure', $source_post_id, $result );
 
 		if ( true !== $this->should_redirect() ) {
 			return;
@@ -108,7 +108,7 @@ class ForkPostController {
 			'pf_error_message' => rawurlencode( $message ),
 		), $url );
 
-		$url = apply_filters( 'post_forking_post_fork_failure_redirect_url', $url, $source_post_id, $result );
+		$url = apply_filters( 'safe_edit_post_fork_failure_redirect_url', $url, $source_post_id, $result );
 
 		wp_redirect( $url );
 		exit;
@@ -127,7 +127,7 @@ class ForkPostController {
 			$message = $result->get_error_message();
 		}
 
-		return apply_filters( 'post_forking_fork_failure_message', $message, $result );
+		return apply_filters( 'safe_edit_fork_failure_message', $message, $result );
 	}
 
 	/**
@@ -140,7 +140,7 @@ class ForkPostController {
 	public function get_post_forking_success_message( $fork, $source_post ) {
 		$message = __( 'A fork has been created and you can edit it below.', 'wp-safe-edit' );
 
-		return apply_filters( 'post_forking_fork_success_message', $message, $fork, $source_post );
+		return apply_filters( 'safe_edit_fork_success_message', $message, $fork, $source_post );
 	}
 
 	/**

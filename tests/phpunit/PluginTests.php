@@ -12,7 +12,7 @@ class PluginTests extends Base\TestCase {
 	}
 
 	public function test_register() {
-		\WP_Mock::expectAction( 'post_forking_loaded' );
+		\WP_Mock::expectAction( 'safe_edit_loaded' );
 
 		$instance = Plugin::get_instance();
 
@@ -25,7 +25,7 @@ class PluginTests extends Base\TestCase {
 	}
 
 	public function test_init() {
-		\WP_Mock::expectAction( 'post_forking_init' );
+		\WP_Mock::expectAction( 'safe_edit_init' );
 
 		$instance = Plugin::get_instance();
 		$instance->init();

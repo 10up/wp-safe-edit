@@ -45,7 +45,7 @@ class Statuses {
 		$this->archived_status->register();
 
 		add_filter(
-			'post_forking_filter_insert_post_data',
+			'safe_edit_filter_insert_post_data',
 			[ $this, 'filter_draft_fork_post_data' ],
 			10, 2
 		);

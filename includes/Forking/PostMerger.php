@@ -73,7 +73,7 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
-			do_action( 'post_forking_before_merge_post', $fork, $source_post );
+			do_action( 'safe_edit_before_merge_post', $fork, $source_post );
 
 			$original_post_data   = $_POST;
 			$original_post_data   = $this->prepare_post_data( $post_data );
@@ -107,7 +107,7 @@ class PostMerger extends AbstractMerger  {
 
 			clean_post_cache( $source_post->ID );
 
-			do_action( 'post_forking_after_merge_post', $fork, $source_post );
+			do_action( 'safe_edit_after_merge_post', $fork, $source_post );
 
 			return $merge_post_id;
 
@@ -218,12 +218,12 @@ class PostMerger extends AbstractMerger  {
 
 			$result = Helpers\clear_post_meta( $source_post ); // Clear any existing meta data first to prevent duplicate rows for the same meta keys.
 
-			do_action( 'post_forking_before_merge_post_meta', $source_post, $forked_post );
+			do_action( 'safe_edit_before_merge_post_meta', $source_post, $forked_post );
 
 			$excluded_keys = $this->get_meta_keys_to_exclude();
 			$result = Helpers\copy_post_meta( $forked_post, $source_post, $excluded_keys );
 
-			do_action( 'post_forking_after_merge_post_meta', $source_post, $forked_post, $result );
+			do_action( 'safe_edit_after_merge_post_meta', $source_post, $forked_post, $result );
 
 			return $result;
 		} catch ( Exception $e ) {
@@ -258,11 +258,11 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
-			do_action( 'post_forking_before_merge_post_terms', $source_post, $forked_post );
+			do_action( 'safe_edit_before_merge_post_terms', $source_post, $forked_post );
 
 			$result = Helpers\copy_post_terms( $forked_post, $source_post );
 
-			do_action( 'post_forking_after_merge_post_terms', $source_post, $forked_post );
+			do_action( 'safe_edit_after_merge_post_terms', $source_post, $forked_post );
 
 			return $result;
 		} catch ( Exception $e ) {

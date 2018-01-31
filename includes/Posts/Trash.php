@@ -125,7 +125,7 @@ class Trash {
 				break;
 		}
 
-		$prefix = apply_filters( 'post_forking_admin_post_title_prefix', $prefix, $title, $id );
+		$prefix = apply_filters( 'safe_edit_admin_post_title_prefix', $prefix, $title, $id );
 
 		if ( empty( $prefix ) ) {
 			return $title;

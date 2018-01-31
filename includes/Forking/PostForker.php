@@ -79,7 +79,7 @@ class PostForker extends AbstractForker {
 				);
 			}
 
-			do_action( 'post_forking_before_fork_post', $post );
+			do_action( 'safe_edit_before_fork_post', $post );
 
 			if ( empty( $post_data ) || ! is_array( $post_data ) ) {
 				$post_data = $_POST;
@@ -112,7 +112,7 @@ class PostForker extends AbstractForker {
 
 			\TenUp\WPSafeEdit\Posts\set_original_post_id_for_fork( $forked_post_id, $post->ID );
 
-			do_action( 'post_forking_after_fork_post', $forked_post_id, $post, $post_data );
+			do_action( 'safe_edit_after_fork_post', $forked_post_id, $post, $post_data );
 
 			return $forked_post_id;
 
@@ -187,11 +187,11 @@ class PostForker extends AbstractForker {
 
 			$result = Helpers\clear_post_meta( $forked_post ); // Clear any existing meta data first to prevent duplicate rows for the same meta keys.
 
-			do_action( 'post_forking_before_fork_post_meta', $forked_post, $post );
+			do_action( 'safe_edit_before_fork_post_meta', $forked_post, $post );
 
 			$result = Helpers\copy_post_meta( $post, $forked_post );
 
-			do_action( 'post_forking_after_fork_post_meta', $forked_post, $post, $result );
+			do_action( 'safe_edit_after_fork_post_meta', $forked_post, $post, $result );
 
 			return $result;
 
@@ -226,11 +226,11 @@ class PostForker extends AbstractForker {
 				);
 			}
 
-			do_action( 'post_forking_before_fork_post_terms', $forked_post, $post );
+			do_action( 'safe_edit_before_fork_post_terms', $forked_post, $post );
 
 			$result = Helpers\copy_post_terms( $post, $forked_post );
 
-			do_action( 'post_forking_after_fork_post_terms', $forked_post, $post );
+			do_action( 'safe_edit_after_fork_post_terms', $forked_post, $post );
 
 			return $result;
 
@@ -288,7 +288,7 @@ class PostForker extends AbstractForker {
 			$post_data['ID']          = '';
 			$post_data['post_status'] = $post_status;
 
-			return apply_filters( 'post_forking_prepared_post_data_for_fork', $post_data );
+			return apply_filters( 'safe_edit_prepared_post_data_for_fork', $post_data );
 
 		} catch ( Exception $e ) {
 			\TenUp\WPSafeEdit\Logging\log_exception( $e );

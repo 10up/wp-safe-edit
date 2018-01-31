@@ -69,7 +69,7 @@ class MergePostController {
 	 * @param  int $fork_post_id The post ID of the fork that was merged into the source post.
 	 */
 	public function handle_merge_success( $source_post_id, $fork_post_id ) {
-		do_action( 'post_forking_post_merge_success', $fork_post_id, $source_post_id );
+		do_action( 'safe_edit_post_merge_success', $fork_post_id, $source_post_id );
 
 		if ( true !== $this->should_redirect() ) {
 			return;
@@ -82,7 +82,7 @@ class MergePostController {
 			'pf_success_message' => rawurlencode( $message ),
 		), $url );
 
-		$url = apply_filters( 'post_forking_post_merge_success_redirect_url', $url, $fork_post_id, $source_post_id );
+		$url = apply_filters( 'safe_edit_post_merge_success_redirect_url', $url, $fork_post_id, $source_post_id );
 
 		wp_redirect( $url );
 		exit;
@@ -95,7 +95,7 @@ class MergePostController {
 	 * @param  \WP_Error|mixed $result The result from the merge request, usually a WP_Error.
 	 */
 	public function handle_merge_failure( $fork_post_id, $result ) {
-		do_action( 'post_forking_post_fork_failure', $fork_post_id, $result );
+		do_action( 'safe_edit_post_fork_failure', $fork_post_id, $result );
 
 		if ( true !== $this->should_redirect() ) {
 			return;
@@ -108,7 +108,7 @@ class MergePostController {
 			'pf_error_message' => rawurlencode( $message ),
 		), $url );
 
-		$url = apply_filters( 'post_forking_post_merge_failure_redirect_url', $url, $fork_post_id, $result );
+		$url = apply_filters( 'safe_edit_post_merge_failure_redirect_url', $url, $fork_post_id, $result );
 
 		wp_redirect( $url );
 		exit;
@@ -127,7 +127,7 @@ class MergePostController {
 			$message = $result->get_error_message();
 		}
 
-		return apply_filters( 'post_forking_merge_failure_message', $message, $result );
+		return apply_filters( 'safe_edit_merge_failure_message', $message, $result );
 	}
 
 	/**
@@ -140,7 +140,7 @@ class MergePostController {
 	public function get_post_merge_success_message( $source_post, $fork ) {
 		$message = __( 'Changes from the fork have been published to the source post below.', 'wp-safe-edit' );
 
-		return apply_filters( 'post_forking_merge_success_message', $message, $source_post, $fork );
+		return apply_filters( 'safe_edit_merge_success_message', $message, $source_post, $fork );
 	}
 
 	/**

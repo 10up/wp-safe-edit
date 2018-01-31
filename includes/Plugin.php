@@ -69,7 +69,7 @@ class Plugin {
 			array( $this, 'enqueue_admin_styles' )
 		);
 
-		do_action( 'post_forking_loaded' );
+		do_action( 'safe_edit_loaded' );
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Plugin {
 	 * @return void
 	 */
 	function init() {
-		do_action( 'post_forking_init' );
+		do_action( 'safe_edit_init' );
 	}
 
 	function enqueue_admin_scripts() {

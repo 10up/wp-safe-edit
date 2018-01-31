@@ -98,7 +98,7 @@ class Posts {
 			return $data;
 		}
 
-		$data = apply_filters( 'post_forking_filter_insert_post_data', $data, $postarr );
+		$data = apply_filters( 'safe_edit_filter_insert_post_data', $data, $postarr );
 
 		return $data;
 	}

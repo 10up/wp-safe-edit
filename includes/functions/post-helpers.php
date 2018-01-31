@@ -58,7 +58,7 @@ function post_can_be_forked( $post ) {
 			);
 		}
 
-		return apply_filters( 'post_forking_post_can_be_forked', true, $post );
+		return apply_filters( 'safe_edit_post_can_be_forked', true, $post );
 
 	} catch ( Exception $e ) {
 		return false;
@@ -105,7 +105,7 @@ function post_can_be_merged( $post ) {
 			);
 		}
 
-		return apply_filters( 'post_forking_post_can_be_merged', true, $post );
+		return apply_filters( 'safe_edit_post_can_be_merged', true, $post );
 
 	} catch ( Exception $e ) {
 		return false;
@@ -294,7 +294,7 @@ function current_user_can_fork_post( $post ) {
 	$privilege = $post_type->cap->edit_published_posts;
 
 	$value = current_user_can( $privilege );
-	return true === apply_filters( 'post_forking_current_user_can_merge_post', $value, $post );
+	return true === apply_filters( 'safe_edit_current_user_can_merge_post', $value, $post );
 }
 
 /**
@@ -314,7 +314,7 @@ function current_user_can_merge_post( $post ) {
 	$privilege = $post_type->cap->publish_posts;
 
 	$value = current_user_can( $privilege );
-	return true === apply_filters( 'post_forking_current_user_can_merge_post', $value, $post );
+	return true === apply_filters( 'safe_edit_current_user_can_merge_post', $value, $post );
 }
 
 /**
