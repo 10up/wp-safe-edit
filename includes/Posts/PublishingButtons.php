@@ -94,8 +94,10 @@ class PublishingButtons {
 			<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
 
 			<a
-				href="<?php echo esc_url( get_edit_post_link( $source_post->ID ) ); ?>"
-				class="view-source-post-link">
+				href="<?php echo esc_url( get_permalink( $source_post->ID ) ); ?>"
+				class="view-source-post-link"
+				target="_blank"
+				rel="noopener noreferrer">
 				<?php esc_html_e( $link_label, 'wp-safe-edit' ); ?>
 			</a>
 		</div>
@@ -119,7 +121,7 @@ class PublishingButtons {
 		}
 
 		$message    = $this->get_viewing_archived_fork_message();
-		$link_label = $this->get_view_source_post_label(); ?>
+		$link_label = $this->get_edit_source_post_label(); ?>
 
 		<div class="wpse-viewing-archived-fork-message">
 			<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
@@ -356,7 +358,12 @@ class PublishingButtons {
 	}
 
 	function get_view_source_post_label() {
-		$value = 'View source post';
+		$value = 'View source post on site';
 		return apply_filters( 'post_forking_view_source_post_link_label', $value );
+	}
+
+	function get_edit_source_post_label() {
+		$value = 'Edit source post';
+		return apply_filters( 'post_forking_edit_source_post_link_label', $value );
 	}
 }
