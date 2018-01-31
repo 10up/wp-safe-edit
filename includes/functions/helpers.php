@@ -62,22 +62,18 @@ function is_valid_post_id( $post_id ) {
 /**
  * Get a property from either an object or an array.
  *
- * @param  string $key The name of the property to retrieve
+ * @param  string       $key        The name of the property to retrieve.
  * @param  array|object $data The object to retrieve the property for.
- * @param  mixed $default The default if the property is empty or not found.
+ * @param  mixed        $default     The default if the property is empty or not found.
  * @return mixed
  */
 function get_property( $key, $data, $default = null ) {
 	$value = null;
 
 	if ( is_array( $data ) ) {
-		$value = get_array_property( $key, $data );
+		$value = get_array_property( $key, $data, $default );
 	} elseif ( is_object( $data ) ) {
-		$value = get_object_property( $key, $data );
-	}
-
-	if ( empty( $value ) && ! empty( $default ) ) {
-		$value = $default;
+		$value = get_object_property( $key, $data, $default );
 	}
 
 	return $value;
@@ -86,13 +82,14 @@ function get_property( $key, $data, $default = null ) {
 /**
  * Get a property from an array.
  *
- * @param  string $key The name of the property to retrieve
- * @param  array $data The array to retrieve the property for.
+ * @param string $key     The name of the property to retrieve.
+ * @param array  $data    The array to retrieve the property for.
+ * @param mixed  $default The default if the property is empty or not found.
  * @return mixed
  */
-function get_array_property( $key, $data ) {
+function get_array_property( $key, $data, $default = null ) {
 	if ( ! isset( $data[ $key ] ) ) {
-		return null;
+		return $default;
 	}
 
 	return $data[ $key ];
@@ -101,13 +98,14 @@ function get_array_property( $key, $data ) {
 /**
  * Get a property from an object.
  *
- * @param  string $key The name of the property to retrieve
- * @param  object $data The object to retrieve the property for.
+ * @param string $key     The name of the property to retrieve.
+ * @param object $data    The object to retrieve the property for.
+ * @param mixed  $default The default if the property is empty or not found.
  * @return mixed
  */
-function get_object_property( $key, $data ) {
+function get_object_property( $key, $data, $default = null ) {
 	if ( ! isset( $data->$key ) ) {
-		return null;
+		return $default;
 	}
 
 	return $data->$key;
