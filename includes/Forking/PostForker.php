@@ -81,8 +81,11 @@ class PostForker extends AbstractForker {
 
 			do_action( 'safe_edit_before_fork_post', $post );
 
+			if ( empty( $post_data ) || ! is_array( $post_data ) ) {
+				$post_data = $post->to_array();
+			}
 			// First, create a copy of the post using the source post.
-			$post_data = $this->prepare_post_data_for_fork( $post, $post->to_array() );
+			$post_data = $this->prepare_post_data_for_fork( $post, $post_data );
 
 			if ( ! is_array( $post_data ) || empty( $post_data ) ) {
 				throw new Exception(
@@ -318,8 +321,9 @@ class PostForker extends AbstractForker {
 			}
 
 			// Double check to make sure we don't include a post ID
-			$post_data['post_ID']     = '';
-			$post_data['ID']          = '';
+			unset( $post_data['post_ID'] );
+			unset( $post_data['ID'] );
+
 			$post_data['post_status'] = $post_status;
 
 			return apply_filters( 'safe_edit_prepared_post_data_for_fork', $post_data );

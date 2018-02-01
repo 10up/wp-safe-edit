@@ -88,8 +88,8 @@ class PostMerger extends AbstractMerger  {
 
 			do_action( 'safe_edit_before_merge_post', $fork, $source_post );
 
-			// Second, update the source post with the data saved to the fork.
-			$post_data = $this->prepare_post_data_for_merge( $fork, $source_post, $fork->to_array() );
+			// Second, update the source post
+			$post_data = $this->prepare_post_data_for_merge( $fork, $source_post, $_POST );
 
 			if ( ! is_array( $post_data ) || empty( $post_data ) ) {
 				throw new Exception(
