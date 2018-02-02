@@ -5,7 +5,7 @@ Safely edit published posts behind the scenes without worrying about affecting t
 
 ## Requirements
 
-* **WordPress >= 4.5** due to the use of `get_post_types_by_support()`.
+* **WordPress >= 4.5** due to the use of `get_post_types_by_support()`
 * **PHP >=5.4**
 
 ## Installation
