@@ -18,7 +18,7 @@ define( 'WP_SAFE_EDIT_PATH',        dirname( __FILE__ ) . '/' );
 define( 'WP_SAFE_EDIT_INC',         WP_SAFE_EDIT_PATH . 'includes/' );
 
 // Include the autoloader.
-require_once __DIR__ . '/vendor/autoload.php';
+require_once WP_SAFE_EDIT_PATH . '/autoload.php';
 
 try {
 	register_activation_hook( __FILE__, '\\TenUp\WPSafeEdit\Plugin::activate' );

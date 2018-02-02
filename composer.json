@@ -24,12 +24,6 @@
     "autoload": {
         "psr-4": {
             "TenUp\\WPSafeEdit\\": "includes"
-        },
-        "files": [
-            "includes/functions/helpers.php",
-            "includes/functions/db-helpers.php",
-            "includes/functions/post-helpers.php",
-            "includes/functions/log-helpers.php"
-        ]
+        }
     }
 }
