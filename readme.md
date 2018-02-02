@@ -5,7 +5,8 @@ Safely edit published posts behind the scenes without worrying about affecting t
 
 ## Requirements
 
-TODO
+* **WordPress >= 4.5** due to the use of `get_post_types_by_support()`.
+* **PHP >=5.4**
 
 ## Installation
 
@@ -55,7 +56,7 @@ Figure 4.
 
 ## Roadmap
 
-This is a list of planned improvements.
+Planned improvements are listed below:
 
 1. Interrupt the publish fork process when the source post has been modified since the fork was created.
 
