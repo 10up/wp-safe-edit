@@ -31,7 +31,7 @@ _Figure 1._
    
    * **Trash Changes:** If you change your mind, you can trash your changes by pressing the **"Move to Trash"** link.
 
-3. Once you're happy with your changes, publish the changes back to the source post by pressing the **"Publish Changes"** button [Fig. 2] . The published post you created the fork from will be updated with your changes and reflected on the live site.<br><br>
+3. Once you're happy with your changes, publish the changes back to the source post by pressing the **"Publish Changes"** button [Fig. 2] . The post you created the fork from will be updated with your changes and reflected on the live site.<br><br>
 <img src="images/readme/publish-changes-button.png" alt="Image of the “Publish Changes” button." width="300"/><br>
 _Figure 2._
 
@@ -41,7 +41,7 @@ _Figure 3._
 
 ## Caveats & Limitations
 
-1. You cannot edit a post in the dashboard if an open fork exists because the changes would be overwritten when the fork is published; a lockout message is shown if you try [Fig. 4]. **Note:** It's still possible to edit the post through an API or code, so consider that before enabling support. This will be improved soon by detecting if the source post has been modified when trying to publish a fork.<br><br>
+1. You cannot edit a post in the dashboard if an open fork exists because the changes would be overwritten when the fork is published; a lockout message is shown if you try [Fig. 4]. **Note:** It's still possible to edit the post through an API or code, so consider that before enabling support. I plan to improve this by interrupting the publish fork process when the source post has been modified since the fork was created.<br><br>
 <img src="images/readme/source-post-lockout.png" alt="Image of the “open fork exist” lockout message." width="522"/><br>
 _Figure 4._
 
