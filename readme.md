@@ -9,7 +9,7 @@ TODO
 
 ## Installation
 
-1. Download and install the plugin in WordPress.
+1. Download and activate the plugin in WordPress.
 
 2. Register safe edit functionality for one or more post types:
 
@@ -19,7 +19,10 @@ do_action( 'safe_edit_add_post_type_support', array( 'post', 'page' ) );
 
 ## Usage
 
-1. Once safe edit functionality has been registered for a post type, you'll see a new **"Create Fork"** button when editing a post. To safely edit a post without affecting the published version, press the **"Create Fork"** button. A copy of the post is created where you can stage your changes.
+1. A **"Create Fork"** button [Fig. 1] will be available for all post types you registered support for. Pressing this button will create a copy of the post where you can stage your changes. All post meta and taxonomy terms associated with the post will be included.
+
+[[images/readme/create-fork-button.png|alt=Image of the “Create Fork” button.]]
+Figure 1
 
 2. When editing a fork, it functions like any other post so you can do the following:
    * **Save Changes as a Draft:** Save your changes as a draft by pressing the **"Save Draft"** button. Changes saved as a draft will not be reflected on the live site until you publish them.
@@ -29,6 +32,8 @@ do_action( 'safe_edit_add_post_type_support', array( 'post', 'page' ) );
    * **Trash Changes:** If you change your mind, you can trash your changes by pressing the **"Move to Trash"** link.
 
 3. Once you're happy with your changes, publish the changes back to the source post by pressing the **"Publish Changes"** button. The published post you created the fork from will be updated with your changes and reflected on the live site.
+
+4. 
 
 ## Caveats & Limitations
 
