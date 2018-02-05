@@ -1,5 +1,5 @@
 {
-    "name": "wp-post-forking",
+    "name": "10up/wp-safe-edit",
     "description": "Edit published posts safely behind the scenes and publish the changes when ready.",
     "version": "0.1.0",
     "type": "wordpress-plugin",
