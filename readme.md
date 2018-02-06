@@ -5,7 +5,8 @@ Safely edit published posts behind the scenes without worrying about affecting t
 
 ## Requirements
 
-TODO
+* **WordPress >= 4.5** due to the use of `get_post_types_by_support()`
+* **PHP >=5.4**
 
 ## Installation
 
@@ -21,7 +22,7 @@ do_action( 'safe_edit_add_post_type_support', array( 'post', 'page' ) );
 
 1. A **"Create Fork"** button [Fig. 1] will be available for all post types you registered support for. Pressing this button will create a copy of the post where you can stage your changes. All post meta and taxonomy terms associated with the post will be included.<br><br>
 <img src="images/readme/create-fork-button.png" alt="Image of the “Create Fork” button." width="300"/><br>
-Figure 1.
+_Figure 1._
 
 2. When editing a fork, it functions like any other post so you can do the following:
    * **Save Changes as a Draft:** Save your changes as a draft by pressing the **"Save Draft"** button. Changes saved as a draft will not be reflected on the live site until you publish them.
@@ -30,19 +31,19 @@ Figure 1.
    
    * **Trash Changes:** If you change your mind, you can trash your changes by pressing the **"Move to Trash"** link.
 
-3. Once you're happy with your changes, publish the changes back to the source post by pressing the **"Publish Changes"** button [Fig. 2] . The published post you created the fork from will be updated with your changes and reflected on the live site.<br><br>
+3. Once you're happy with your changes, publish the changes back to the source post by pressing the **"Publish Changes"** button [Fig. 2] . The post you created the fork from will be updated with your changes and reflected on the live site.<br><br>
 <img src="images/readme/publish-changes-button.png" alt="Image of the “Publish Changes” button." width="300"/><br>
-Figure 2.
+_Figure 2._
 
 4. You can view previous forks that have been created and published using the **"Archived Forks"** meta box [Fig. 3].<br><br>
 <img src="images/readme/archived-forks.png" alt="Image of the “Archived Forks” meta box." width="516"/><br>
-Figure 3.
+_Figure 3._
 
 ## Caveats & Limitations
 
-1. You cannot edit a post in the dashboard if an open fork exists because the changes would be overwritten when the fork is published; a lockout message is shown if you try [Fig. 4]. **Note:** It's still possible to edit the post through an API or code, so consider that before enabling support. This will be improved soon by detecting if the source post has been modified when trying to publish a fork.<br><br>
+1. You cannot edit a post in the dashboard if an open fork exists because the changes would be overwritten when the fork is published; a lockout message is shown if you try [Fig. 4]. **Note:** It's still possible to edit the post through an API or code, so consider that before enabling support. I plan to improve this by interrupting the publish fork process when the source post has been modified since the fork was created.<br><br>
 <img src="images/readme/source-post-lockout.png" alt="Image of the “open fork exist” lockout message." width="522"/><br>
-Figure 4.
+_Figure 4._
 
 2. If a post type contains meta boxes that save data behind the scenes using AJAX, you may need to hook into the publish fork process to make adjustments. Consider this scenario:
 
@@ -55,7 +56,7 @@ Figure 4.
 
 ## Roadmap
 
-This is a list of planned improvements.
+Planned improvements are listed below:
 
 1. Interrupt the publish fork process when the source post has been modified since the fork was created.
 
