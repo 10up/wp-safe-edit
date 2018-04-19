@@ -36,16 +36,14 @@ class Plugin {
 	public $api;
 
 	public function __construct() {
-		$this->statuses = new Statuses();
-		$this->posts    = new Posts();
-		$this->api      = new API();
+		$this->posts = new Posts();
+		$this->api   = new API();
 	}
 
 	/**
 	 * Register hooks and actions.
 	 */
 	public function register() {
-		$this->statuses->register();
 		$this->posts->register();
 		$this->api->register();
 

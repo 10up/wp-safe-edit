@@ -23,12 +23,6 @@ class Trash {
 			'untrashed_post',
 			array( $this, 'handle_untrashed_post' )
 		);
-
-		add_filter(
-			'the_title',
-			array( $this, 'filter_admin_post_list_title' ),
-			10, 2
-		);
 	}
 
 	/**
@@ -84,59 +78,5 @@ class Trash {
 		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
 			return;
 		}
-	}
-
-	/**
-	 * Alter the post title for forks shown in the admin trash post list.
-	 *
-	 * @param  string $title The psot title
-	 * @param  int $id The post ID
-	 * @return string The post title
-	 */
-	public function filter_admin_post_list_title( $title, $id ) {
-		global $pagenow;
-
-		if (
-			! is_admin() ||
-			'edit.php' !== $pagenow ||
-			'trash' !== sanitize_text_field( filter_input( INPUT_GET, 'post_status' ) ) // Only alter the post title when viewing the trash, since forks to not show up on the other list views.
-		) {
-			return $title;
-		}
-
-		$prefix = '';
-		$previous_status = get_post_meta( $id, '_wp_trash_meta_status', true );
-
-		switch ( $previous_status ) {
-			case DraftForkStatus::get_name():
-				$prefix = __( 'draft fork', 'wp-safe-edit' );
-				break;
-
-			case PendingForkStatus::get_name():
-				$prefix = __( 'pending fork', 'wp-safe-edit' );
-				break;
-
-			case ArchivedForkStatus::get_name():
-				$prefix = __( 'archived fork', 'wp-safe-edit' );
-				break;
-
-			default:
-				$prefix = '';
-				break;
-		}
-
-		$prefix = apply_filters( 'safe_edit_admin_post_title_prefix', $prefix, $title, $id );
-
-		if ( empty( $prefix ) ) {
-			return $title;
-		}
-
-		$title = sprintf(
-			'%s (%s)',
-			$title,
-			$prefix
-		);
-
-		return $title;
 	}
 }

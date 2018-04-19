@@ -295,7 +295,18 @@ function current_user_can_fork_post( $post ) {
 	$privilege = $post_type->cap->edit_published_posts;
 
 	$value = current_user_can( $privilege );
-	return true === apply_filters( 'safe_edit_current_user_can_merge_post', $value, $post );
+	return true === apply_filters( 'safe_edit_current_user_can_fork_post', $value, $post );
+}
+
+/**
+ * Determine if the current user can edit a fork.
+ *
+ * @param  int|\WP_Post $post
+ * @return boolean
+ */
+function current_user_can_edit_fork( $post ) {
+	$value = current_user_can_fork_post( $post );
+	return true === apply_filters( 'safe_edit_current_user_can_edit_fork', $value, $post );
 }
 
 /**

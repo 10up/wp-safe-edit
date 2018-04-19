@@ -3,6 +3,7 @@
 namespace TenUp\WPSafeEdit\Posts;
 
 use TenUp\WPSafeEdit\Helpers;
+use TenUp\WPSafeEdit\Posts;
 use TenUp\WPSafeEdit\Posts\Statuses\DraftForkStatus;
 use TenUp\WPSafeEdit\Posts\Statuses\PendingForkStatus;
 use TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus;
@@ -49,6 +50,12 @@ class Statuses {
 			[ $this, 'filter_draft_fork_post_data' ],
 			10, 2
 		);
+
+		add_filter(
+			'the_title',
+			array( $this, 'filter_admin_post_list_title' ),
+			10, 2
+		);
 	}
 
 	public static function get_valid_fork_post_statuses() {
@@ -82,10 +89,77 @@ class Statuses {
 		if (
 			'pending' === $postarr['post_status'] &&
 			$draft_fork_post_status === $post->post_status
-		 ) {
+		) {
 			$data['post_status'] = $draft_fork_post_status;
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Alter the post title for forks shown in the dashboard post lists.
+	 *
+	 * @param  string $title The post title
+	 * @param  int    $id    The post ID
+	 * @return string The post title
+	 */
+	public function filter_admin_post_list_title( $title, $id ) {
+		global $pagenow;
+
+		if (
+			! is_admin() ||
+			'edit.php' !== $pagenow ||
+			true !== Posts\post_type_supports_forking( $id )
+		) {
+			return $title;
+		}
+
+		$suffix = '';
+		$status = '';
+
+		if ( 'trash' === sanitize_text_field( filter_input( INPUT_GET, 'post_status' ) ) ) {
+			$status = get_post_meta( $id, '_wp_trash_meta_status', true );
+		} else {
+			$status = get_post_status( $id );
+		}
+
+		switch ( $status ) {
+			case DraftForkStatus::get_name():
+				$suffix = __( '— Draft Revision', 'wp-safe-edit' );
+				break;
+
+			case PendingForkStatus::get_name():
+				$suffix = __( '— Pending Draft Revision', 'wp-safe-edit' );
+				break;
+
+			case ArchivedForkStatus::get_name():
+				$suffix = __( '— Archived Draft Revision', 'wp-safe-edit' );
+				break;
+
+			case 'publish':
+				if ( true === Posts\post_has_open_fork( $id ) ) {
+					$suffix = __( '— Draft Revision Pending', 'wp-safe-edit' );
+				}
+
+				break;
+
+			default:
+				$suffix = '';
+				break;
+		}
+
+		$suffix = apply_filters( 'safe_edit_admin_post_title_suffix', $suffix, $title, $id );
+
+		if ( empty( $suffix ) ) {
+			return $title;
+		}
+
+		$title = sprintf(
+			'%s %s',
+			$title,
+			$suffix
+		);
+
+		return $title;
 	}
 }

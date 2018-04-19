@@ -331,7 +331,7 @@ class PublishingButtons {
 	}
 
 	function get_fork_post_button_label() {
-		$value = __( 'Save Draft', 'wp-safe-edit' );
+		$value = __( 'Save as Draft', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_fork_post_button_label', $value );
 	}
 

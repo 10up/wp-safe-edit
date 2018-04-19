@@ -31,12 +31,21 @@ abstract class AbstractStatus {
 	}
 
 	function register_post_status() {
-		register_post_status( $this->get_name(), array(
+		register_post_status( $this->get_name(), $this->get_options() );
+	}
+
+	/**
+	 * Get the options to use when registering the post status.
+	 *
+	 * @return array
+	 */
+	function get_options() {
+		return array(
 			'label'                  => $this->get_label(),
 			'internal'               => true,
 			'exclude_from_search'    => true,
 			'show_in_admin_all_list' => false,
 			'protected'              => true,
-		) );
+		);
 	}
 }
