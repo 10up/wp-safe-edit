@@ -121,7 +121,7 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_failure_message_from_result( $result ) {
-		$message = __( 'The changes from the fork could not be published for some reason.', 'wp-safe-edit' );
+		$message = __( 'The draft changes could not be published.', 'wp-safe-edit' );
 
 		if ( is_wp_error( $result ) ) {
 			$message = $result->get_error_message();
@@ -138,7 +138,7 @@ class MergePostController {
 	 * @return string
 	 */
 	public function get_post_merge_success_message( $source_post, $fork ) {
-		$message = __( 'Changes from the fork have been published to the source post below.', 'wp-safe-edit' );
+		$message = __( 'The draft changes have been published.', 'wp-safe-edit' );
 
 		return apply_filters( 'safe_edit_merge_success_message', $message, $source_post, $fork );
 	}

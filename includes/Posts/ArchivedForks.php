@@ -49,7 +49,7 @@ class ArchivedForks {
 	public function register_archived_forks_meta_box() {
 		add_meta_box(
 			'post-forking-archived-forks',
-			__( 'Archived Forks', 'wp-safe-edit' ),
+			__( 'Archived Draft Revisions', 'wp-safe-edit' ),
 			[ $this, 'render_archived_forks_meta_box' ],
 			(array) Posts\get_forkable_post_types()
 		);
@@ -81,7 +81,7 @@ class ArchivedForks {
 			wp_reset_query();
 
 		} else { ?>
-			<p><?php echo esc_html_e( 'No archived forks available', 'wp-safe-edit' ); ?></p>
+			<p><?php echo esc_html_e( 'No draft revisions have been created yet.', 'wp-safe-edit' ); ?></p>
 		<?php
 		}
 	}

@@ -60,12 +60,12 @@ class PublishingButtons {
 		$link_label = $this->get_edit_fork_label(); ?>
 
 		<div class="wpse-fork-exists-message">
-			<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
+			<?php echo esc_html( $message ); ?>
 
 			<a
 				href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"
 				class="edit-fork-link">
-				<?php esc_html_e( $link_label, 'wp-safe-edit' ); ?>
+				<?php echo esc_html( $link_label ); ?>
 			</a>
 		</div>
 	<?php
@@ -87,19 +87,22 @@ class PublishingButtons {
 			return;
 		}
 
-		$message    = $this->get_editing_fork_message();
-		$link_label = $this->get_view_source_post_label(); ?>
+		$message = $this->get_editing_fork_message();
 
-		<div class="wpse-view-source-post-message">
-			<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
-
-			<a
-				href="<?php echo esc_url( get_permalink( $source_post->ID ) ); ?>"
+		$link = sprintf(
+			'<a
+				href="%s"
 				class="view-source-post-link"
 				target="_blank"
-				rel="noopener noreferrer">
-				<?php esc_html_e( $link_label, 'wp-safe-edit' ); ?>
-			</a>
+				rel="noopener noreferrer">%s</a>',
+			esc_url( get_permalink( $source_post->ID ) ),
+			get_the_title( $source_post )
+		);
+
+		$message = sprintf( $message, $link ); ?>
+
+		<div class="wpse-view-source-post-message">
+			<?php echo wp_kses_post( $message ); ?>
 		</div>
 	<?php
 	}
@@ -124,12 +127,12 @@ class PublishingButtons {
 		$link_label = $this->get_edit_source_post_label(); ?>
 
 		<div class="wpse-viewing-archived-fork-message">
-			<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
+			<?php echo esc_html( $message ); ?>
 
 			<a
 				href="<?php echo esc_url( get_edit_post_link( $source_post->ID ) ); ?>"
 				class="view-source-post-link">
-				<?php esc_html_e( $link_label, 'wp-safe-edit' ); ?>
+				<?php echo esc_html( $link_label ); ?>
 			</a>
 		</div>
 	<?php
@@ -151,9 +154,9 @@ class PublishingButtons {
 			<span class="wpse-spinner spinner"></span>
 			<input
 				type="submit"
-				class="button button-primary button-large"
+				class="button button-large"
 				id="wpse-fork-post-button"
-				value="<?php esc_html_e( $button_label, 'wp-safe-edit' ) ?>"
+				value="<?php echo esc_html( $button_label ); ?>"
 			>
 
 			<?php
@@ -180,7 +183,7 @@ class PublishingButtons {
 				type="submit"
 				class="button button-primary button-large"
 				id="wpse-merge-post-button"
-				value="<?php esc_html_e( $button_label, 'wp-safe-edit' ) ?>"
+				value="<?php echo esc_html( $button_label ) ?>"
 			>
 
 			<?php
@@ -313,13 +316,13 @@ class PublishingButtons {
 			<div class="notification-dialog">
 				<div class="post-locked-message">
 					<p class="currently-editing wp-tab-first" tabindex="0">
-						<?php esc_html_e( $message, 'wp-safe-edit' ); ?>
+						<?php echo esc_html( $message ); ?>
 					</p>
 
 					<p>
 						<a class="button" href="<?php echo esc_url( wp_get_referer() ) ?>"><?php esc_html_e( 'Go back', 'wp-safe-edit' ) ?></a>
 
-						<a class="button button-primary wp-tab-last" href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"><?php esc_html_e( $link_label, 'wp-safe-edit' ); ?></a>
+						<a class="button button-primary wp-tab-last" href="<?php echo esc_url( get_edit_post_link( $fork->ID ) ); ?>"><?php echo esc_html( $link_label ); ?></a>
 					</p>
 				</div>
 			</div>
@@ -328,42 +331,37 @@ class PublishingButtons {
 	}
 
 	function get_fork_post_button_label() {
-		$value = 'Create Fork';
+		$value = __( 'Save Draft', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_fork_post_button_label', $value );
 	}
 
 	function get_merge_post_button_label() {
-		$value = 'Publish Changes';
+		$value = __( 'Publish Changes', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_merge_post_button_label', $value );
 	}
 
 	function get_fork_exists_message() {
-		$value = 'A fork of this post has been created. Further edits must be made on the forked version or they will be overwritten when it\'s published.';
+		$value = __( 'A draft version of this post has been created. Changes must be made on the draft until it\'s published.', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_fork_exists_message', $value );
 	}
 
 	function get_editing_fork_message() {
-		$value = 'You\'re viewing a fork created from another post. Changes you make here will be reflected on the source post when you publish.';
+		$value = __( 'You\'re editing a draft of %s. Publish your changes to make them live.', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_editing_fork_message', $value );
 	}
 
 	function get_viewing_archived_fork_message() {
-		$value = 'You\'re viewing an archived fork created from another post. Further changes must be made on the source post.';
+		$value = __( 'You\'re viewing an archived draft revision. This draft can no longer be edited.', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_viewing_archived_fork_message', $value );
 	}
 
 	function get_edit_fork_label() {
-		$value = 'Edit fork';
+		$value = __( 'Edit Draft', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_edit_fork_link_label', $value );
 	}
 
-	function get_view_source_post_label() {
-		$value = 'View source post on site';
-		return apply_filters( 'safe_edit_view_source_post_link_label', $value );
-	}
-
 	function get_edit_source_post_label() {
-		$value = 'Edit source post';
+		$value = __( 'Edit the published version', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_edit_source_post_link_label', $value );
 	}
 }

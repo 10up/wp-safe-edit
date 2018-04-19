@@ -121,7 +121,7 @@ class ForkPostController {
 	 * @return string
 	 */
 	public function get_post_forking_failure_message_from_result( $result ) {
-		$message = __( 'Post could not be forked.', 'wp-safe-edit' );
+		$message = __( 'Post could not be saved as a draft.', 'wp-safe-edit' );
 
 		if ( is_wp_error( $result ) ) {
 			$message = $result->get_error_message();
@@ -138,7 +138,7 @@ class ForkPostController {
 	 * @return string
 	 */
 	public function get_post_forking_success_message( $fork, $source_post ) {
-		$message = __( 'A fork has been created and you can edit it below.', 'wp-safe-edit' );
+		$message = __( 'A draft has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
 
 		return apply_filters( 'safe_edit_fork_success_message', $message, $fork, $source_post );
 	}
