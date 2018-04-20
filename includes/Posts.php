@@ -80,8 +80,13 @@ class Posts {
 		);
 
 		add_action(
-			'safe_edit_add_post_type_support',
+			'init',
 			[ $this, 'add_post_type_support' ]
+		);
+
+		add_action(
+			'safe_edit_add_post_type_support',
+			[ $this, 'add_custom_post_type_support' ]
 		);
 
 		add_filter( 
@@ -129,7 +134,18 @@ class Posts {
 	 * @param string|array $post_types The post types to add support to.
 	 * @return void
 	 */
-	public function add_post_type_support( $post_types ) {
+	public function add_post_type_support() {
+		add_post_type_support( 'post', PostTypeSupport::FORKING_FEATURE_NAME );
+		add_post_type_support( 'page', PostTypeSupport::FORKING_FEATURE_NAME );
+	}
+
+	/**
+	 * Add forking support for one or more custom post types.
+	 *
+	 * @param string|array $post_types The post types to add support to.
+	 * @return void
+	 */
+	public function add_custom_post_type_support( $post_types ) {
 		if ( is_array( $post_types ) ) {
 			foreach ( $post_types as $post_type ) {
 				add_post_type_support( $post_type, PostTypeSupport::FORKING_FEATURE_NAME );
