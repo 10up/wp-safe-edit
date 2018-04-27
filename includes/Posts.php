@@ -172,13 +172,13 @@ class Posts {
 
 		$fork = Posts\get_open_fork_for_post( $post );
 
-		if ( true !== Helpers\is_post( $post ) ) {
+		if ( true !== Helpers\is_post( $fork ) ) {
 			return $actions;
 		}
 
 		$edit_draft_revision_action = array( 'draft_revision' => sprintf( 
 			'<a href="%1$s">%2$s</a>',
-			get_edit_post_link( $post->ID ),
+			get_edit_post_link( $fork->ID ),
 			esc_html( __( 'Edit Draft Revision', 'wp-safe-edit' ) )
 		) );
 
