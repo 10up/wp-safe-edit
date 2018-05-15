@@ -63,6 +63,11 @@ class Plugin {
 		);
 
 		add_action(
+			'enqueue_block_editor_assets',
+			array( $this, 'enqueue_gutenberg_edit_scripts' )
+		);
+
+		add_action(
 			'admin_enqueue_scripts',
 			array( $this, 'enqueue_admin_styles' )
 		);
@@ -140,6 +145,17 @@ class Plugin {
 			trailingslashit( WP_SAFE_EDIT_URL ) . "assets/js/wp-post-forking{$min}.js",
 			array( 'jquery' ),
 			$version,
+			true
+		);
+	}
+
+	// Enable Gutenberg support.
+	function enqueue_gutenberg_edit_scripts() {
+		wp_enqueue_script(
+			'wp_safe_edit_gutrnberg_admin',
+			trailingslashit( WP_SAFE_EDIT_URL ) . "dist/main.js",
+			array( 'wp-blocks' ),
+			WP_SAFE_EDIT_VERSION,
 			true
 		);
 	}
