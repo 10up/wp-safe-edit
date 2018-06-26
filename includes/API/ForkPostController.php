@@ -84,6 +84,13 @@ class ForkPostController {
 
 		$url = apply_filters( 'safe_edit_post_fork_success_redirect_url', $url, $fork_post_id, $source_post_id );
 
+		// Stay in the classic editor when forking from the classic editor.
+		if ( isset( $_REQUEST[ 'classic-editor' ] ) ) {
+			$url = add_query_arg( array(
+				'classic-editor' => true,
+			), $url );
+		}
+
 		wp_redirect( $url );
 		exit;
 	}
