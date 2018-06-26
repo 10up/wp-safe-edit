@@ -158,7 +158,11 @@ class PublishingButtons {
 				id="wpse-fork-post-button"
 				value="<?php echo esc_html( $button_label ); ?>"
 			>
-
+			<input
+				type="hidden"
+				id="classic-editor"
+				value="1"
+			/>
 			<?php
 			wp_nonce_field( ForkPostController::NONCE_ACTION, ForkPostController::NONCE_NAME ); ?>
 		</div>
