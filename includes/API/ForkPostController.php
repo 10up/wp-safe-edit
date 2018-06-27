@@ -20,6 +20,70 @@ class ForkPostController {
 			'post_action_fork_post',
 			array( $this, 'handle_fork_post_request' )
 		);
+		add_action( 'rest_api_init', function () {
+			register_rest_route( 'wp-safe-edit/v1', '/fork/(?P<id>\d+)', array(
+				'methods' => 'GET',
+				'callback' => 'TenUp\WPSafeEdit\API\ForkPostController::handle_fork_post_api_request',
+				'permission_callback' => '__return_true',
+				'args'                => array(
+					'id'        => array(
+						'required'    => true,
+						'description' => esc_html__( 'Id of post that is being forked.', 'wp-safe-edit' ),
+						'type'        => 'integer',
+					),
+					'nonce'     => array(
+						'required'    => true,
+						'description' => esc_html__( 'Action nonce.', 'wp-safe-edit' ),
+						'type'        => 'string',
+					),
+				),
+
+			) );
+	  	} );
+	}
+
+	// Handle REST API based forking requests.
+	public static function handle_fork_post_api_request( $request ) {
+		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'post-fork' ) ) {
+			return new \WP_Error(
+				'rest_cannot_create',
+				esc_html__( 'Sorry, you are not allowed to fork posts.', 'wp-safe-edit' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$post_id = absint( $request['id'] );
+
+		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
+			wp_send_json_error(
+				esc_html__( 'Post could not be forked because the request did not provide a valid post ID.', 'wp-safe-edit' )
+			);
+		}
+
+		$forker = new PostForker();
+		$result = $forker->fork( $post_id );
+
+		if ( true === Helpers\is_valid_post_id( $result ) ) {
+			do_action( 'safe_edit_post_fork_success', $fork_post_id, $source_post_id );
+
+			$message = self::get_post_forking_success_message( $fork_post_id, $source_post_id );
+
+			$url = get_edit_post_link( $fork_post_id, 'nodisplay' );
+			$url = add_query_arg( array(
+				'pf_success_message' => rawurlencode( $message ),
+			), $url );
+			$url = apply_filters( 'safe_edit_post_fork_success_redirect_url', $url, $fork_post_id, $source_post_id );
+
+			$data = array(
+				'shouldRedirect' => self::should_redirect(),
+				'url'            => $url,
+			);
+			wp_send_json_success( $data );
+
+		} else {
+			do_action( 'safe_edit_post_fork_failure', $post_id, $result );
+			wp_send_json_error( self::get_post_forking_failure_message_from_result( $result ) );
+		}
 	}
 
 	/**
