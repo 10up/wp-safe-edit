@@ -158,6 +158,14 @@ class Plugin {
 			WP_SAFE_EDIT_VERSION,
 			true
 		);
+		wp_localize_script(
+			'wp_safe_edit_gutrnberg_admin',
+			'gutenbergData',
+			array(
+				'id'        => get_the_ID(),
+				'forknonce' => wp_create_nonce( 'post-fork' )
+			)
+		);
 	}
 
 	function enqueue_admin_styles() {
