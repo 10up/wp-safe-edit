@@ -163,7 +163,10 @@ class Plugin {
 			'gutenbergData',
 			array(
 				'id'        => get_the_ID(),
-				'forknonce' => wp_create_nonce( 'post-fork' )
+				'forknonce' => wp_create_nonce( 'post-fork' ),
+				'message'   => isset( $_GET['pf_success_message'] ) ?
+					sanitize_text_field( $_GET['pf_success_message'] ) :
+					false,
 			)
 		);
 	}
