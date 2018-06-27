@@ -23,6 +23,11 @@ class PostForker extends AbstractForker {
 	 * @return boolean|\WP_Error
 	 */
 	public function fork( $post ) {
+		if ( ! ( defined( '_wp_translate_postdata' ) ) ) {
+			function _wp_translate_postdata( $bool, $data ) {
+				return $data;
+			}
+		}
 		try {
 			$post = Helpers\get_post( $post );
 			if ( true !== Helpers\is_post( $post ) ) {
