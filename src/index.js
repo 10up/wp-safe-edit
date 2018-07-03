@@ -50,7 +50,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 	// Set up the plugin fills.
 	registerPlugin( 'wp-safe-edit', {
 		render: WPSafeEditSidebar,
-		icon: 'yes',
+		icon: null,
 	} );
 
 	// Display any message.
