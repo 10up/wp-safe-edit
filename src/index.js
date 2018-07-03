@@ -27,17 +27,21 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 		}
 
 		render() {
+			// Only show the button if the post is published and its not a safe edit draft already.
+			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'postStatus' );
+			var isPublished = wp.data.select( 'core/editor' ).isCurrentPostPublished();
+			if ( ! isPublished || 'wpse-draft' === postStatus ) {
+				return null;
+			}
 			return (
 				<PluginSidebarMoreMenuItem>
-					<p>
 						<span
 							type="button"
-							className="components-button components-icon-button components-menu-item__button has-icon"
+							className="components-button components-icon-button components-menu-item__button"
 							id="gutenberg-wpse-fork-post-button"
 							value={ __( 'Save as Draft' ) }
 							onClick= { this.forkPost }
 						>{ __( 'Save as Draft' ) }</span>
-					</p>
 				</PluginSidebarMoreMenuItem>
 			);
 		}
