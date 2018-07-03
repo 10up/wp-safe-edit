@@ -72,6 +72,11 @@ class Plugin {
 			array( $this, 'enqueue_admin_styles' )
 		);
 
+		add_filter(
+			'admin_body_class',
+			array( $this, 'admin_body_class' )
+		);
+
 		do_action( 'safe_edit_loaded' );
 	}
 
@@ -186,5 +191,19 @@ class Plugin {
 			array(),
 			$version
 		);
+	}
+
+	function admin_body_class( $classes ) {
+		global $post;
+
+		if ( ! $post ) {
+			return $classes;
+		}
+
+		if ( 'wpse-draft' === $post->post_status ) {
+			$classes .= ' wpse-draft ';
+		}
+
+		return $classes;
 	}
 }
