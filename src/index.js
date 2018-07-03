@@ -7,6 +7,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 	const { PluginSidebarMoreMenuItem } = wp.editPost;
 	const { registerPlugin } = wp.plugins;
 	const WP_SAFE_EDIT_NOTICE_ID = 'wp-safe-edit-notice';
+	const WP_SAFE_EDIT_STATUS_ID = 'wp-safe-edit-status';
 
 	class WPSafeEditSidebar extends Component {
 
@@ -30,9 +31,21 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			console.log( result );
 		}
 
+		componentDidMount() {
+			// Display a notice to inform the user if this is a safe draft.
+			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+			if ( 'wpse-draft' === postStatus  ) {
+				const message = __( 'A draft has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
+				wp.data.dispatch( 'core/editor' ).createWarningNotice( message, {
+					id: WP_SAFE_EDIT_STATUS_ID,
+				} );
+			}
+
+		}
+
 		render() {
 			// Only show the button if the post is published and its not a safe edit draft already.
-			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'postStatus' );
+			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 			var isPublished = wp.data.select( 'core/editor' ).isCurrentPostPublished();
 			if ( ! isPublished || 'wpse-draft' === postStatus ) {
 				return null;
