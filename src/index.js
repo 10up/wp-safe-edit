@@ -1,5 +1,5 @@
 import { Component } from 'react';
-const { data, element, piRequest } = wp;
+const { data, apiRequest } = wp;
 
 
 if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem ) {
@@ -12,6 +12,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 
 		async forkPost( e ) {
 			console.log( e );
+			e.preventDefault();
 			const id = document.getElementById( 'post_ID' ).value;
 			const request = {
 				path: 'wp-safe-edit/v1/fork/' + id,
@@ -23,6 +24,9 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 				dataType: 'json',
 			}
 			const result = await apiRequest( request );
+			if ( result.data && result.data.shouldRedirect ) {
+				document.location = result.data.redirectUrl;
+			}
 			console.log( result );
 		}
 
