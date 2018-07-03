@@ -61,28 +61,28 @@ class ForkPostController {
 		}
 
 		$forker = new PostForker();
-		$result = $forker->fork( $post_id );
+		$fork_post_id = $forker->fork( $post_id );
 
-		if ( true === Helpers\is_valid_post_id( $result ) ) {
-			do_action( 'safe_edit_post_fork_success', $fork_post_id, $source_post_id );
+		if ( true === Helpers\is_valid_post_id( $fork_post_id ) ) {
+			do_action( 'safe_edit_post_fork_success', $fork_post_id, $post_id );
 
-			$message = self::get_post_forking_success_message( $fork_post_id, $source_post_id );
+			$message = self::get_post_forking_success_message( $fork_post_id, $post_id );
 
 			$url = get_edit_post_link( $fork_post_id, 'nodisplay' );
 			$url = add_query_arg( array(
 				'pf_success_message' => rawurlencode( $message ),
 			), $url );
-			$url = apply_filters( 'safe_edit_post_fork_success_redirect_url', $url, $fork_post_id, $source_post_id );
+			$url = apply_filters( 'safe_edit_post_fork_success_redirect_url', $url, $fork_post_id, $post_id );
 
 			$data = array(
 				'shouldRedirect' => self::should_redirect(),
-				'url'            => $url,
+				'redirectUrl'    => $url,
 			);
 			wp_send_json_success( $data );
 
 		} else {
-			do_action( 'safe_edit_post_fork_failure', $post_id, $result );
-			wp_send_json_error( self::get_post_forking_failure_message_from_result( $result ) );
+			do_action( 'safe_edit_post_fork_failure', $post_id, $fork_post_id );
+			wp_send_json_error( self::get_post_forking_failure_message_from_result( $fork_post_id ) );
 		}
 	}
 
