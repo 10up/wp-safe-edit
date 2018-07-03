@@ -1,6 +1,6 @@
 /*! WP Safe Edit - v0.1.0
  * https://github.com/10up/WP-Safe-Edit
- * Copyright (c) 2017; * Licensed MIT */
+ * Copyright (c) 2018; * Licensed MIT */
 ( function( $, window, undefined ) {
 	'use strict';
 	var form            = null,
@@ -211,7 +211,7 @@
 			if ( ! this.forkButton ) {
 				this.forkButton = document.getElementById('wpse-fork-post-button');
 			}
-
+			console.log( 'getForkButton', this.forkButton );
 			return this.forkButton;
 		},
 
@@ -221,6 +221,10 @@
 
 			if ( ! form || ! formActionField ) {
 				event.preventDefault();
+
+				// Perform an Ajax callback for Gutenberg,
+				console.log( event );
+
 				return false;
 			}
 
@@ -281,7 +285,7 @@
 			showPostFormSpinner();
 		},
 	};
-
+console.log( 'forkPostSupport' );
 	var forkPostSupport = new ForkPostSupport();
 	forkPostSupport.init();
 
