@@ -20,7 +20,7 @@ class PostForker extends AbstractForker {
 	 * Fork a post along with it's meta data and taxonomy associations.
 	 *
 	 * @param  int|\WP_Post $post
-	 * @return boolean|\WP_Error
+	 * @return boolean|\WP_Error|int Forked post id.
 	 */
 	public function fork( $post ) {
 		if ( ! ( defined( '_wp_translate_postdata' ) ) ) {
