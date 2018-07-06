@@ -147,7 +147,7 @@ class PostMerger extends AbstractMerger  {
 	public function prepare_post_data( $post_data, $update ) {
 		try {
 			// Make sure the post data contains the correct keys for the DB post columns. This is needed in case $_POST data is used where the form fields don't all match the DB columns.
-			$post_data = _wp_translate_postdata( $update, $post_data );
+			$post_data = \TenUp\WPSafeEdit\Helpers\_wp_translate_postdata( $update, $post_data );
 
 			if ( empty( $post_data ) || ! is_array( $post_data ) ) {
 				throw new InvalidArgumentException(

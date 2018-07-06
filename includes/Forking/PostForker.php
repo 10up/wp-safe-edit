@@ -316,7 +316,7 @@ class PostForker extends AbstractForker {
 			}
 
 			// Make sure the post data contains the correct keys for the DB post columns. This is needed in case $_POST data is used where the form fields don't all match the DB columns.
-			$post_data = _wp_translate_postdata( false, $post_data );
+			$post_data = \TenUp\WPSafeEdit\Helpers\_wp_translate_postdata( false, $post_data );
 
 			$excluded_columns = $this->get_columns_to_exclude();
 			foreach ( (array) $excluded_columns as $column ) {
@@ -355,7 +355,7 @@ class PostForker extends AbstractForker {
 		}
 
 		// Make sure the post data contains the correct keys for the DB post columns. This is needed in case $_POST data is used where the form fields don't all match the DB columns.
-		$post_data = _wp_translate_postdata( true, $post_data );
+		$post_data = \TenUp\WPSafeEdit\Helpers\_wp_translate_postdata( true, $post_data );
 
 		$excluded_columns = $this->get_columns_to_exclude();
 		foreach ( (array) $excluded_columns as $column ) {
