@@ -66,7 +66,11 @@ class PostMerger extends AbstractMerger  {
 			}
 
 			// First, save the fork in case changes were made to the fields but not saved.
-			$fork_post_data       = $this->prepare_post_data( $_POST, true );
+			if ( isset( $_POST['ID'] ) ) {
+				$fork_post_data = $this->prepare_post_data( $_POST, true );
+			} else {
+				$fork_post_data = $fork;
+			}
 			$updated_fork_post_id = wp_update_post( $fork_post_data, true );
 
 			if ( is_wp_error( $updated_fork_post_id ) ) {
