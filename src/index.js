@@ -12,7 +12,6 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 	class WPSafeEditSidebar extends Component {
 
 		async forkPost( e ) {
-			console.log( e );
 			e.preventDefault();
 			const id = document.getElementById( 'post_ID' ).value;
 			const request = {
@@ -28,7 +27,6 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			if ( result.data && result.data.shouldRedirect ) {
 				document.location = result.data.redirectUrl;
 			}
-			console.log( result );
 		}
 
 		async mergeFork( e ) {
@@ -60,7 +58,6 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 					const currentPostStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 					if ( 'publish' === currentPostStatus ) {
 						unssubscribe();
-						console.log('publish');
 						setTimeout( () => {
 							// Merge the fork.
 							this.mergeFork();
