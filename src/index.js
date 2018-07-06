@@ -70,7 +70,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			}
 
 			// Remove any previous notice.
-			wp.data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
+			wp.data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_STATUS_ID );
 
 			// Display a notice to inform the user if this is a safe draft.
 			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
