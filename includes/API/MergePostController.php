@@ -20,6 +20,85 @@ class MergePostController {
 			'post_action_merge_post',
 			array( $this, 'handle_merge_post_request' )
 		);
+		add_action( 'rest_api_init', function () {
+			register_rest_route( 'wp-safe-edit/v1', '/merge/(?P<id>\d+)', array(
+				'methods' => 'GET',
+				'callback' => 'TenUp\WPSafeEdit\API\MergePostController::handle_merge_post_api_request',
+				'permission_callback' => '__return_true',
+				'args'                => array(
+					'id'        => array(
+						'required'    => true,
+						'description' => esc_html__( 'Id of post that is being forked.', 'wp-safe-edit' ),
+						'type'        => 'integer',
+					),
+					'nonce'     => array(
+						'required'    => true,
+						'description' => esc_html__( 'Action nonce.', 'wp-safe-edit' ),
+						'type'        => 'string',
+					),
+				),
+
+			) );
+		} );
+	}
+
+	// Handle REST API based forking requests.
+	public static function handle_merge_post_api_request( $request ) {
+
+		$post_id = absint( $request['id'] );
+
+		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
+			wp_send_json_error(
+				esc_html__( 'Post could not be merged because the request did not provide a valid post ID.', 'wp-safe-edit' )
+			);
+		}
+
+		try {
+			$_POST            = (array) get_post( $post_id );
+			$_POST['post_ID'] = $post_id;
+			$merger           = new PostMerger();
+			$result           = $merger->merge( $post_id );
+
+			if ( true === Helpers\is_valid_post_id( $result ) ) {
+				$message = self::get_post_merge_success_message( $result, $post_id );
+				$url = get_edit_post_link( $post_id, 'nodisplay' );
+				$url = add_query_arg( array(
+					'pf_success_message' => rawurlencode( $message ),
+				), $url );
+
+				$url = apply_filters( 'safe_edit_post_merge_success_redirect_url', $url, $result, $post_id );
+
+				// Stay in the classic editor when forking from the classic editor.
+				if ( isset( $_REQUEST[ 'classic-editor' ] ) ) {
+					$url = add_query_arg( array(
+						'classic-editor' => true,
+					), $url );
+				}
+				$data = array(
+					'shouldRedirect' => self::should_redirect(),
+					'redirectUrl'    => $url,
+					'message'		 => $message,
+				);
+				wp_send_json_success( $data );
+			} else {
+				$message = self::get_post_merge_failure_message_from_result( $result );
+				wp_send_json_error(
+					$message
+				);
+			}
+		} catch ( Exception $e ) {
+			\TenUp\WPSafeEdit\Logging\log_exception( $e );
+
+			$result = new WP_Error(
+				'post_merger',
+				$e->getMessage()
+			);
+
+			$message = self::get_post_merge_failure_message_from_result( $result );
+			wp_send_json_error(
+				$message
+			);
+		}
 	}
 
 	/**
