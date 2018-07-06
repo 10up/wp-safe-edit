@@ -67,6 +67,17 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 						}, 300 );
 					}
 				} );
+			} else {
+
+				// Display any message except on for editing page
+				if ( gutenbergData.message ) {
+					data.dispatch( 'core/editor' ).createSuccessNotice( gutenbergData.message, {
+						id: WP_SAFE_EDIT_NOTICE_ID,
+					} );
+				} else {
+					// Remove any previous notice.
+					wp.data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
+				}
 			}
 
 			// Remove any previous notice.
@@ -112,14 +123,4 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 		render: WPSafeEditSidebar,
 		icon: null,
 	} );
-
-	// Display any message.
-	if ( gutenbergData.message ) {
-		data.dispatch( 'core/editor' ).createSuccessNotice( gutenbergData.message, {
-			id: WP_SAFE_EDIT_NOTICE_ID,
-		} );
-	} else {
-		// Remove any previous notice.
-		wp.data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
-	}
 }
