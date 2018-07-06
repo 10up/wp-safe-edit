@@ -150,11 +150,11 @@ class MergePostController {
 	public function handle_merge_success( $source_post_id, $fork_post_id ) {
 		do_action( 'safe_edit_post_merge_success', $fork_post_id, $source_post_id );
 
-		if ( true !== $this->should_redirect() ) {
+		if ( true !== self::should_redirect() ) {
 			return;
 		}
 
-		$message = $this->get_post_merge_success_message( $source_post_id, $fork_post_id );
+		$message = self::get_post_merge_success_message( $source_post_id, $fork_post_id );
 
 		$url = get_edit_post_link( $source_post_id, 'nodisplay' );
 		$url = add_query_arg( array(
@@ -183,11 +183,11 @@ class MergePostController {
 	public function handle_merge_failure( $fork_post_id, $result ) {
 		do_action( 'safe_edit_post_fork_failure', $fork_post_id, $result );
 
-		if ( true !== $this->should_redirect() ) {
+		if ( true !== self::should_redirect() ) {
 			return;
 		}
 
-		$message = $this->get_post_merge_failure_message_from_result( $result );
+		$message = self::get_post_merge_failure_message_from_result( $result );
 
 		$url = get_edit_post_link( $fork_post_id, 'nodisplay' );
 		$url = add_query_arg( array(
@@ -206,7 +206,7 @@ class MergePostController {
 	 * @param  \WP_Error|mixed $result The result from the merge request, usually a WP_Error.
 	 * @return string
 	 */
-	public function get_post_merge_failure_message_from_result( $result ) {
+	public static function get_post_merge_failure_message_from_result( $result ) {
 		$message = __( 'The draft changes could not be published.', 'wp-safe-edit' );
 
 		if ( is_wp_error( $result ) ) {
@@ -223,7 +223,7 @@ class MergePostController {
 	 * @param  int|\WP_Post $fork The fork that was merged into its source post
 	 * @return string
 	 */
-	public function get_post_merge_success_message( $source_post, $fork ) {
+	public static function get_post_merge_success_message( $source_post, $fork ) {
 		$message = __( 'The draft changes have been published.', 'wp-safe-edit' );
 
 		return apply_filters( 'safe_edit_merge_success_message', $message, $source_post, $fork );
@@ -234,7 +234,7 @@ class MergePostController {
 	 *
 	 * @return boolean
 	 */
-	public function should_redirect() {
+	public static function should_redirect() {
 		if ( defined( 'PHPUNIT_RUNNER' ) || defined( 'WP_CLI' ) ) {
 			return false;
 		}
