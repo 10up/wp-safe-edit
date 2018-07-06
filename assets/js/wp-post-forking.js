@@ -211,7 +211,7 @@
 			if ( ! this.forkButton ) {
 				this.forkButton = document.getElementById('wpse-fork-post-button');
 			}
-			console.log( 'getForkButton', this.forkButton );
+
 			return this.forkButton;
 		},
 
@@ -221,10 +221,6 @@
 
 			if ( ! form || ! formActionField ) {
 				event.preventDefault();
-
-				// Perform an Ajax callback for Gutenberg,
-				console.log( event );
-
 				return false;
 			}
 
@@ -285,7 +281,7 @@
 			showPostFormSpinner();
 		},
 	};
-console.log( 'forkPostSupport' );
+
 	var forkPostSupport = new ForkPostSupport();
 	forkPostSupport.init();
 
