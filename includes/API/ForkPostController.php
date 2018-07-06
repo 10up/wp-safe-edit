@@ -154,7 +154,7 @@ class ForkPostController {
 				'classic-editor' => true,
 			), $url );
 		}
-		error_log( $url );
+
 		wp_redirect( $url );
 		exit;
 	}
