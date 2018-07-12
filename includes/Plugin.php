@@ -63,8 +63,18 @@ class Plugin {
 		);
 
 		add_action(
+			'enqueue_block_editor_assets',
+			array( $this, 'enqueue_gutenberg_edit_scripts' )
+		);
+
+		add_action(
 			'admin_enqueue_scripts',
 			array( $this, 'enqueue_admin_styles' )
+		);
+
+		add_filter(
+			'admin_body_class',
+			array( $this, 'admin_body_class' )
 		);
 
 		do_action( 'safe_edit_loaded' );
@@ -144,6 +154,28 @@ class Plugin {
 		);
 	}
 
+	// Enable Gutenberg support.
+	function enqueue_gutenberg_edit_scripts() {
+		wp_enqueue_script(
+			'wp_safe_edit_gutrnberg_admin',
+			trailingslashit( WP_SAFE_EDIT_URL ) . "dist/main.js",
+			array( 'wp-blocks' ),
+			WP_SAFE_EDIT_VERSION,
+			true
+		);
+		wp_localize_script(
+			'wp_safe_edit_gutrnberg_admin',
+			'gutenbergData',
+			array(
+				'id'        => get_the_ID(),
+				'forknonce' => wp_create_nonce( 'post-fork' ),
+				'message'   => isset( $_GET['pf_success_message'] ) ?
+					sanitize_text_field( $_GET['pf_success_message'] ) :
+					false,
+			)
+		);
+	}
+
 	function enqueue_admin_styles() {
 		$min     = '.min';
 		$version = WP_SAFE_EDIT_VERSION;
@@ -159,5 +191,19 @@ class Plugin {
 			array(),
 			$version
 		);
+	}
+
+	function admin_body_class( $classes ) {
+		global $post;
+
+		if ( ! $post ) {
+			return $classes;
+		}
+
+		if ( 'wpse-draft' === $post->post_status ) {
+			$classes .= ' wpse-draft ';
+		}
+
+		return $classes;
 	}
 }

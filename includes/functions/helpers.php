@@ -19,6 +19,23 @@ function get_post( $post ) {
 	return $post;
 }
 
+
+/**
+ * Stub core function for REST context.
+ *
+ * @param bool $update Are we updating a pre-existing post?
+ * @param array $post_data Array of post data. Defaults to the contents of $_POST.
+ *
+ * @return object The post data object.
+ */
+function _wp_translate_postdata( $update = false, $post_data = null ) {
+	if ( function_exists( '\_wp_translate_postdata' ) ) {
+		return \_wp_translate_postdata( $update, $post_data );
+	} else {
+		return $post_data;
+	}
+}
+
 /**
  * Determine if the object is a post object.
  *

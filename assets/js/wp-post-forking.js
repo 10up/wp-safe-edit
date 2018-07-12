@@ -1,6 +1,6 @@
 /*! WP Safe Edit - v0.1.0
  * https://github.com/10up/WP-Safe-Edit
- * Copyright (c) 2017; * Licensed MIT */
+ * Copyright (c) 2018; * Licensed MIT */
 ( function( $, window, undefined ) {
 	'use strict';
 	var form            = null,
@@ -141,11 +141,12 @@
 	ForkPostSupport.prototype = {
 		init: function () {
 			var self = this;
-
-			$(document).ready(function () {
-				self.setupEvents();
-				self.setupLockDialog();
-			});
+			$(document).ready( function () {
+				setTimeout( function() {
+					self.setupEvents();
+					self.setupLockDialog();
+				}, 500 );
+			} );
 		},
 
 		setupEvents: function() {
@@ -237,8 +238,10 @@
 		init: function () {
 			var self = this;
 
-			$(document).ready(function () {
-				self.setupEvents();
+			$(document).ready( function () {
+				setTimeout( function() {
+					self.setupEvents();
+				}, 500 );
 			});
 		},
 

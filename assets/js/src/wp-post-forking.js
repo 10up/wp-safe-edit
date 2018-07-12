@@ -146,11 +146,12 @@
 	ForkPostSupport.prototype = {
 		init: function () {
 			var self = this;
-
-			$(document).ready(function () {
-				self.setupEvents();
-				self.setupLockDialog();
-			});
+			$(document).ready( function () {
+				setTimeout( function() {
+					self.setupEvents();
+					self.setupLockDialog();
+				}, 500 );
+			} );
 		},
 
 		setupEvents: function() {
@@ -242,8 +243,10 @@
 		init: function () {
 			var self = this;
 
-			$(document).ready(function () {
-				self.setupEvents();
+			$(document).ready( function () {
+				setTimeout( function() {
+					self.setupEvents();
+				}, 500 );
 			});
 		},
 

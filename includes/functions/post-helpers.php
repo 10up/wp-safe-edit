@@ -87,7 +87,7 @@ function post_can_be_merged( $post ) {
 			);
 		}
 
-		if ( true !== is_open_fork( $post ) ) {
+		if ( true !== is_open_fork( $post ) && 'publish' !== $post->post_status ) {
 			throw new Exception(
 				'Post cannot be merged because it is not an open fork.'
 			);
