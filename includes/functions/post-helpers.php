@@ -24,37 +24,37 @@ function post_can_be_forked( $post ) {
 	try {
 		if ( true !== Helpers\is_post( $post ) ) {
 			throw new InvalidArgumentException(
-				'Post cannot be forked because it is not a valid post object or post ID.'
+				esc_html__( 'Post cannot be forked because it is not a valid post object or post ID.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true !== post_type_supports_forking( $post ) ) {
 			throw new Exception(
-				'Post cannot be forked because the post type does not support forking.'
+				esc_html__( 'Post cannot be forked because the post type does not support forking.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true !== in_array( $post->post_status, array( 'publish', 'private' ) ) ) {
 			throw new Exception(
-				'Post cannot be forked because the post status is not supported.'
+				esc_html__( 'Post cannot be forked because the post status is not supported.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true === is_open_fork( $post ) ) {
 			throw new Exception(
-				'Post cannot be forked because it is already a fork.'
+				esc_html__( 'Post cannot be forked because it is already a fork.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true === post_has_open_fork( $post ) ) {
 			throw new Exception(
-				'Post cannot be forked because a previous fork that is still open.'
+				esc_html__( 'Post cannot be forked because a previous fork that is still open.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true !== current_user_can_fork_post( $post ) ) {
 			throw new Exception(
-				'Post cannot be forked because the current user does not have permission.'
+				esc_html__( 'Post cannot be forked because the current user does not have permission.', 'wp-safe-edit' )
 			);
 		}
 
@@ -77,31 +77,31 @@ function post_can_be_merged( $post ) {
 	try {
 		if ( true !== Helpers\is_post( $post ) ) {
 			throw new InvalidArgumentException(
-				'Post cannot be merged because it is not a valid post object or post ID.'
+				esc_html__( 'Post cannot be merged because it is not a valid post object or post ID.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true !== post_type_supports_forking( $post ) ) {
 			throw new Exception(
-				'Post cannot be merged because the post type does not support forking.'
+				esc_html__( 'Post cannot be merged because the post type does not support forking.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true !== is_open_fork( $post ) && 'publish' !== $post->post_status ) {
 			throw new Exception(
-				'Post cannot be merged because it is not an open fork.'
+				esc_html__( 'Post cannot be merged because it is not an open fork.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true !== fork_has_source_post( $post ) ) {
 			throw new Exception(
-				'Post cannot be merged because the source post cannot be found.'
+				esc_html__( 'Post cannot be merged because the source post cannot be found.', 'wp-safe-edit' )
 			);
 		}
 
 		if ( true !== current_user_can_merge_post( $post ) ) {
 			throw new Exception(
-				'Post cannot be merged because the current user does not have permission.'
+				esc_html__( 'Post cannot be merged because the current user does not have permission.', 'wp-safe-edit' )
 			);
 		}
 
@@ -403,7 +403,7 @@ function set_original_post_id_for_fork( $forked_post, $original_post ) {
 			true !== Helpers\is_valid_post_id( $original_post_id )
 		) {
 			throw new Exception(
-				'Could not set the original post ID for a fork because the fork or original post were invalid.'
+				esc_html__( 'Could not set the original post ID for a fork because the fork or original post were invalid.', 'wp-safe-edit' )
 			);
 		}
 
@@ -434,7 +434,7 @@ function get_original_post_id_for_fork( $forked_post ) {
 
 		if ( true !== Helpers\is_valid_post_id( $forked_post ) ) {
 			throw new Exception(
-				'Could not get the original post ID for a fork because the fork was invalid.'
+				esc_html__( 'Could not get the original post ID for a fork because the fork was invalid.', 'wp-safe-edit' )
 			);
 		}
 

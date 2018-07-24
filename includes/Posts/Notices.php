@@ -7,6 +7,11 @@ namespace TenUp\WPSafeEdit\Posts;
  */
 class Notices {
 
+	/**
+	 * Add needed hooks.
+	 *
+	 * @return void
+	 */
 	public function register() {
 		add_action(
 			'admin_notices',
@@ -14,11 +19,21 @@ class Notices {
 		);
 	}
 
+	/**
+	 * Render our notices.
+	 *
+	 * @return void
+	 */
 	public function render_notices() {
 		$this->render_success_notices();
 		$this->render_error_notices();
 	}
 
+	/**
+	 * Render the success notices.
+	 *
+	 * @return void
+	 */
 	public function render_success_notices() {
 		$notice = sanitize_text_field(
 			rawurldecode(
@@ -37,6 +52,11 @@ class Notices {
 	<?php
 	}
 
+	/**
+	 * Render the error notices.
+	 *
+	 * @return void
+	 */
 	public function render_error_notices() {
 		$notice = sanitize_text_field(
 			rawurldecode(

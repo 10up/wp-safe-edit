@@ -25,7 +25,7 @@ class PostMerger extends AbstractMerger  {
 		try {
 			if ( true !== $this->can_merge( $fork ) ) {
 				throw new Exception(
-					'Post could not be merged.'
+					esc_html__( 'Post could not be merged.', 'wp-safe-edit' )
 				);
 			}
 
@@ -33,7 +33,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( true !== Helpers\is_valid_post_id( $result ) ) {
 				throw new Exception(
-					'Post could not be merged.'
+					esc_html__( 'Post could not be merged.', 'wp-safe-edit' )
 				);
 			}
 
@@ -61,7 +61,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( true !== Helpers\is_post( $fork ) ) {
 				throw new InvalidArgumentException(
-					'Post could not be merged because it is not a valid post object or post ID.'
+					esc_html__( 'Post could not be merged because it is not a valid post object or post ID.', 'wp-safe-edit' )
 				);
 			}
 
@@ -75,7 +75,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( is_wp_error( $updated_fork_post_id ) ) {
 				throw new Exception(
-					'Fork could not be updated with $_POST data during merge: ' . $updated_fork_post_id->get_error_message()
+					esc_html__( 'Fork could not be updated with $_POST data during merge: ', 'wp-safe-edit' ) . $updated_fork_post_id->get_error_message()
 				);
 			}
 
@@ -86,7 +86,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( true !== Helpers\is_post( $source_post ) ) {
 				throw new Exception(
-					'Post could not be merged because the source post could not be found.'
+					esc_html__( 'Post could not be merged because the source post could not be found.', 'wp-safe-edit' )
 				);
 			}
 
@@ -97,7 +97,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( ! is_array( $post_data ) || empty( $post_data ) ) {
 				throw new Exception(
-					'Fork could not be merged because the post data was invalid.'
+					esc_html__( 'Fork could not be merged because the post data was invalid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -105,13 +105,13 @@ class PostMerger extends AbstractMerger  {
 
 			if ( is_wp_error( $merge_post_id ) ) {
 				throw new Exception(
-					'Fork could not be merged: ' . $merge_post_id->get_error_message()
+					esc_html__( 'Fork could not be merged: ', 'wp-safe-edit' ) . $merge_post_id->get_error_message()
 				);
 			}
 
 			if ( true !== Helpers\is_valid_post_id( $merge_post_id ) ) {
 				throw new Exception(
-					'Fork could not be merged.'
+					esc_html__( 'Fork could not be merged.', 'wp-safe-edit' )
 				);
 			}
 
@@ -151,7 +151,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( empty( $post_data ) || ! is_array( $post_data ) ) {
 				throw new InvalidArgumentException(
-					'Could not prepare the post data to merging because it was invalid.'
+					esc_html__( 'Could not prepare the post data to merging because it was invalid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -178,7 +178,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( true !== Helpers\is_post( $fork ) ) {
 				throw new InvalidArgumentException(
-					'Could not prepare the forked post data to merge because the fork is not a valid post object or post ID.'
+					esc_html__( 'Could not prepare the forked post data to merge because the fork is not a valid post object or post ID.', 'wp-safe-edit' )
 				);
 			}
 
@@ -186,7 +186,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( true !== Helpers\is_post( $source_post ) ) {
 				throw new InvalidArgumentException(
-					'Could not prepare the forked post data to merge because the source post is not a valid post object or post ID.'
+					esc_html__( 'Could not prepare the forked post data to merge because the source post is not a valid post object or post ID.', 'wp-safe-edit' )
 				);
 			}
 
@@ -228,7 +228,7 @@ class PostMerger extends AbstractMerger  {
 				true !== Helpers\is_post( $forked_post )
 			) {
 				throw new InvalidArgumentException(
-					'Could not merge post meta because the posts given were not valid.'
+					esc_html__( 'Could not merge post meta because the posts given were not valid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -270,7 +270,7 @@ class PostMerger extends AbstractMerger  {
 				true !== Helpers\is_post( $forked_post )
 			) {
 				throw new InvalidArgumentException(
-					'Could not merge post terms because the posts given were not valid.'
+					esc_html__( 'Could not merge post terms because the posts given were not valid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -301,7 +301,7 @@ class PostMerger extends AbstractMerger  {
 		try {
 			if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
 				throw new Exception(
-					'Forked post could not be archived because the supplied post ID was not valid.'
+					esc_html__( 'Forked post could not be archived because the supplied post ID was not valid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -313,7 +313,7 @@ class PostMerger extends AbstractMerger  {
 
 			if ( true !== Helpers\is_valid_post_id( $result ) ) {
 				throw new Exception(
-					'Forked post could not be archived.'
+					esc_html__( 'Forked post could not be archived.', 'wp-safe-edit' )
 				);
 			}
 

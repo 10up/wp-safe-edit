@@ -76,7 +76,7 @@ class ForkPostController {
 
 			$data = array(
 				'shouldRedirect' => self::should_redirect(),
-				'redirectUrl'    => $url,
+				'redirectUrl'    => esc_url( $url ),
 			);
 			wp_send_json_success( $data );
 
@@ -95,13 +95,13 @@ class ForkPostController {
 
 			if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
 				throw new Exception(
-					'Post could not be forked because the request did not provide a valid post ID.'
+					esc_html__( 'Post could not be forked because the request did not provide a valid post ID.', 'wp-safe-edit' )
 				);
 			}
 
 			if ( true !== $this->is_request_valid() ) {
 				throw new Exception(
-					'Post could not be forked because the request was invalid.'
+					esc_html__( 'Post could not be forked because the request was invalid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -155,7 +155,7 @@ class ForkPostController {
 			), $url );
 		}
 
-		wp_redirect( $url );
+		wp_redirect( esc_url( $url ) );
 		exit;
 	}
 
@@ -181,7 +181,7 @@ class ForkPostController {
 
 		$url = apply_filters( 'safe_edit_post_fork_failure_redirect_url', $url, $source_post_id, $result );
 
-		wp_redirect( $url );
+		wp_redirect( esc_url( $url ) );
 		exit;
 	}
 
@@ -257,13 +257,13 @@ class ForkPostController {
 
 			if ( false === wp_verify_nonce( $nonce, static::NONCE_ACTION ) ) {
 				throw new Exception(
-					'Post could not be forked because the request nonce was invalid.'
+					esc_html__( 'Post could not be forked because the request nonce was invalid.', 'wp-safe-edit' )
 				);
 			}
 
 			if ( true !== \TenUp\WPSafeEdit\Posts\post_can_be_forked( $post_id ) ) {
 				throw new Exception(
-					'Post could not be forked because the post specified in the request was not forkable.'
+					esc_html__( 'Post could not be forked because the post specified in the request was not forkable.', 'wp-safe-edit' )
 				);
 			}
 

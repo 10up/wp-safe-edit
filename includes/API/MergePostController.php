@@ -110,13 +110,13 @@ class MergePostController {
 
 			if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
 				throw new Exception(
-					'Post could not be merged because the request did not provide a valid post ID.'
+					esc_html__( 'Post could not be merged because the request did not provide a valid post ID.', 'wp-safe-edit' )
 				);
 			}
 
 			if ( true !== $this->is_request_valid() ) {
 				throw new Exception(
-					'Post could not be merged because the request was invalid.'
+					esc_html__( 'Post could not be merged because the request was invalid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -170,7 +170,7 @@ class MergePostController {
 			), $url );
 		}
 
-		wp_redirect( $url );
+		wp_redirect( esc_url( $url ) );
 		exit;
 	}
 
@@ -196,7 +196,7 @@ class MergePostController {
 
 		$url = apply_filters( 'safe_edit_post_merge_failure_redirect_url', $url, $fork_post_id, $result );
 
-		wp_redirect( $url );
+		wp_redirect( esc_url( $url ) );
 		exit;
 	}
 
@@ -272,13 +272,13 @@ class MergePostController {
 
 			if ( false === wp_verify_nonce( $nonce, static::NONCE_ACTION ) ) {
 				throw new Exception(
-					'Post could not be merged because the request nonce was invalid.'
+					esc_html__( 'Post could not be merged because the request nonce was invalid.', 'wp-safe-edit' )
 				);
 			}
 
 			if ( true !== \TenUp\WPSafeEdit\Posts\post_can_be_merged( $post_id ) ) {
 				throw new Exception(
-					'Post could not be merged because the post specified in the request was not mergable.'
+					esc_html__( 'Post could not be merged because the post specified in the request was not mergable.', 'wp-safe-edit' )
 				);
 			}
 

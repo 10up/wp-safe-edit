@@ -136,6 +136,11 @@ class Plugin {
 		do_action( 'safe_edit_init' );
 	}
 
+	/**
+	 * Enqueue any needed admin scripts.
+	 *
+	 * @return void
+	 */
 	function enqueue_admin_scripts() {
 		$min     = '.min';
 		$version = WP_SAFE_EDIT_VERSION;
@@ -154,7 +159,11 @@ class Plugin {
 		);
 	}
 
-	// Enable Gutenberg support.
+	/**
+	 * Enable Gutenberg support.
+	 *
+	 * @return void
+	 */
 	function enqueue_gutenberg_edit_scripts() {
 		wp_enqueue_script(
 			'wp_safe_edit_gutrnberg_admin',
@@ -176,6 +185,11 @@ class Plugin {
 		);
 	}
 
+	/**
+	 * Enqueue any needed admin styles.
+	 *
+	 * @return void
+	 */
 	function enqueue_admin_styles() {
 		$min     = '.min';
 		$version = WP_SAFE_EDIT_VERSION;
@@ -193,6 +207,12 @@ class Plugin {
 		);
 	}
 
+	/**
+	 * Add custom body class to drafts.
+	 *
+	 * @param string $classes Current classes.
+	 * @return string
+	 */
 	function admin_body_class( $classes ) {
 		global $post;
 

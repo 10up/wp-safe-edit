@@ -28,6 +28,11 @@ class PublishingButtons {
 		);
 	}
 
+	/**
+	 * Render needed items.
+	 *
+	 * @return void
+	 */
 	public function render_publishing_buttons() {
 		$this->render_open_fork_message();
 		$this->render_archived_fork_message();
@@ -42,6 +47,8 @@ class PublishingButtons {
 
 	/**
 	 * Render a message letting the user know the post has an open fork pending.
+	 *
+	 * @return void
 	 */
 	function render_open_fork_message() {
 		global $post;
@@ -73,6 +80,8 @@ class PublishingButtons {
 
 	/**
 	 * Render a message letting the user know they're editing a fork and can view the source post.
+	 *
+	 * @return void
 	 */
 	function render_view_source_post_message() {
 		global $post;
@@ -96,7 +105,7 @@ class PublishingButtons {
 				target="_blank"
 				rel="noopener noreferrer">%s</a>',
 			esc_url( get_permalink( $source_post->ID ) ),
-			get_the_title( $source_post )
+			esc_html( get_the_title( $source_post ) )
 		);
 
 		$message = sprintf( $message, $link ); ?>
@@ -109,6 +118,8 @@ class PublishingButtons {
 
 	/**
 	 * Render a message letting the user know they're viewing an archived fork and can view the source post.
+	 *
+	 * @return void
 	 */
 	function render_archived_fork_message() {
 		global $post;
@@ -140,6 +151,8 @@ class PublishingButtons {
 
 	/**
 	 * Render the "Fork Post" publishing button.
+	 *
+	 * @return void
 	 */
 	function render_fork_post_button() {
 		global $post;
@@ -171,6 +184,8 @@ class PublishingButtons {
 
 	/**
 	 * Render the "Merge Post" publishing button.
+	 *
+	 * @return void
 	 */
 	function render_merge_post_button() {
 		global $post;
@@ -196,6 +211,11 @@ class PublishingButtons {
 	<?php
 	}
 
+	/**
+	 * Hide the publishing button.
+	 *
+	 * @return void
+	 */
 	public function alter_publishing_buttons() {
 		if ( true !== $this->should_hide_wp_publish_buttons() ) {
 			return;
@@ -210,6 +230,11 @@ class PublishingButtons {
 	<?php
 	}
 
+	/**
+	 * Hide publishing fields.
+	 *
+	 * @return void
+	 */
 	public function alter_publishing_fields() {
 		global $post;
 
@@ -227,6 +252,11 @@ class PublishingButtons {
 		}
 	}
 
+	/**
+	 * Hide the status field.
+	 *
+	 * @return void
+	 */
 	public function alter_status_field() {
 		if ( true !== $this->should_hide_wp_status_field() ) {
 			return;
@@ -241,6 +271,11 @@ class PublishingButtons {
 	<?php
 	}
 
+	/**
+	 * Determine if we should hide the publish button.
+	 *
+	 * @return bool
+	 */
 	public function should_hide_wp_publish_buttons() {
 		global $post;
 
@@ -263,6 +298,11 @@ class PublishingButtons {
 		return $value;
 	}
 
+	/**
+	 * Determine if we should hide the status field.
+	 *
+	 * @return bool
+	 */
 	public function should_hide_wp_status_field() {
 		global $post;
 
@@ -283,7 +323,9 @@ class PublishingButtons {
 	}
 
 	/**
-	 * Render a dialog letting the user know the psot is locked because of an open fork exists.
+	 * Render a dialog letting the user know the post is locked because of an open fork exists.
+	 *
+	 * @return void
 	 */
 	function render_lock_dialog() {
 		global $pagenow;
@@ -334,36 +376,71 @@ class PublishingButtons {
 	<?php
 	}
 
+	/**
+	 * Get the fork button label.
+	 *
+	 * @return string
+	 */
 	function get_fork_post_button_label() {
 		$value = __( 'Save as Draft', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_fork_post_button_label', $value );
 	}
 
+	/**
+	 * Get the merge button label.
+	 *
+	 * @return string
+	 */
 	function get_merge_post_button_label() {
 		$value = __( 'Publish Changes', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_merge_post_button_label', $value );
 	}
 
+	/**
+	 * Get the fork exists message.
+	 *
+	 * @return string
+	 */
 	function get_fork_exists_message() {
 		$value = __( 'A draft version of this post has been created. Changes must be made on the draft until it\'s published.', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_fork_exists_message', $value );
 	}
 
+	/**
+	 * Get the editing fork message.
+	 *
+	 * @return string
+	 */
 	function get_editing_fork_message() {
 		$value = __( 'You\'re editing a draft of %s. Publish your changes to make them live.', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_editing_fork_message', $value );
 	}
 
+	/**
+	 * Get the viewing archived fork message.
+	 *
+	 * @return string
+	 */
 	function get_viewing_archived_fork_message() {
 		$value = __( 'You\'re viewing an archived draft revision. This draft can no longer be edited.', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_viewing_archived_fork_message', $value );
 	}
 
+	/**
+	 * Get the edit fork label.
+	 *
+	 * @return string
+	 */
 	function get_edit_fork_label() {
 		$value = __( 'Edit Draft', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_edit_fork_link_label', $value );
 	}
 
+	/**
+	 * Get the edit source label.
+	 *
+	 * @return string
+	 */
 	function get_edit_source_post_label() {
 		$value = __( 'Edit the published version', 'wp-safe-edit' );
 		return apply_filters( 'safe_edit_edit_source_post_link_label', $value );

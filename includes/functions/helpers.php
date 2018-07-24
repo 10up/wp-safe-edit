@@ -2,7 +2,10 @@
 namespace TenUp\WPSafeEdit\Helpers;
 
 /**
- * Get a post object, but only if the ID is not zero. Use this instead of WordPress' get_post( $post ) when you don't want the global post returned when a valid post or post ID isn't given.
+ * Get a post object, but only if the ID is not zero.
+ *
+ * Use this instead of WordPress' get_post( $post ) when you don't
+ * want the global post returned when a valid post or post ID isn't given.
  *
  * @param  int|\WP_Post $post The post ID or object
  * @return \WP_Post|null
@@ -18,7 +21,6 @@ function get_post( $post ) {
 
 	return $post;
 }
-
 
 /**
  * Stub core function for REST context.

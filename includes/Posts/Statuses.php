@@ -40,6 +40,11 @@ class Statuses {
 		$this->archived_status = new ArchivedForkStatus();
 	}
 
+	/**
+	 * Register needed hooks.
+	 *
+	 * @return void
+	 */
 	public function register() {
 		$this->draft_status->register();
 		$this->pending_status->register();
@@ -58,6 +63,11 @@ class Statuses {
 		);
 	}
 
+	/**
+	 * Get our valid statuses.
+	 *
+	 * @return array
+	 */
 	public static function get_valid_fork_post_statuses() {
 		return array(
 			DraftForkStatus::get_name(),
@@ -125,20 +135,20 @@ class Statuses {
 
 		switch ( $status ) {
 			case DraftForkStatus::get_name():
-				$suffix = __( '— Draft Revision', 'wp-safe-edit' );
+				$suffix = esc_html__( '— Draft Revision', 'wp-safe-edit' );
 				break;
 
 			case PendingForkStatus::get_name():
-				$suffix = __( '— Pending Draft Revision', 'wp-safe-edit' );
+				$suffix = esc_html__( '— Pending Draft Revision', 'wp-safe-edit' );
 				break;
 
 			case ArchivedForkStatus::get_name():
-				$suffix = __( '— Archived Draft Revision', 'wp-safe-edit' );
+				$suffix = esc_html__( '— Archived Draft Revision', 'wp-safe-edit' );
 				break;
 
 			case 'publish':
 				if ( true === Posts\post_has_open_fork( $id ) ) {
-					$suffix = __( '— Draft Revision Pending', 'wp-safe-edit' );
+					$suffix = esc_html__( '— Draft Revision Pending', 'wp-safe-edit' );
 				}
 
 				break;

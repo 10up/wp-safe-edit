@@ -28,13 +28,13 @@ class PostForker extends AbstractForker {
 			$post = Helpers\get_post( $post );
 			if ( true !== Helpers\is_post( $post ) ) {
 				throw new InvalidArgumentException(
-					'Could not fork post because it\'s not valid or could not be found.'
+					esc_html__( 'Could not fork post because it\'s not valid or could not be found.', 'wp-safe-edit' )
 				);
 			}
 
 			if ( true !== $this->can_fork( $post ) ) {
 				throw new Exception(
-					'Post could not be forked.'
+					esc_html__( 'Post could not be forked.', 'wp-safe-edit' )
 				);
 			}
 
@@ -47,7 +47,7 @@ class PostForker extends AbstractForker {
 
 			if ( true !== Helpers\is_valid_post_id( $forked_post_id ) ) {
 				throw new Exception(
-					'Post could not be forked.'
+					esc_html__( 'Post could not be forked.', 'wp-safe-edit' )
 				);
 			}
 
@@ -76,7 +76,7 @@ class PostForker extends AbstractForker {
 
 			if ( true !== Helpers\is_post_or_post_id( $post ) ) {
 				throw new InvalidArgumentException(
-					'Post could not be forked because it is not a valid post object or post ID.'
+					esc_html__( 'Post could not be forked because it is not a valid post object or post ID.', 'wp-safe-edit' )
 				);
 			}
 
@@ -90,7 +90,7 @@ class PostForker extends AbstractForker {
 
 			if ( ! is_array( $post_data ) || empty( $post_data ) ) {
 				throw new Exception(
-					'Post could not be forked because the post data was invalid.'
+					esc_html__( 'Post could not be forked because the post data was invalid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -98,13 +98,13 @@ class PostForker extends AbstractForker {
 
 			if ( is_wp_error( $forked_post_id ) ) {
 				throw new Exception(
-					'Post could not be forked: ' . $forked_post_id->get_error_message()
+					esc_html__( 'Post could not be forked: ', 'wp-safe-edit' ) . $forked_post_id->get_error_message()
 				);
 			}
 
 			if ( true !== Helpers\is_valid_post_id( $forked_post_id ) ) {
 				throw new Exception(
-					'Post could not be forked.'
+					esc_html__( 'Post could not be forked.', 'wp-safe-edit' )
 				);
 			}
 
@@ -117,7 +117,7 @@ class PostForker extends AbstractForker {
 
 			if ( is_wp_error( $updated_forked_post_id ) ) {
 				throw new Exception(
-					'The fork could not be updated: ' . $updated_forked_post_id->get_error_message()
+					esc_html__( 'The fork could not be updated: ', 'wp-safe-edit' ) . $updated_forked_post_id->get_error_message()
 				);
 			}
 
@@ -175,7 +175,7 @@ class PostForker extends AbstractForker {
 			$post = Helpers\get_post( $post );
 			if ( true !== Helpers\is_post( $post ) ) {
 				throw new InvalidArgumentException(
-					'Could not create an archived fork of a post because it\'s not valid or could not be found.'
+					esc_html__( 'Could not create an archived fork of a post because it\'s not valid or could not be found.', 'wp-safe-edit' )
 				);
 			}
 
@@ -186,7 +186,7 @@ class PostForker extends AbstractForker {
 
 			if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
 				throw new Exception(
-					'Could not back up the original post data as an archived fork.'
+					esc_html__( 'Could not back up the original post data as an archived fork.', 'wp-safe-edit' )
 				);
 			}
 
@@ -219,7 +219,7 @@ class PostForker extends AbstractForker {
 				true !== Helpers\is_post( $forked_post )
 			) {
 				throw new InvalidArgumentException(
-					'Could not fork post meta because the posts given were not valid.'
+					esc_html__( 'Could not fork post meta because the posts given were not valid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -260,7 +260,7 @@ class PostForker extends AbstractForker {
 				true !== Helpers\is_post( $forked_post )
 			) {
 				throw new InvalidArgumentException(
-					'Could not fork post terms because the posts given were not valid.'
+					esc_html__( 'Could not fork post terms because the posts given were not valid.', 'wp-safe-edit' )
 				);
 			}
 
@@ -295,7 +295,7 @@ class PostForker extends AbstractForker {
 
 			if ( true !== Helpers\is_post( $post ) ) {
 				throw new InvalidArgumentException(
-					'Could not prepare the forked post data because the original post is not a valid post object or post ID.'
+					esc_html__( 'Could not prepare the forked post data because the original post is not a valid post object or post ID.', 'wp-safe-edit' )
 				);
 			}
 
@@ -307,7 +307,7 @@ class PostForker extends AbstractForker {
 
 			if ( empty( $post_status ) ) {
 				throw new Exception(
-					'Could not prepare the forked post data because the correct post status could not be determined.'
+					esc_html__( 'Could not prepare the forked post data because the correct post status could not be determined.', 'wp-safe-edit' )
 				);
 			}
 

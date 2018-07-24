@@ -13,6 +13,11 @@ use TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus;
  */
 class Trash {
 
+	/**
+	 * Register needed hooks.
+	 *
+	 * @return void
+	 */
 	public function register() {
 		add_action(
 			'trashed_post',
@@ -28,7 +33,8 @@ class Trash {
 	/**
 	 * Handle cleanup when a post is moved to the trash.
 	 *
-	 * @param  int $post_id The ID of the post trashed
+	 * @param int $post_id The ID of the post trashed
+	 * @return void
 	 */
 	public function handle_trashed_post( $post_id ) {
 		$this->trash_forks( $post_id );
@@ -37,7 +43,8 @@ class Trash {
 	/**
 	 * Handle cleanup when a post is untrashed.
 	 *
-	 * @param  int $post_id The ID of the post untrashed
+	 * @param int $post_id The ID of the post untrashed
+	 * @return void
 	 */
 	public function handle_untrashed_post( $post_id ) {
 		$this->untrash_forks( $post_id );
@@ -46,7 +53,8 @@ class Trash {
 	/**
 	 * Trash all forks for a post.
 	 *
-	 * @param  int $post_id The ID of the post to trash the forks for.
+	 * @param int $post_id The ID of the post to trash the forks for.
+	 * @return void
 	 */
 	public function trash_forks( $post_id ) {
 		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {
@@ -72,7 +80,8 @@ class Trash {
 	/**
 	 * Untrash all forks for a post.
 	 *
-	 * @param  int $post_id The ID of the post to untrash the forks for.
+	 * @param int $post_id The ID of the post to untrash the forks for.
+	 * @return void
 	 */
 	public function untrash_forks( $post_id ) {
 		if ( true !== Helpers\is_valid_post_id( $post_id ) ) {

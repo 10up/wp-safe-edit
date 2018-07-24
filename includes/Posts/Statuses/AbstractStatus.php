@@ -12,6 +12,8 @@ abstract class AbstractStatus {
 
 	/**
 	 * Returns the post status name.
+	 *
+	 * @return string
 	 */
 	public static function get_name() {
 		$value = static::NAME;
@@ -20,16 +22,28 @@ abstract class AbstractStatus {
 
 	/**
 	 * Returns the post status label.
+	 *
+	 * @return string
 	 */
 	public static function get_label() {
 		$value = static::LABEL;
 		return apply_filters( "post_forking_{$value}_post_status_label", $value );
 	}
 
+	/**
+	 * Run needed hooks/functions.
+	 *
+	 * @return void
+	 */
 	function register() {
 		$this->register_post_status();
 	}
 
+	/**
+	 * Register post status.
+	 *
+	 * @return void
+	 */
 	function register_post_status() {
 		register_post_status( $this->get_name(), $this->get_options() );
 	}

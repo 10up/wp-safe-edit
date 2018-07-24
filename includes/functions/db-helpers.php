@@ -209,6 +209,11 @@ SQL;
 	return $results;
 }
 
+/**
+ * Get the postmeta table name.
+ *
+ * @return string
+ */
 function get_postmeta_table_name() {
 	global $wpdb;
 	return $wpdb->postmeta;

@@ -154,6 +154,7 @@ class Posts {
 			add_post_type_support( $post_types, PostTypeSupport::FORKING_FEATURE_NAME );
 		}
 	}
+
 	/**
 	 * Modify the action links for post lists.
 	 *
@@ -179,7 +180,7 @@ class Posts {
 		$edit_draft_revision_action = array( 'draft_revision' => sprintf( 
 			'<a href="%1$s">%2$s</a>',
 			get_edit_post_link( $fork->ID ),
-			esc_html( __( 'Edit Draft Revision', 'wp-safe-edit' ) )
+			esc_html__( 'Edit Draft Revision', 'wp-safe-edit' )
 		) );
 
 		// Insert the Edit Draft Revision link after the Edit link.

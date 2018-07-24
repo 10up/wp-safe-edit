@@ -12,6 +12,11 @@ use \TenUp\WPSafeEdit\Posts\Statuses\ArchivedForkStatus;
  */
 class ArchivedForks {
 
+	/**
+	 * Add needed hooks.
+	 *
+	 * @return void
+	 */
 	public function register() {
 		add_action(
 			'add_meta_boxes',
@@ -19,6 +24,11 @@ class ArchivedForks {
 		);
 	}
 
+	/**
+	 * Register archived draft meta boxes.
+	 *
+	 * @return void
+	 */
 	public function register_meta_boxes() {
 		if ( true === $this->should_show_archived_forks_meta_box() ) {
 			$this->register_archived_forks_meta_box();
@@ -46,15 +56,26 @@ class ArchivedForks {
 		return apply_filters( 'safe_edit_should_show_archived_forks_meta_box', $value, $post );
 	}
 
+	/**
+	 * Add the archived draft meta box.
+	 *
+	 * @return void
+	 */
 	public function register_archived_forks_meta_box() {
 		add_meta_box(
 			'post-forking-archived-forks',
-			__( 'Archived Draft Revisions', 'wp-safe-edit' ),
+			esc_html__( 'Archived Draft Revisions', 'wp-safe-edit' ),
 			[ $this, 'render_archived_forks_meta_box' ],
 			(array) Posts\get_forkable_post_types()
 		);
 	}
 
+	/**
+	 * Render the archived draft meta box.
+	 *
+	 * @param \WP_Post $post Post object.
+	 * @return void
+	 */
 	public function render_archived_forks_meta_box( $post ) {
 		if ( true !== Helpers\is_post( $post ) ) {
 			return;
@@ -73,7 +94,7 @@ class ArchivedForks {
 						get_the_title()
 					); ?>
 					<br>
-					<span class="date"><?php echo get_the_date(); ?></span>
+					<span class="date"><?php echo esc_html( get_the_date() ); ?></span>
 				</p>
 			<?php
 			}
@@ -81,7 +102,7 @@ class ArchivedForks {
 			wp_reset_query();
 
 		} else { ?>
-			<p><?php echo esc_html_e( 'No draft revisions have been created yet.', 'wp-safe-edit' ); ?></p>
+			<p><?php esc_html_e( 'No draft revisions have been created yet.', 'wp-safe-edit' ); ?></p>
 		<?php
 		}
 	}
