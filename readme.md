@@ -12,10 +12,15 @@ Safely edit published posts behind the scenes without affecting the live site. Y
 
 1. Download and activate the plugin in WordPress.
 
-2. Draft functionality is available for posts and pages by default. You can register support for custom post types using an action:
+2. Draft functionality is available for posts and pages by default. You can register support for custom post types using a filter:
 
 ```php
-do_action( 'safe_edit_add_post_type_support', array( 'book', 'video' ) );
+add_filter( 'safe_edit_supported_post_types', function( $post_types ) {
+	// Add 'book' post type to array of supported post types.
+	$post_types[] = 'book';
+
+	return $post_types;
+} );
 ```
 
 ## Usage
@@ -26,9 +31,9 @@ _Figure 1._
 
 2. When editing a draft, it functions like any other post so you can do the following:
    * **Save Changes as a Draft:** Changes saved as a draft will not be reflected on the live site until you publish them.
-	 
+
    * **Preview Changes:** Preview your changes at any time by pressing the **"Preview"** button.
-   
+
    * **Trash Changes:** If you change your mind, you can trash your updates by pressing the **"Move to Trash"** link.
 
 3. Once you're happy with your changes, publish them by pressing the **"Publish Changes"** button [Fig. 2]. The post you created the draft from will be updated with your changes and reflected on the live site.<br><br>
