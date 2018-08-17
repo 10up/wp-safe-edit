@@ -135,8 +135,23 @@ class Posts {
 	 * @return void
 	 */
 	public function add_post_type_support() {
-		add_post_type_support( 'post', PostTypeSupport::FORKING_FEATURE_NAME );
-		add_post_type_support( 'page', PostTypeSupport::FORKING_FEATURE_NAME );
+		/**
+		 * Filter: WP Safe Edit Supported Post Types.
+		 *
+		 * Use this filter to add/remove post types from an array of supported post types.
+		 *
+		 * @param array $post_types An array of post type names that support safe editing.
+		 */
+		$post_types = apply_filters( 'safe_edit_supported_post_types', [ 'post', 'page' ] );
+
+		/**
+		 * Action: WP Safe Edit Add Post Type Support.
+		 *
+		 * Fires when support for WP Safe Edit is added to the supported post types.
+		 *
+		 * @param array $post_types An array of post type names that support safe editing.
+		 */
+		do_action( 'safe_edit_add_post_type_support', $post_types );
 	}
 
 	/**
