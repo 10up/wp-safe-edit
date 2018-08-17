@@ -12,10 +12,15 @@ Safely edit published posts behind the scenes without affecting the live site. Y
 
 1. Download and activate the plugin in WordPress.
 
-2. Draft functionality is available for posts and pages by default. You can register support for custom post types using an action:
+2. Draft functionality is available for posts and pages by default. You can register support for custom post types using a filter:
 
 ```php
-do_action( 'safe_edit_add_post_type_support', array( 'book', 'video' ) );
+add_filter( 'safe_edit_supported_post_types', function( $post_types ) {
+	// Add 'book' post type to array of supported post types.
+	$post_types[] = 'book';
+
+	return $post_types;
+} );
 ```
 
 ## Usage
