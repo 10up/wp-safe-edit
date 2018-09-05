@@ -1,5 +1,5 @@
 import { Component } from 'react';
-const { data, apiRequest } = wp;
+const { data, apiRequest, element } = wp;
 
 
 if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem ) {
@@ -86,6 +86,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 				const message = __( 'A draft has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
 				wp.data.dispatch( 'core/editor' ).createSuccessNotice(
 					message,
+					element.createElement( 'p', {}, message ),
 					{
 						id: WP_SAFE_EDIT_STATUS_ID,
 						isDismissible: false,
