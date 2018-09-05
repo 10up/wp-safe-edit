@@ -3,7 +3,7 @@ const { data, apiRequest, element } = wp;
 
 
 if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem ) {
-	const { __ } = wp.i18n;
+	const { __, setLocaleData } = wp.i18n;
 	const { PluginSidebarMoreMenuItem } = wp.editPost;
 	const { registerPlugin } = wp.plugins;
 	const WP_SAFE_EDIT_NOTICE_ID = 'wp-safe-edit-notice';
@@ -11,15 +11,21 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 
 	class WPSafeEditSidebar extends Component {
 
+		constructor( props ) {
+			super( props );
+
+			// Set up translations.
+			setLocaleData( wpSafeEditGutenbergData.locale, 'wp-safe-edit' );
+		}
 		async forkPost( e ) {
 			e.preventDefault();
 			const id = document.getElementById( 'post_ID' ).value;
 			const request = {
 				path: 'wp-safe-edit/v1/fork/' + id,
 				data: {
-					nonce: gutenbergData.forknonce,
+					nonce: wpSafeEditGutenbergData.forknonce,
 				},
-				nonce: gutenbergData.forknonce,
+				nonce: wpSafeEditGutenbergData.forknonce,
 				type: 'GET',
 				dataType: 'json',
 			}
@@ -34,9 +40,9 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			const request = {
 				path: 'wp-safe-edit/v1/merge/' + id,
 				data: {
-					nonce: gutenbergData.forknonce,
+					nonce: wpSafeEditGutenbergData.forknonce,
 				},
-				nonce: gutenbergData.forknonce,
+				nonce: wpSafeEditGutenbergData.forknonce,
 				type: 'GET',
 				dataType: 'json',
 			}
@@ -67,9 +73,9 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			} else {
 
 				// Display any message except on for editing page
-				if ( gutenbergData.message ) {
+				if ( wpSafeEditGutenbergData.message ) {
 					data.dispatch( 'core/editor' ).createSuccessNotice(
-						element.createElement( 'p', {}, gutenbergData.message ),
+						element.createElement( 'p', {}, wpSafeEditGutenbergData.message ),
 						{
 							id: WP_SAFE_EDIT_NOTICE_ID,
 						}
@@ -110,9 +116,9 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 							type="button"
 							className="components-button components-icon-button components-menu-item__button"
 							id="gutenberg-wpse-fork-post-button"
-							value={ __( 'Save as Draft' ) }
+							value={ __( 'Save as Draft', 'wp-safe-edit' ) }
 							onClick= { this.forkPost }
-						>{ __( 'Save as Draft' ) }</span>
+						>{ __( 'Save as Draft', 'wp-safe-edit' ) }</span>
 				</PluginSidebarMoreMenuItem>
 			);
 		}

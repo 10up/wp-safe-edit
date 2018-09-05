@@ -166,23 +166,52 @@ class Plugin {
 	 */
 	function enqueue_gutenberg_edit_scripts() {
 		wp_enqueue_script(
-			'wp_safe_edit_gutrnberg_admin',
+			'wp_safe_edit_gutenberg_admin',
 			trailingslashit( WP_SAFE_EDIT_URL ) . "dist/main.js",
 			array( 'wp-blocks' ),
 			WP_SAFE_EDIT_VERSION,
 			true
 		);
 		wp_localize_script(
-			'wp_safe_edit_gutrnberg_admin',
-			'gutenbergData',
+			'wp_safe_edit_gutenberg_admin',
+			'wpSafeEditGutenbergData',
 			array(
 				'id'        => get_the_ID(),
 				'forknonce' => wp_create_nonce( 'post-fork' ),
 				'message'   => isset( $_GET['pf_success_message'] ) ?
 					sanitize_text_field( $_GET['pf_success_message'] ) :
 					false,
+				'locale'    => self::get_jed_locale_data( 'wp-safe-edit' ),
 			)
 		);
+	}
+
+	/**
+	 * Returns Jed-formatted localization data. From Gutenberg.
+	 *
+	 * @param  string $domain Translation domain.
+	 *
+	 * @return array
+	 */
+	public static function get_jed_locale_data( $domain ) {
+		$translations = get_translations_for_domain( $domain );
+
+		$locale = array(
+			'' => array(
+				'domain' => $domain,
+				'lang'   => is_admin() ? get_user_locale() : get_locale(),
+			),
+		);
+
+		if ( ! empty( $translations->headers['Plural-Forms'] ) ) {
+			$locale['']['plural_forms'] = $translations->headers['Plural-Forms'];
+		}
+
+		foreach ( $translations->entries as $msgid => $entry ) {
+			$locale[ $msgid ] = $entry->translations;
+		}
+
+		return $locale;
 	}
 
 	/**
