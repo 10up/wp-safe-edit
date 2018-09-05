@@ -48,14 +48,14 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 		}
 
 		componentDidMount() {
-			const { subscribe } = wp.data;
+			const { subscribe } = data;
 
-			const initialPostStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+			const initialPostStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
 			if ( 'wpse-draft' === initialPostStatus ) {
 				// Watch for the publish event.
 				const unssubscribe = subscribe( ( e ) => {
-					const currentPostStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+					const currentPostStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 					if ( 'publish' === currentPostStatus ) {
 						unssubscribe();
 						setTimeout( () => {
@@ -73,19 +73,18 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 					} );
 				} else {
 					// Remove any previous notice.
-					wp.data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
+					data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
 				}
 			}
 
 			// Remove any previous notice.
-			wp.data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_STATUS_ID );
+			data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_STATUS_ID );
 
 			// Display a notice to inform the user if this is a safe draft.
-			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+			var postStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 			if ( 'wpse-draft' === postStatus  ) {
 				const message = __( 'A draft has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
-				wp.data.dispatch( 'core/editor' ).createSuccessNotice(
-					message,
+				data.dispatch( 'core/editor' ).createSuccessNotice(
 					element.createElement( 'p', {}, message ),
 					{
 						id: WP_SAFE_EDIT_STATUS_ID,
@@ -97,8 +96,8 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 
 		render() {
 			// Only show the button if the post is published and its not a safe edit draft already.
-			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
-			var isPublished = wp.data.select( 'core/editor' ).isCurrentPostPublished();
+			var postStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+			var isPublished = data.select( 'core/editor' ).isCurrentPostPublished();
 			if ( ! isPublished || 'wpse-draft' === postStatus ) {
 				return null;
 			}
