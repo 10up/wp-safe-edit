@@ -292,9 +292,17 @@ function current_user_can_fork_post( $post ) {
 	}
 
 	$post_type = get_post_type_object( $post->post_type );
-	$privilege = $post_type->cap->edit_published_posts;
+	
+	// First determine if the user can edit published posts.
+	$edit_published_privilege = $post_type->cap->edit_published_posts;
+	$value                    = current_user_can( $edit_published_privilege );
 
-	$value = current_user_can( $privilege );
+	// If the user can edit published posts, also determine if the user can edit the fork post by ID.
+	if ( true === $value ) {
+		$edit_post_privilege = $post_type->cap->edit_post;
+		$value               = current_user_can( $edit_post_privilege, $post->ID );
+	}
+
 	return true === apply_filters( 'safe_edit_current_user_can_fork_post', $value, $post );
 }
 
@@ -323,9 +331,17 @@ function current_user_can_merge_post( $post ) {
 	}
 
 	$post_type = get_post_type_object( $post->post_type );
-	$privilege = $post_type->cap->publish_posts;
+	
+	// First determine if the user can publish posts.
+	$published_privilege = $post_type->cap->publish_posts;
+	$value               = current_user_can( $published_privilege );
 
-	$value = current_user_can( $privilege );
+	// As an extra level of security, also determine if the user can edit the post by ID.
+	if ( true === $value ) {
+		$edit_post_privilege = $post_type->cap->edit_post;
+		$value               = current_user_can( $edit_post_privilege, $post->ID );
+	}
+
 	return true === apply_filters( 'safe_edit_current_user_can_merge_post', $value, $post );
 }
 

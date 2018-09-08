@@ -76,7 +76,7 @@ class ForkPostController {
 
 			$data = array(
 				'shouldRedirect' => self::should_redirect(),
-				'redirectUrl'    => esc_url( $url ),
+				'redirectUrl'    => $url,
 			);
 			wp_send_json_success( $data );
 

@@ -1,9 +1,9 @@
 import { Component } from 'react';
-const { data, apiRequest } = wp;
+const { data, apiRequest, element } = wp;
 
 
 if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem ) {
-	const { __ } = wp.i18n;
+	const { __, setLocaleData } = wp.i18n;
 	const { PluginSidebarMoreMenuItem } = wp.editPost;
 	const { registerPlugin } = wp.plugins;
 	const WP_SAFE_EDIT_NOTICE_ID = 'wp-safe-edit-notice';
@@ -11,15 +11,21 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 
 	class WPSafeEditSidebar extends Component {
 
+		constructor( props ) {
+			super( props );
+
+			// Set up translations.
+			setLocaleData( wpSafeEditGutenbergData.locale, 'wp-safe-edit' );
+		}
 		async forkPost( e ) {
 			e.preventDefault();
 			const id = document.getElementById( 'post_ID' ).value;
 			const request = {
 				path: 'wp-safe-edit/v1/fork/' + id,
 				data: {
-					nonce: gutenbergData.forknonce,
+					nonce: wpSafeEditGutenbergData.forknonce,
 				},
-				nonce: gutenbergData.forknonce,
+				nonce: wpSafeEditGutenbergData.forknonce,
 				type: 'GET',
 				dataType: 'json',
 			}
@@ -34,9 +40,9 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			const request = {
 				path: 'wp-safe-edit/v1/merge/' + id,
 				data: {
-					nonce: gutenbergData.forknonce,
+					nonce: wpSafeEditGutenbergData.forknonce,
 				},
-				nonce: gutenbergData.forknonce,
+				nonce: wpSafeEditGutenbergData.forknonce,
 				type: 'GET',
 				dataType: 'json',
 			}
@@ -48,14 +54,14 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 		}
 
 		componentDidMount() {
-			const { subscribe } = wp.data;
+			const { subscribe } = data;
 
-			const initialPostStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+			const initialPostStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
 			if ( 'wpse-draft' === initialPostStatus ) {
 				// Watch for the publish event.
 				const unssubscribe = subscribe( ( e ) => {
-					const currentPostStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+					const currentPostStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 					if ( 'publish' === currentPostStatus ) {
 						unssubscribe();
 						setTimeout( () => {
@@ -67,25 +73,28 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			} else {
 
 				// Display any message except on for editing page
-				if ( gutenbergData.message ) {
-					data.dispatch( 'core/editor' ).createSuccessNotice( gutenbergData.message, {
-						id: WP_SAFE_EDIT_NOTICE_ID,
-					} );
+				if ( wpSafeEditGutenbergData.message ) {
+					data.dispatch( 'core/editor' ).createSuccessNotice(
+						element.createElement( 'p', {}, wpSafeEditGutenbergData.message ),
+						{
+							id: WP_SAFE_EDIT_NOTICE_ID,
+						}
+					);
 				} else {
 					// Remove any previous notice.
-					wp.data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
+					data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
 				}
 			}
 
 			// Remove any previous notice.
-			wp.data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_STATUS_ID );
+			data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_STATUS_ID );
 
 			// Display a notice to inform the user if this is a safe draft.
-			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+			var postStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 			if ( 'wpse-draft' === postStatus  ) {
 				const message = __( 'A draft has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
-				wp.data.dispatch( 'core/editor' ).createSuccessNotice(
-					message,
+				data.dispatch( 'core/editor' ).createSuccessNotice(
+					element.createElement( 'p', {}, message ),
 					{
 						id: WP_SAFE_EDIT_STATUS_ID,
 						isDismissible: false,
@@ -96,8 +105,8 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 
 		render() {
 			// Only show the button if the post is published and its not a safe edit draft already.
-			var postStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
-			var isPublished = wp.data.select( 'core/editor' ).isCurrentPostPublished();
+			var postStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
+			var isPublished = data.select( 'core/editor' ).isCurrentPostPublished();
 			if ( ! isPublished || 'wpse-draft' === postStatus ) {
 				return null;
 			}
@@ -107,9 +116,9 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 							type="button"
 							className="components-button components-icon-button components-menu-item__button"
 							id="gutenberg-wpse-fork-post-button"
-							value={ __( 'Save as Draft' ) }
+							value={ __( 'Save as Draft', 'wp-safe-edit' ) }
 							onClick= { this.forkPost }
-						>{ __( 'Save as Draft' ) }</span>
+						>{ __( 'Save as Draft', 'wp-safe-edit' ) }</span>
 				</PluginSidebarMoreMenuItem>
 			);
 		}
