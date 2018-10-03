@@ -84,7 +84,11 @@ class Statuses {
 	 * @return array
 	 */
 	public function filter_draft_fork_post_data( $data, $postarr ) {
-		global $post;
+		$post = null;
+
+		if ( ! empty( $postarr['ID'] ) ) {
+			$post = Helpers\get_post( $postarr['ID'] );
+		}
 
 		if ( true !== Helpers\is_post( $post ) ) {
 			return $data;
@@ -94,13 +98,16 @@ class Statuses {
 			return $data;
 		}
 
-		// If saving a draft of a fork, keep the same post status.
-		$draft_fork_post_status = DraftForkStatus::get_name();
-		if (
-			'pending' === $postarr['post_status'] &&
-			$draft_fork_post_status === $post->post_status
-		) {
-			$data['post_status'] = $draft_fork_post_status;
+		// If the new post status is pending, keep the original post status.
+		if ( 'pending' === $postarr['post_status'] ) {
+			$draft_fork_post_status         = DraftForkStatus::get_name();
+			$pending_draft_fork_post_status = PendingForkStatus::get_name();
+
+			if ( $post->post_status === $draft_fork_post_status ) {
+				$data['post_status'] = $draft_fork_post_status;
+			} elseif ( $post->post_status === $pending_draft_fork_post_status ) {
+				$data['post_status'] = $pending_draft_fork_post_status;
+			}
 		}
 
 		return $data;

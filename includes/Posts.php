@@ -110,7 +110,11 @@ class Posts {
 	 * @return array
 	 */
 	public function filter_insert_post_data( $data, $postarr ) {
-		global $post;
+		$post = null;
+
+		if ( ! empty( $postarr['ID'] ) ) {
+			$post = Helpers\get_post( $postarr['ID'] );
+		}
 
 		if ( true !== Helpers\is_post( $post ) ) {
 			return $data;
