@@ -327,6 +327,8 @@ class PostForker extends AbstractForker {
 
 			$post_data['post_status'] = $post_status;
 
+			$post_data = wp_slash( $post_data );
+
 			return apply_filters( 'safe_edit_prepared_post_data_for_fork', $post_data );
 
 		} catch ( Exception $e ) {
@@ -365,6 +367,8 @@ class PostForker extends AbstractForker {
 
 		$post_data['post_parent'] = $fork->post_parent;
 		$post_data['post_status'] = $fork->post_status;
+
+		$post_data = wp_slash( $post_data );
 
 		return $post_data;
 	}

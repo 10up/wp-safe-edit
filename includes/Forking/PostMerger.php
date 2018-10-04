@@ -155,6 +155,8 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
+			$post_data = wp_slash( $post_data );
+
 			return $post_data;
 
 		} catch ( Exception $e ) {
@@ -201,6 +203,8 @@ class PostMerger extends AbstractMerger  {
 
 			$post_data['ID']          = $source_post->ID;
 			$post_data['post_status'] = Helpers\get_property( 'post_status', $source_post );
+
+			$post_data = wp_slash( $post_data );
 
 			return $post_data;
 
@@ -292,7 +296,7 @@ class PostMerger extends AbstractMerger  {
 	}
 
 	/**
-	 * Archive a forked post after it's been merged. 
+	 * Archive a forked post after it's been merged.
 	 *
 	 * @param  int $post_id The post ID for the fork to archive.
 	 * @return boolean|\WP_Error
@@ -308,6 +312,8 @@ class PostMerger extends AbstractMerger  {
 			$post_data                = array();
 			$post_data['ID']          = absint( $post_id );
 			$post_data['post_status'] = $this->get_archived_fork_post_status();
+
+			$post_data = wp_slash( $post_data );
 
 			$result = wp_update_post( $post_data, true );
 
