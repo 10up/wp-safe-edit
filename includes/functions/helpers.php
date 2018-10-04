@@ -32,7 +32,11 @@ function get_post( $post ) {
  */
 function _wp_translate_postdata( $update = false, $post_data = null ) {
 	if ( function_exists( '\_wp_translate_postdata' ) ) {
-		return \_wp_translate_postdata( $update, $post_data );
+		$translated = \_wp_translate_postdata( $update, $post_data );
+		if ( is_wp_error( $translated ) ) {
+			return $post_data;
+		}
+		return $translated;
 	} else {
 		return $post_data;
 	}
