@@ -89,16 +89,16 @@ class Posts {
 			[ $this, 'add_custom_post_type_support' ]
 		);
 
-		add_filter( 
-			'post_row_actions', 
-			[ $this, 'modify_list_row_actions' ], 
-			10, 2 
+		add_filter(
+			'post_row_actions',
+			[ $this, 'modify_list_row_actions' ],
+			10, 2
 		);
 
-		add_filter( 
-			'page_row_actions', 
-			[ $this, 'modify_list_row_actions' ], 
-			10, 2 
+		add_filter(
+			'page_row_actions',
+			[ $this, 'modify_list_row_actions' ],
+			10, 2
 		);
 	}
 
@@ -182,7 +182,7 @@ class Posts {
 	 * @return array The modified action links.
 	 */
 	public function modify_list_row_actions( $actions, $post ) {
-		if ( 
+		if (
 			true !== Posts\post_type_supports_forking( $post ) ||
 			true !== Posts\current_user_can_edit_fork( $post ) ||
 			true !== Posts\post_has_open_fork( $post )
@@ -196,7 +196,7 @@ class Posts {
 			return $actions;
 		}
 
-		$edit_draft_revision_action = array( 'draft_revision' => sprintf( 
+		$edit_draft_revision_action = array( 'draft_revision' => sprintf(
 			'<a href="%1$s">%2$s</a>',
 			get_edit_post_link( $fork->ID ),
 			esc_html__( 'Edit Draft Revision', 'wp-safe-edit' )
@@ -209,13 +209,13 @@ class Posts {
 			$edit_draft_revision_action,
 			array_slice( $actions, $pos )
 		);
-		
+
 		// Remove the edit link since further edits need to be done on the open draft revision.
 		unset( $actions['edit'] );
 
 		// Remove the quick edit link since further edits need to be done on the open draft revision.
 		unset( $actions['inline hide-if-no-js'] );
-	 
+
 		return $actions;
 	}
 }

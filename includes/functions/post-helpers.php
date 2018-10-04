@@ -292,7 +292,7 @@ function current_user_can_fork_post( $post ) {
 	}
 
 	$post_type = get_post_type_object( $post->post_type );
-	
+
 	// First determine if the user can edit published posts.
 	$edit_published_privilege = $post_type->cap->edit_published_posts;
 	$value                    = current_user_can( $edit_published_privilege );
@@ -331,7 +331,7 @@ function current_user_can_merge_post( $post ) {
 	}
 
 	$post_type = get_post_type_object( $post->post_type );
-	
+
 	// First determine if the user can publish posts.
 	$published_privilege = $post_type->cap->publish_posts;
 	$value               = current_user_can( $published_privilege );
