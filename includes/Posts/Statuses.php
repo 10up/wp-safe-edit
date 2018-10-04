@@ -100,14 +100,7 @@ class Statuses {
 
 		// If the new post status is pending, keep the original post status.
 		if ( 'pending' === $postarr['post_status'] ) {
-			$draft_fork_post_status         = DraftForkStatus::get_name();
-			$pending_draft_fork_post_status = PendingForkStatus::get_name();
-
-			if ( $post->post_status === $draft_fork_post_status ) {
-				$data['post_status'] = $draft_fork_post_status;
-			} elseif ( $post->post_status === $pending_draft_fork_post_status ) {
-				$data['post_status'] = $pending_draft_fork_post_status;
-			}
+			$data['post_status'] = PendingForkStatus::get_name();
 		}
 
 		return $data;

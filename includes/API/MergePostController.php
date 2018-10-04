@@ -61,7 +61,7 @@ class MergePostController {
 
 			if ( true === Helpers\is_valid_post_id( $result ) ) {
 				$message = self::get_post_merge_success_message( $result, $post_id );
-				$url = get_edit_post_link( $post_id, 'nodisplay' );
+				$url = get_edit_post_link( $result, 'nodisplay' );
 				$url = add_query_arg( array(
 					'pf_success_message' => rawurlencode( $message ),
 				), $url );
