@@ -155,7 +155,7 @@ class ForkPostController {
 			), $url );
 		}
 
-		wp_redirect( esc_url( $url ) );
+		wp_safe_redirect( esc_url_raw( $url ) );
 		exit;
 	}
 
@@ -181,7 +181,7 @@ class ForkPostController {
 
 		$url = apply_filters( 'safe_edit_post_fork_failure_redirect_url', $url, $source_post_id, $result );
 
-		wp_redirect( esc_url( $url ) );
+		wp_safe_redirect( esc_url_raw( $url ) );
 		exit;
 	}
 

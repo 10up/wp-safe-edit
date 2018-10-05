@@ -170,7 +170,7 @@ class MergePostController {
 			), $url );
 		}
 
-		wp_redirect( esc_url( $url ) );
+		wp_safe_redirect( esc_url_raw( $url ) );
 		exit;
 	}
 
@@ -196,7 +196,7 @@ class MergePostController {
 
 		$url = apply_filters( 'safe_edit_post_merge_failure_redirect_url', $url, $fork_post_id, $result );
 
-		wp_redirect( esc_url( $url ) );
+		wp_safe_redirect( esc_url_raw( $url ) );
 		exit;
 	}
 
