@@ -198,6 +198,7 @@ class PublishingButtons {
 
 		<div class="wpse-actions wpse-merge-post-button-wrapper">
 			<span class="wpse-spinner spinner"></span>
+			<input type="hidden" name="post_status" value="wpse-draft" />
 			<input
 				type="submit"
 				class="button button-primary button-large"
