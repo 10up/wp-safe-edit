@@ -112,11 +112,15 @@ class PostForker extends AbstractForker {
 			$this->copy_post_meta( $post, $forked_post_id );
 			$this->copy_post_terms( $post, $forked_post_id );
 
-			// Third, update the fork with the $_POST data in case any changes were made but not saved.
 			$updated_forked_post_id = null;
+			$post_data              = array();
+
+			// Third, if $_POST is not empty, use that as the post data. This is needed to capture changes made to the post edit fields before the fork button was pressed.
 			if ( ! empty( $_POST ) ) {
-				$updated_forked_post_id = $this->update_forked_post( $forked_post_id, $_POST );
+				$post_data = $_POST;
 			}
+
+			$updated_forked_post_id = $this->update_forked_post( $forked_post_id, $post_data );
 
 			if ( is_wp_error( $updated_forked_post_id ) || ! Helpers\is_valid_post_id( $updated_forked_post_id ) ) {
 				throw new Exception(
