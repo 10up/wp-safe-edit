@@ -7,6 +7,7 @@ use \TenUp\WPSafeEdit\Posts;
 use \TenUp\WPSafeEdit\Posts\PostTypeSupport;
 use \TenUp\WPSafeEdit\API\ForkPostController;
 use \TenUp\WPSafeEdit\API\MergePostController;
+use \TenUp\WPSafeEdit\Posts\Statuses\DraftForkStatus;
 
 /**
  * Class to manage the publishing buttons to fork and merge posts.
@@ -198,7 +199,7 @@ class PublishingButtons {
 
 		<div class="wpse-actions wpse-merge-post-button-wrapper">
 			<span class="wpse-spinner spinner"></span>
-			<input type="hidden" name="post_status" value="wpse-draft" />
+			<input type="hidden" name="post_status" value="<?php echo esc_attr( DraftForkStatus::get_name() ); ?>" />
 			<input
 				type="submit"
 				class="button button-primary button-large"
