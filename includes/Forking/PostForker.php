@@ -113,11 +113,12 @@ class PostForker extends AbstractForker {
 			$this->copy_post_terms( $post, $forked_post_id );
 
 			// Third, update the fork with the $_POST data in case any changes were made but not saved.
+			$updated_forked_post_id = null;
 			if ( ! empty( $_POST ) ) {
 				$updated_forked_post_id = $this->update_forked_post( $forked_post_id, $_POST );
 			}
 
-			if ( is_wp_error( $updated_forked_post_id ) ) {
+			if ( is_wp_error( $updated_forked_post_id ) || ! Helpers\is_valid_post_id( $updated_forked_post_id ) ) {
 				throw new Exception(
 					esc_html__( 'The fork could not be updated: ', 'wp-safe-edit' ) . $updated_forked_post_id->get_error_message()
 				);
