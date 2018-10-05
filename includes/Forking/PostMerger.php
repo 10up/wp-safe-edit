@@ -155,7 +155,8 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
-			return $post_data;
+			// Converts to an object for escaping.
+			return apply_filters( 'safe_edit_prepared_post_data_for_merge', $post_data );
 
 		} catch ( Exception $e ) {
 			\TenUp\WPSafeEdit\Logging\log_exception( $e );

@@ -60,7 +60,8 @@ class ForkPostController {
 			);
 		}
 
-		add_filter( 'wp_insert_post_data', 'wp_slash' );
+		// Adds slashes as data passed by API strips slashes.
+		add_filter( 'safe_edit_prepared_post_data_for_fork', 'wp_slash' );
 
 		$forker = new PostForker();
 		$fork_post_id = $forker->fork( $post_id );
