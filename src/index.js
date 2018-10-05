@@ -58,7 +58,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 
 			const initialPostStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
-			if ( 'wpse-draft' === initialPostStatus ) {
+			if ( 'wpse-draft' === initialPostStatus || 'wpse-pending' === initialPostStatus ) {
 				// Watch for the publish event.
 				const unssubscribe = subscribe( ( e ) => {
 					const currentPostStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
