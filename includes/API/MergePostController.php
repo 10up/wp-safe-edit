@@ -53,6 +53,8 @@ class MergePostController {
 			);
 		}
 
+		add_filter( 'wp_insert_post_data', 'wp_slash' );
+
 		try {
 			$_POST            = (array) get_post( $post_id );
 			$_POST['post_ID'] = $post_id;
