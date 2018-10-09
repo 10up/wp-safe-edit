@@ -155,7 +155,8 @@ class PostMerger extends AbstractMerger  {
 				);
 			}
 
-			return $post_data;
+			// Converts to an object for escaping.
+			return apply_filters( 'safe_edit_prepared_post_data_for_merge', $post_data );
 
 		} catch ( Exception $e ) {
 			\TenUp\WPSafeEdit\Logging\log_exception( $e );
@@ -292,7 +293,7 @@ class PostMerger extends AbstractMerger  {
 	}
 
 	/**
-	 * Archive a forked post after it's been merged. 
+	 * Archive a forked post after it's been merged.
 	 *
 	 * @param  int $post_id The post ID for the fork to archive.
 	 * @return boolean|\WP_Error

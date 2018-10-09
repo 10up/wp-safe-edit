@@ -53,6 +53,9 @@ class MergePostController {
 			);
 		}
 
+		// Adds slashes as data passed by API strips slashes.
+		add_filter( 'safe_edit_prepared_post_data_for_merge', 'wp_slash' );
+
 		try {
 			$_POST            = (array) get_post( $post_id );
 			$_POST['post_ID'] = $post_id;
