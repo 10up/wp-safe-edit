@@ -75,7 +75,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 				// Display any message except on for editing page
 				if ( wpSafeEditGutenbergData.message ) {
 					data.dispatch( 'core/notices' ).createSuccessNotice(
-						element.createElement( 'p', {}, wpSafeEditGutenbergData.message ),
+						wpSafeEditGutenbergData.message,
 						{
 							id: WP_SAFE_EDIT_NOTICE_ID,
 						}
@@ -94,7 +94,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			if ( 'wpse-draft' === postStatus  ) {
 				const message = __( 'A draft has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
 				data.dispatch( 'core/notices' ).createSuccessNotice(
-					element.createElement( 'p', {}, message ),
+					message,
 					{
 						id: WP_SAFE_EDIT_STATUS_ID,
 						isDismissible: false,
