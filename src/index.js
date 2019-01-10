@@ -74,27 +74,27 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 
 				// Display any message except on for editing page
 				if ( wpSafeEditGutenbergData.message ) {
-					data.dispatch( 'core/editor' ).createSuccessNotice(
-						element.createElement( 'p', {}, wpSafeEditGutenbergData.message ),
+					data.dispatch( 'core/notices' ).createSuccessNotice(
+						wpSafeEditGutenbergData.message,
 						{
 							id: WP_SAFE_EDIT_NOTICE_ID,
 						}
 					);
 				} else {
 					// Remove any previous notice.
-					data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
+					data.dispatch( 'core/notices' ).removeNotice( WP_SAFE_EDIT_NOTICE_ID );
 				}
 			}
 
 			// Remove any previous notice.
-			data.dispatch( 'core/editor' ).removeNotice( WP_SAFE_EDIT_STATUS_ID );
+			data.dispatch( 'core/notices' ).removeNotice( WP_SAFE_EDIT_STATUS_ID );
 
 			// Display a notice to inform the user if this is a safe draft.
 			var postStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 			if ( 'wpse-draft' === postStatus  ) {
 				const message = __( 'A draft has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
-				data.dispatch( 'core/editor' ).createSuccessNotice(
-					element.createElement( 'p', {}, message ),
+				data.dispatch( 'core/notices' ).createSuccessNotice(
+					message,
 					{
 						id: WP_SAFE_EDIT_STATUS_ID,
 						isDismissible: false,
