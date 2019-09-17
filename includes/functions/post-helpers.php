@@ -351,10 +351,17 @@ function current_user_can_merge_post( $post ) {
  * @return array
  */
 function get_open_fork_post_statuses() {
-	return array(
+	$open_statuses = array(
 		DraftForkStatus::NAME,
 		PendingForkStatus::NAME,
 	);
+
+	/**
+	 * Filter open fork post statuses
+	 *
+	 * @param array $open_statuses Open fork post statuses known to WPSE
+	 */
+	return apply_filters( 'save_edit_open_fork_post_statuses', $open_statuses );
 }
 
 /**
