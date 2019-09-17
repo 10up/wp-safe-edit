@@ -69,11 +69,18 @@ class Statuses {
 	 * @return array
 	 */
 	public static function get_valid_fork_post_statuses() {
-		return array(
+		$statuses = array(
 			DraftForkStatus::get_name(),
 			PendingForkStatus::get_name(),
 			ArchivedForkStatus::get_name(),
 		);
+
+		/**
+		 * Filter valid WPSafeEdit post statuses
+		 *
+		 * @param array $statuses Array of post statuses considered valid by WPSE
+		 */
+		return apply_filters( 'safe_edit_valid_fork_post_statuses', $statuses );
 	}
 
 	/**
