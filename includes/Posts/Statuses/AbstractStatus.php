@@ -60,6 +60,7 @@ abstract class AbstractStatus {
 			'exclude_from_search'    => true,
 			'show_in_admin_all_list' => false,
 			'protected'              => true,
+			'public'                 => false,
 		);
 	}
 }
