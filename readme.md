@@ -1,7 +1,6 @@
-WP Safe Edit
-========
+# WP Safe Edit
 
-Safely edit published posts behind the scenes without affecting the live site. You can save your changes as a draft and publish them when ready, so you don't have to finish your updates in one sitting. This gives editors the opportunity to collaborate on changes or get approval before publishing.
+> Safely edit published posts behind the scenes without affecting the live site. You can save your changes as a draft and publish them when ready, so you don't have to finish your updates in one sitting. This gives editors the opportunity to collaborate on changes or get approval before publishing.
 
 ## Requirements
 
@@ -26,8 +25,8 @@ add_filter( 'safe_edit_supported_post_types', function( $post_types ) {
 ## Usage
 
 1. When this plugin is installed, a **"Save as Draft"** button [Fig. 1] will be available for posts and pages as well as the post types you registered support for. Pressing this button will create a draft copy of the post where you can stage your changes. All post meta and taxonomy terms associated with the post will be included.<br><br>
-<img src="images/readme/save-draft-button.jpeg" alt="Image of the “Save as Draft” button." width="300"/><br>
-_Figure 1._
+
+![Save Draft button](.wordpress-org/screenshot-1.jpg "Image of the “Save as Draft” button.")
 
 2. When editing a draft, it functions like any other post so you can do the following:
    * **Save Changes as a Draft:** Changes saved as a draft will not be reflected on the live site until you publish them.
@@ -36,23 +35,23 @@ _Figure 1._
    
    * **Trash Changes:** If you change your mind, you can trash your updates by pressing the **"Move to Trash"** link.
 
-3. Once you're happy with your changes, publish them by pressing the **"Publish Changes"** button [Fig. 2]. The post you created the draft from will be updated with your changes and reflected on the live site.<br><br>
-<img src="images/readme/publish-changes-button.jpeg" alt="Image of the “Publish Changes” button." width="300"/><br>
-_Figure 2._
+3. Once you're happy with your changes, publish them by pressing the **"Publish Changes"** button [Fig. 2]. The post you created the draft from will be updated with your changes and reflected on the live site.
+
+![Publish Changes button](.wordpress-org/screenshot-2.jpg "Image of the “Publish Changes” button.")
 
 ## Viewing Previous Drafts
 
-You can view the most recent drafts created for a post using the **"Archived Draft Revisions"** meta box [Fig. 3]. Unlike WordPress revisions, all content, terms, and meta data are retained so you can see what the draft looked like when it was published.<br><br>
-<img src="images/readme/archived-drafts.jpeg" alt="Image of the “Archived Draft Revisions” meta box." width="516"/><br>
-_Figure 3._
+You can view the most recent drafts created for a post using the **"Archived Draft Revisions"** meta box [Fig. 3]. Unlike WordPress revisions, all content, terms, and meta data are retained so you can see what the draft looked like when it was published.
+
+![Archived Draft Revisions meta box](.wordpress-org/screenshot-3.jpg "Image of the “Archived Draft Revisions” meta box.")
 
 ## Caveats & Limitations
 
 1. This plugin isn't compatible with post types using Gutenberg yet.
 
-2. You cannot edit a post in the dashboard if an open draft exists for it because the changes would be overwritten when the draft is published; a lockout message is shown if you try [Fig. 4]. **Note:** It's still possible to edit the post through an API or code, so consider that before enabling support. A planned improvement is to interrupt the publish draft process when the source post has been modified since the draft was created.<br><br>
-<img src="images/readme/source-post-lockout.jpeg" alt="Image of the “open draft exist” lockout message." width="522"/><br>
-_Figure 4._
+2. You cannot edit a post in the dashboard if an open draft exists for it because the changes would be overwritten when the draft is published; a lockout message is shown if you try [Fig. 4]. **Note:** It's still possible to edit the post through an API or code, so consider that before enabling support. A planned improvement is to interrupt the publish draft process when the source post has been modified since the draft was created.
+
+![Source Post Lockout](.wordpress-org/screenshot-4.jpg "Image of the “open draft exist” lockout message.")
 
 3. If a post type contains meta boxes that save data behind the scenes using AJAX, you may need to hook into the publish draft process to make adjustments. Consider the following scenario:
 
@@ -76,3 +75,7 @@ Some of the planned improvements are listed below:
 - Complete unit tests.
 
 - Show more than the last 10 archived drafts.
+
+## Like what you see?
+
+<a href="http://10up.com/contact/"><img src="https://10updotcom-wpengine.s3.amazonaws.com/uploads/2016/10/10up-Github-Banner.png" width="850" alt="Work with us at 10up"></a>
