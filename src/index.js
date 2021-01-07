@@ -2,9 +2,9 @@ import { Component } from 'react';
 const { data, apiRequest, element } = wp;
 
 
-if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem ) {
+if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginPostStatusInfo ) {
 	const { __, setLocaleData } = wp.i18n;
-	const { PluginSidebarMoreMenuItem } = wp.editPost;
+	const { PluginPostStatusInfo } = wp.editPost;
 	const { registerPlugin } = wp.plugins;
 	const WP_SAFE_EDIT_NOTICE_ID = 'wp-safe-edit-notice';
 	const WP_SAFE_EDIT_STATUS_ID = 'wp-safe-edit-status';
@@ -92,7 +92,7 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 			// Display a notice to inform the user if this is a safe draft.
 			var postStatus = data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 			if ( 'wpse-draft' === postStatus  ) {
-				const message = __( 'A draft has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
+				const message = __( 'A revision has been created and you can edit it below. Publish your changes to make them live.', 'wp-safe-edit' );
 				data.dispatch( 'core/notices' ).createSuccessNotice(
 					message,
 					{
@@ -111,15 +111,15 @@ if ( wp.editPost && 'undefined' !== typeof wp.editPost.PluginSidebarMoreMenuItem
 				return null;
 			}
 			return (
-				<PluginSidebarMoreMenuItem>
-						<span
+				<PluginPostStatusInfo>
+						<button
 							type="button"
-							className="components-button components-icon-button components-menu-item__button"
+							className="components-button is-secondary"
 							id="gutenberg-wpse-fork-post-button"
 							value={ __( 'Save as Draft', 'wp-safe-edit' ) }
 							onClick= { this.forkPost }
-						>{ __( 'Save as Draft', 'wp-safe-edit' ) }</span>
-				</PluginSidebarMoreMenuItem>
+						>{ __( 'Save as Revision', 'wp-safe-edit' ) }</button>
+				</PluginPostStatusInfo>
 			);
 		}
 	};
