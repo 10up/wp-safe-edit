@@ -35,7 +35,7 @@ abstract class AbstractStatus {
 	 *
 	 * @return void
 	 */
-	function register() {
+	public function register() {
 		$this->register_post_status();
 	}
 
@@ -44,7 +44,7 @@ abstract class AbstractStatus {
 	 *
 	 * @return void
 	 */
-	function register_post_status() {
+	public function register_post_status() {
 		register_post_status( $this->get_name(), $this->get_options() );
 	}
 
@@ -53,15 +53,23 @@ abstract class AbstractStatus {
 	 *
 	 * @return array
 	 */
-	function get_options() {
-		return array(
+	public function get_options() {
+
+		$args = array(
 			'label'                  => $this->get_label(),
-			'internal'               => false,
 			'exclude_from_search'    => true,
 			'show_in_admin_all_list' => false,
 			'protected'              => true,
 			'public'                 => false,
 			'publicly_queryable'     => false,
 		);
+
+		/**
+		 * Filter post status registration arguments.
+		 *
+		 * @param array  $args        Array or string of post status arguments.
+		 * @param string $post_status Name of the post status.
+		 */
+		return apply_filters( 'safe_edit_register_post_status_args', $args, $this->get_name() );
 	}
 }
