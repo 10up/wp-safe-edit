@@ -25,5 +25,4 @@ class PendingForkStatus extends AbstractStatus {
 
 		return $options;
 	}
-
 }

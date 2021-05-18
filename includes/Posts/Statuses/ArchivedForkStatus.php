@@ -9,5 +9,4 @@ class ArchivedForkStatus extends AbstractStatus {
 
 	const NAME  = 'wpse-archived';
 	const LABEL = 'Archived Fork';
-
 }

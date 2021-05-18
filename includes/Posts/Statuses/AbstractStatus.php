@@ -56,11 +56,12 @@ abstract class AbstractStatus {
 	function get_options() {
 		return array(
 			'label'                  => $this->get_label(),
-			'internal'               => true,
+			'internal'               => false,
 			'exclude_from_search'    => true,
 			'show_in_admin_all_list' => false,
 			'protected'              => true,
 			'public'                 => false,
+			'publicly_queryable'     => false,
 		);
 	}
 }

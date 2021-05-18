@@ -18,7 +18,6 @@ class DraftForkStatus extends AbstractStatus {
 	public function get_options() {
 		$options = parent::get_options();
 
-		$options['internal']                  = false;
 		$options['show_in_admin_status_list'] = true;
 
 		$label_value            = __( 'Draft Revisions <span class="count">(%s)</span>', 'wp-safe-edit' );
@@ -26,5 +25,4 @@ class DraftForkStatus extends AbstractStatus {
 
 		return $options;
 	}
-
 }
