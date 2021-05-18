@@ -20,8 +20,12 @@ class PendingForkStatus extends AbstractStatus {
 
 		$options['show_in_admin_status_list'] = true;
 
-		$label_value                          = __( 'Pending Revisions <span class="count">(%s)</span>', 'wp-safe-edit' );
-		$options['label_count']               = _n_noop( $label_value, $label_value );
+		/* translators: %s revisions count. */
+		$options['label_count'] = _n_noop(
+			'Pending Revisions <span class="count">(%s)</span>',
+			'Pending Revisions <span class="count">(%s)</span>',
+			'wp-safe-edit'
+		);
 
 		return $options;
 	}
