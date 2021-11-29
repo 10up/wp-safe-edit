@@ -9,6 +9,8 @@
  * Text Domain: wp-safe-edit
  * Domain Path: /languages
  * License:     MIT
+ * Update URI:  https://github.com/10up/wp-safe-edit
+ * 
  */
 
 // Useful global constants
